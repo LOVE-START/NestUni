@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "theme-provider": "/components/theme-provider/theme-provider",
+    "chat-nav-bar": "/components/chat-nav-bar/chat-nav-bar",
+    "agent-confirm-card": "/components/agent-confirm-card/agent-confirm-card",
+    "agent-steps": "/components/agent-steps/agent-steps"
+  },
+  "navigationStyle": "custom"
+}

@@ -1,0 +1,661 @@
+/* ======================== */
+/* 🌿 页面整体风格 */
+/* ======================== */
+.club-detail-container {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', sans-serif;
+  padding-bottom: 40rpx;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #f3f3f3;
+  border-top: 4rpx solid #4a90e2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ======================== */
+/* 🎴 顶部封面区域 */
+/* ======================== */
+.cover-container {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  overflow: hidden;
+  border-bottom-left-radius: 36rpx;
+  border-bottom-right-radius: 36rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+}
+
+.cover-swiper, .cover-image {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-image {
+  object-fit: cover;
+  transform: scale(1.03);
+  transition: transform 0.8s ease;
+}
+
+/* 社团分类标签 */
+.club-category-tag {
+  position: absolute;
+  top: 48rpx;
+  right: 24rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 500;
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+  z-index: 10;
+  box-shadow: 0 4rpx 12rpx rgba(255, 175, 189, 0.3);
+}
+
+.tag-text {
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+}
+
+/* ======================== */
+/* 🏛️ 社团信息卡片 */
+/* ======================== */
+.club-card {
+  margin: -60rpx 24rpx 24rpx;
+  padding: 36rpx;
+  background-color: #fff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.club-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.club-logo {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+  object-fit: cover;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
+  border: 4rpx solid #fff;
+  flex-shrink: 0;
+}
+
+.club-title-info {
+  flex: 1;
+  margin-left: 4rpx;
+  padding-top: 8rpx;
+}
+
+.club-name {
+  font-size: 38rpx;
+  font-weight: 700;
+  margin-bottom: 10rpx;
+  color: #222;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.5rpx;
+}
+
+.club-name::after {
+  content: '';
+  position: absolute;
+  bottom: -6rpx;
+  left: 0;
+  width: 40%;
+  height: 4rpx;
+  background-image: var(--decoration-bg);
+  border-radius: 4rpx;
+}
+
+/* 社团元信息 */
+.club-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8rpx;
+}
+
+/* 编辑按钮 */
+.edit-button-container {
+  align-self: flex-start;
+}
+
+/* 操作按钮区域 */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  align-self: flex-start;
+  margin-top: 16rpx; /* 按钮区域下移 */
+}
+
+.recruitment-button-container {
+  flex-shrink: 0;
+}
+
+/* 招新按钮样式 - 与编辑按钮保持一致 */
+.recruitment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 500;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 175, 189, 0.3);
+  border: none;
+  transition: all 0.3s ease;
+  width: 140rpx; /* 固定宽度 */
+  height: 90rpx; /* 固定高度 */
+  box-sizing: border-box;
+  line-height: 1; /* 重置行高 */
+  margin: 0; /* 重置默认margin */
+  padding: 0; /* 使用固定尺寸，padding设为0 */
+}
+
+.recruitment-button:active {
+  transform: scale(0.95);
+}
+
+.recruitment-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.edit-button-container {
+  flex-shrink: 0;
+}
+
+/* 编辑按钮样式 - 与招新按钮保持一致 */
+.edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 500;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 175, 189, 0.3);
+  border: none;
+  transition: all 0.3s ease;
+  width: 140rpx; /* 固定宽度 */
+  height: 90rpx; /* 固定高度 */
+  box-sizing: border-box;
+  line-height: 1; /* 重置行高 */
+  margin: 0; /* 重置默认margin */
+  padding: 0; /* 使用固定尺寸，padding设为0 */
+}
+
+.edit-button:active {
+  transform: scale(0.95);
+}
+
+.edit-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 8rpx;
+}
+
+/* 信息徽章 */
+.info-badges {
+  display: flex;
+  justify-content: space-around;
+  margin: 30rpx 0 0;
+  padding: 24rpx 0 0;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item.clickable {
+  cursor: pointer;
+}
+
+.stat-item.clickable:active {
+  transform: scale(0.95);
+}
+
+.badge-circle {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.stat-item.clickable:hover .badge-circle {
+  transform: translateY(-5rpx);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
+}
+
+.badge-circle.announcements-circle {
+  background-image: var(--decoration-bg, linear-gradient(to right, #4A90E2, #63B3ED)) !important;
+}
+
+.badge-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.badge-value {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 4rpx;
+  color: #333;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.05);
+}
+
+.badge-label {
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* 社团简介 */
+.club-description {
+  position: relative;
+  margin-top: 30rpx;
+  padding: 28rpx 28rpx 28rpx 40rpx; /* 给左边留出空间 */
+  background-color: #f9f9f9;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.7;
+  box-shadow: inset 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* 确保内部渐变被圆角裁剪 */
+}
+
+/* 左侧渐变装饰条 */
+.decoration-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8rpx;
+  height: 100%;
+  background: var(--decoration-bg, linear-gradient(to bottom, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-top-left-radius: 20rpx;
+  border-bottom-left-radius: 20rpx;
+}
+
+/* ======================== */
+/* 📘 模块通用样式 */
+/* ======================== */
+.section-container {
+  margin: 0 24rpx 30rpx;
+  border-radius: 24rpx;
+  background-color: white;
+  padding: 24rpx 20rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-header {
+  margin-bottom: 24rpx;
+  color: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.section-header.clickable:active {
+  transform: scale(0.98);
+}
+
+.section-header.clickable:hover {
+  background-color: #f0f8ff;
+  transform: translateX(10rpx);
+}
+
+.section-title-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  position: relative;
+  padding-left: 20rpx;
+  color: #333;
+}
+
+.section-title-text::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+.section-content {
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.8;
+}
+
+/* 社团完整介绍 */
+.club-full-description {
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.8;
+}
+
+/* ======================== */
+/* 🎉 活动卡片 */
+/* ======================== */
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx;
+}
+
+.event-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+  border-radius: 30rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1rpx solid #f0f0f0;
+  position: relative;
+}
+
+.event-card:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.event-cover {
+  position: relative;
+  width: 100%;
+  height: 280rpx;
+  overflow: hidden;
+}
+
+.event-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.event-card:active .event-cover-image {
+  transform: scale(1.05);
+}
+
+.event-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20rpx;
+  pointer-events: none;
+}
+
+.event-category {
+  font-size: 22rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4a90e2;
+  font-weight: 600;
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: #fff;
+}
+
+.event-content {
+  padding: 24rpx;
+}
+
+.event-title {
+  font-weight: 700;
+  font-size: 32rpx;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+  line-height: 1.4;
+}
+
+.event-meta {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16rpx;
+  padding: 10rpx 0 16rpx;
+  position: relative;
+}
+
+.event-meta::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1rpx;
+  background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+  margin-top: 16rpx;
+}
+
+.event-date, .event-location {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: rgb(163, 87, 146);
+  background-color: rgba(240, 240, 240, 0.8);
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.event-date {
+  margin-right: 20rpx;
+}
+
+.meta-icon {
+  width: 20rpx;
+  height: 20rpx;
+  margin-right: 6rpx;
+}
+
+.event-description {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ======================== */
+/* 📢 公告卡片 */
+/* ======================== */
+.announcements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.announcement-card {
+  background: #f9fafc;
+  padding: 26rpx;
+  border-radius: 20rpx;
+  box-shadow: inset 0 0 0 1rpx rgba(0,0,0,0.05);
+}
+
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.announcement-title {
+  font-weight: 700;
+  font-size: 28rpx;
+  color: #222;
+}
+
+.announcement-date {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.announcement-content {
+  font-size: 24rpx;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 20rpx;
+}
+
+.announcement-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.announcement-image {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 10rpx;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.announcement-image:active {
+  transform: scale(1.05);
+}
+
+/* ======================== */
+/* 📷 社团相册 */
+/* ======================== */
+.gallery-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.gallery-scroll {
+  white-space: nowrap;
+  padding: 10rpx 0;
+  /* 显示滚动条 */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-scroll::-webkit-scrollbar {
+  height: 8rpx;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4rpx;
+}
+
+.gallery-scroll::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 4rpx;
+}
+
+.gallery-list {
+  display: flex;
+  padding: 0 24rpx;
+}
+
+.gallery-item {
+  display: inline-block;
+  width: 220rpx;
+  height: 160rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 12rpx rgba(0,0,0,0.08);
+  margin-right: 20rpx;
+  flex-shrink: 0; /* 防止图片在滚动时被压缩 */
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:active .gallery-image {
+  transform: scale(1.05);
+}
+
+/* ======================== */
+/* 🔐 解密游戏提示动画 */
+/* ======================== */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 175, 189, 0.4);
+  }
+  70% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10rpx rgba(255, 175, 189, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 175, 189, 0);
+  }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}

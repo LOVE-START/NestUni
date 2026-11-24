@@ -1,0 +1,876 @@
+/* 管理端公共样式
+   设计方向：编辑式极简（暖纸底 + 墨色文字 + 单一陶土色强调）
+   刻意避免：彩虹渐变、emoji 图标、多层阴影、装饰色条
+   各管理页通过 @import 复用，页面文件只保留自身差异 */
+
+page {
+  /* 全局设计变量：配色与线条只有一个维护来源 */
+  --ink: #1b1a17;
+  --muted: #8b857a;
+  --faint: #a9a294;
+  --hairline: #e9e3d7;
+  --surface: #fffdf9;
+  --accent: #a8502f;
+  --accent-tint: #f7e9e0;
+  --accent-line: #edd8ca;
+  background: #f4f1ea;
+}
+
+.container {
+  min-height: 100vh;
+  background: #f4f1ea;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 48rpx);
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ---------- 页头 ---------- */
+
+.masthead {
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  padding-bottom: 32rpx;
+  background: linear-gradient(180deg, #eee7d9 0%, #f4f1ea 82%);
+  animation: rise 0.4s ease both;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+}
+
+/* 返回入口：发丝线圆环，与暖纸底融合 */
+.nav__back {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 1rpx solid #ddd5c6;
+  background: rgba(255, 253, 249, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav__back--pressed {
+  background: #ffffff;
+}
+
+/* 纯 CSS 箭头，避免字体符号在不同机型下大小不一 */
+.nav__arrow {
+  width: 16rpx;
+  height: 16rpx;
+  border-left: 3rpx solid var(--ink);
+  border-bottom: 3rpx solid var(--ink);
+  transform: rotate(45deg);
+  margin-left: 6rpx;
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+}
+
+.lead__eyebrow {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  color: var(--faint);
+}
+
+/* 大标题用衬线体，形成编辑式版面感 */
+.lead__title {
+  margin-top: 12rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 64rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.lead__meta {
+  margin-top: 14rpx;
+  font-size: 23rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+
+/* ---------- 内容区 ---------- */
+
+.content {
+  padding: 0 40rpx;
+  animation: rise 0.5s ease both;
+  animation-delay: 0.06s;
+}
+
+/* 统一卡面：暖白底 + 发丝描边 + 极轻阴影 */
+.panel {
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 26rpx;
+  box-shadow: 0 2rpx 12rpx rgba(27, 26, 23, 0.03);
+  overflow: hidden;
+}
+
+/* ---------- 工具条与搜索 ---------- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 84rpx;
+  padding: 0 24rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+
+/* CSS 绘制的放大镜，避免依赖图片资源 */
+.search__glyph {
+  position: relative;
+  width: 22rpx;
+  height: 22rpx;
+  border: 2rpx solid #b3ab9c;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.search__glyph::after {
+  content: '';
+  position: absolute;
+  right: -8rpx;
+  bottom: -5rpx;
+  width: 10rpx;
+  height: 2rpx;
+  background: #b3ab9c;
+  transform: rotate(45deg);
+}
+
+.search__input {
+  flex: 1;
+  font-size: 27rpx;
+  color: var(--ink);
+}
+
+.search__placeholder {
+  color: var(--faint);
+}
+
+/* ---------- 按钮 ---------- */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 82rpx;
+  padding: 0 30rpx;
+  border-radius: 16rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  box-sizing: border-box;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+/* 微信原生 button 自带伪元素边框，统一去掉 */
+.btn::after {
+  border: none;
+}
+
+.btn--compact {
+  height: 84rpx;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+
+.btn--solid {
+  background: var(--ink);
+  color: #fffdf9;
+}
+
+.btn--ghost {
+  border: 1rpx solid #ded7c9;
+  color: #6f6a5f;
+  background: transparent;
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.btn--pressed {
+  opacity: 0.82;
+}
+
+/* 不可用状态只降透明度，避免额外的灰色按钮样式 */
+.btn--disabled {
+  opacity: 0.35;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--mini {
+  height: 60rpx;
+  padding: 0 22rpx;
+  border-radius: 12rpx;
+  font-size: 23rpx;
+}
+
+/* ---------- 卡片列表 ---------- */
+
+.cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(27, 26, 23, 0.03);
+  padding: 26rpx;
+  margin-bottom: 18rpx;
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 图片与字形图标共用尺寸，保证列表节奏一致 */
+.card__logo,
+.glyph {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  background: #f2eee5;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.card__logo {
+  display: block;
+}
+
+/* 单个汉字替代 emoji，无需图片资源且风格统一 */
+.glyph {
+  color: #4a4438;
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.card__title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.card__meta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #9d968a;
+}
+
+.card__meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10rpx;
+}
+
+.card__meta-row .card__meta {
+  margin-top: 0;
+  margin-left: 12rpx;
+}
+
+.card__excerpt {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #7c766a;
+  line-height: 1.7;
+}
+
+.card__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f2ede4;
+}
+
+/* 文字操作入口：比描边按钮更轻，适合密集列表 */
+.link-btn {
+  padding: 8rpx 18rpx;
+  font-size: 24rpx;
+  color: #6f6a5f;
+  border-radius: 999rpx;
+}
+
+.link-btn--pressed {
+  background: #faf7f0;
+}
+
+.link-btn--danger {
+  color: var(--accent);
+}
+
+.link-btn--accent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- 标签 ---------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 36rpx;
+  padding: 0 14rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+  background: #f2eee5;
+  color: #6f6a5f;
+}
+
+.tag--accent {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.tag--quiet {
+  background: transparent;
+  border: 1rpx solid #e5ded0;
+  color: #9d968a;
+}
+
+/* ---------- 空状态 ---------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 40rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 26rpx;
+}
+
+.empty__seal {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  border: 1rpx solid #ded7c9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 细线圆环内的一条短横线，表示页面暂时安静 */
+.empty__dash {
+  width: 28rpx;
+  height: 2rpx;
+  background: #c8c2b5;
+}
+
+.empty__title {
+  margin-top: 28rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.empty__desc {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: var(--faint);
+}
+
+/* ---------- 分页 ---------- */
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30rpx;
+}
+
+.pager__btn {
+  padding: 12rpx 28rpx;
+  font-size: 24rpx;
+  color: #6f6a5f;
+  border: 1rpx solid #ded7c9;
+  border-radius: 999rpx;
+}
+
+.pager__btn--disabled {
+  opacity: 0.35;
+}
+
+.pager__info {
+  margin: 0 24rpx;
+  font-size: 22rpx;
+  color: var(--faint);
+  letter-spacing: 1rpx;
+}
+
+/* ---------- 底部抽屉 ---------- */
+
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(27, 26, 23, 0.42);
+  display: flex;
+  align-items: flex-end;
+  animation: fade 0.22s ease both;
+}
+
+.sheet {
+  width: 100%;
+  max-height: 92vh;
+  background: var(--surface);
+  border-radius: 32rpx 32rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: sheetUp 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* 顶部拖拽提示条，暗示可下滑关闭 */
+.sheet__grip {
+  width: 64rpx;
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: #e3dccd;
+  margin: 16rpx auto 0;
+}
+
+.sheet__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18rpx 40rpx 22rpx;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.sheet__eyebrow {
+  font-size: 17rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+}
+
+.sheet__title {
+  display: block;
+  margin-top: 6rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sheet__close {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #f4efe4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 纯 CSS 关闭图标 */
+.sheet__close-x {
+  position: relative;
+  width: 22rpx;
+  height: 22rpx;
+}
+
+.sheet__close-x::before,
+.sheet__close-x::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2rpx;
+  background: #6f6a5f;
+}
+
+.sheet__close-x::before {
+  transform: rotate(45deg);
+}
+
+.sheet__close-x::after {
+  transform: rotate(-45deg);
+}
+
+.sheet__body {
+  flex: 1;
+  max-height: 66vh;
+  padding: 26rpx 40rpx 8rpx;
+  box-sizing: border-box;
+}
+
+.sheet__footer {
+  display: flex;
+  padding: 20rpx 40rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #f2ede4;
+}
+
+.sheet__footer .btn {
+  flex: 1;
+}
+
+.sheet__footer .btn + .btn {
+  margin-left: 16rpx;
+}
+
+/* ---------- 表单 ---------- */
+
+.form__group {
+  margin-bottom: 26rpx;
+}
+
+/* 小标签用字距与灰色弱化，作为字段标题 */
+.form__label {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--faint);
+}
+
+.form__input,
+.form__textarea,
+.form__value {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f8f5ee;
+  border: 1rpx solid #ece6d9;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: var(--ink);
+}
+
+/* 单行输入框：显式高度 + 居中行高
+   微信 input 自带固定高度，若只加 padding 会导致文字被裁切 */
+.form__input {
+  height: 88rpx;
+  min-height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 22rpx;
+}
+
+.form__textarea {
+  height: 220rpx;
+  padding: 18rpx 22rpx;
+  line-height: 1.7;
+}
+
+/* 选择器展示区与输入框保持同一高度，保证表单节奏一致 */
+.form__value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  padding: 0 22rpx;
+}
+
+.form__value--empty {
+  color: #b3ab9c;
+}
+
+.form__chevron {
+  width: 12rpx;
+  height: 12rpx;
+  border-right: 2rpx solid #c8c2b5;
+  border-bottom: 2rpx solid #c8c2b5;
+  transform: rotate(45deg);
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+
+.form__hint {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 21rpx;
+  color: var(--faint);
+}
+
+.form__placeholder {
+  color: #b3ab9c;
+}
+
+/* 行内轻量操作（地图选点、清除坐标等） */
+.inline-actions {
+  display: flex;
+  margin-top: 12rpx;
+}
+
+.mini-action {
+  padding: 12rpx 22rpx;
+  margin-right: 14rpx;
+  border: 1rpx solid #ded7c9;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  color: #6f6a5f;
+}
+
+.mini-action--pressed {
+  background: #faf7f0;
+}
+
+/* 复选框组：胶囊样式，避免原生控件破坏版面 */
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  margin: 0 16rpx 14rpx 0;
+  padding: 10rpx 18rpx;
+  background: #faf7f0;
+  border: 1rpx solid #e5ded0;
+  border-radius: 999rpx;
+  font-size: 23rpx;
+  color: #6f6a5f;
+}
+
+.check checkbox {
+  transform: scale(0.78);
+  margin-right: 6rpx;
+}
+
+.check__text {
+  font-size: 23rpx;
+}
+
+/* ---------- 图片上传 ---------- */
+
+.uploader {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.uploader__item,
+.uploader__add {
+  position: relative;
+  width: 190rpx;
+  height: 150rpx;
+  margin: 0 16rpx 16rpx 0;
+  border-radius: 14rpx;
+  box-sizing: border-box;
+}
+
+.uploader__item {
+  background: #f8f5ee;
+  border: 1rpx solid #ece6d9;
+  overflow: hidden;
+}
+
+.uploader__img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.uploader__empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: var(--faint);
+}
+
+/* 删除标记做成轻量半透明圆点，不使用高饱和红色按钮 */
+.uploader__remove {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: rgba(27, 26, 23, 0.55);
+  color: #ffffff;
+  font-size: 22rpx;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploader__add {
+  border: 1rpx dashed #d8d0bf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: var(--faint);
+}
+
+/* ---------- 详情内容 ---------- */
+
+.detail__title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.detail__label {
+  display: block;
+  margin: 30rpx 0 12rpx;
+  font-size: 19rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+}
+
+.detail__text {
+  display: block;
+  font-size: 26rpx;
+  color: #4a4438;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* 键值行：左侧固定宽度，右侧自动换行 */
+.drows {
+  margin-top: 20rpx;
+  border-top: 1rpx solid #f2ede4;
+}
+
+.drow {
+  display: flex;
+  align-items: baseline;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.drow__key {
+  width: 180rpx;
+  flex-shrink: 0;
+  font-size: 22rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+
+.drow__val {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+.drow__val--empty {
+  color: #b3ab9c;
+}
+
+/* ---------- 人员行 ---------- */
+
+.person {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.person__avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  margin-right: 18rpx;
+  background: #f2eee5;
+  flex-shrink: 0;
+}
+
+.person__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.person__name {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.person__meta {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 21rpx;
+  color: #9d968a;
+}
+
+.person__actions {
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* ---------- 动效 ---------- */
+
+/* 区块依次上浮，节奏统一；克制使用，避免满屏动画 */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    opacity: 0.6;
+    transform: translateY(60rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

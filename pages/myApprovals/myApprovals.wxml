@@ -1,0 +1,65 @@
+<!--我的审核记录页面-->
+<view wx:if="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+</view>
+
+<view wx:elif="{{permissionChecked && hasPermission}}" class="container">
+  <!-- 标签切换 -->
+  <view class="tabs">
+    <view class="tab-item {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tab-item {{currentTab === 'pending' ? 'active' : ''}}" bindtap="switchTab" data-tab="pending">待审核</view>
+    <view class="tab-item {{currentTab === 'approved' ? 'active' : ''}}" bindtap="switchTab" data-tab="approved">已通过</view>
+    <view class="tab-item {{currentTab === 'rejected' ? 'active' : ''}}" bindtap="switchTab" data-tab="rejected">已拒绝</view>
+  </view>
+
+  <!-- 审核记录列表 -->
+  <view class="approval-list">
+    <block wx:if="{{approvals.length > 0}}">
+      <view class="approval-card {{item.status}}" wx:for="{{approvals}}" wx:key="id">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="type-tag {{item.target_type}}">{{item.target_type_label}}</view>
+          <view class="status-tag {{item.status}}">{{item.status_label}}</view>
+        </view>
+
+        <!-- 卡片内容 -->
+        <view class="card-content">
+          <view class="title-row">
+            <text class="title">{{item.target.title || item.target.name || '无标题'}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.club}}">
+            <text class="label">所属社团：</text>
+            <text class="value">{{item.club.name}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">申请时间：</text>
+            <text class="value">{{item.created_at_formatted}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.status !== 'pending'}}">
+            <text class="label">审核时间：</text>
+            <text class="value">{{item.approved_at_formatted}}</text>
+          </view>
+          <view class="info-row reject-reason" wx:if="{{item.status === 'rejected' && item.reject_reason}}">
+            <text class="label">拒绝原因：</text>
+            <text class="value">{{item.reject_reason}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && approvals.length === 0}}">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">暂无审核记录</view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{!loading && approvals.length > 0 && pagination.page < pagination.totalPages}}">
+      <view class="load-more-text">上拉加载更多</view>
+    </view>
+  </view>
+</view>

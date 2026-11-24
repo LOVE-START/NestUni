@@ -1,0 +1,284 @@
+/* 🌈 票卡容器（最外层） */
+.ticket-card-wrapper {
+  width: 100%;
+  max-width: 600rpx;
+  min-height: 900rpx;       /* 保证原始票卡高度 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🎟️ 票卡主容器 */
+.ticket-card {
+  width: 100%;
+  max-width: 580rpx;
+  height: 100%;
+  background: #ffffff;       /* 不透明底色，避免方框 */
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0,0,0,0.08), 0 4rpx 12rpx rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;          /* 修改为visible以避免裁剪内容 */
+  position: relative;
+  transition: all 0.35s ease;
+  margin: 0 auto;
+  padding: 10rpx;            /* 添加padding以容纳缩放效果 */
+  box-sizing: border-box;
+}
+
+/* 半透明覆盖层（保留磨砂感） */
+.ticket-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10rpx);
+  z-index: 0;
+  border-radius: 28rpx;
+}
+
+/* 卡片悬浮效果 */
+.ticket-card:hover {
+  transform: translateY(-10rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0,0,0,0.12);
+}
+
+/* 💠 替代票卡样式 */
+.alternative-card {
+  background: linear-gradient(145deg, #dde6ff 0%, #eef3ff 100%);
+}
+
+/* 封面图片 */
+.cover {
+  width: 100%;
+  height: 380rpx;
+  border-radius: 28rpx 28rpx 0 0;
+  object-fit: cover;
+  filter: brightness(0.97);
+  z-index: 1;
+  position: relative;
+  transition: all 0.3s ease;
+  transform-origin: center center; /* 设置变换原点 */
+}
+
+/* 添加波纹效果容器 */
+.ripple-container {
+  position: relative;
+  overflow: visible; /* 修改为visible以避免裁剪内容 */
+  border-radius: 28rpx 28rpx 0 0;
+  margin: -10rpx -10rpx 0 -10rpx; /* 补偿父容器的padding */
+}
+
+/* 波纹效果 */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 主体内容 */
+.content {
+  padding: 36rpx 32rpx 8rpx;
+  flex: none;
+  z-index: 2;   /* 确保覆盖半透明层 */
+  position: relative;
+}
+
+/* 标题行 */
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.movie-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #1a1d29;
+  flex: 1;
+}
+
+/* 用户羽章展示 */
+.user-badges {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin: 0 16rpx;
+}
+
+/* 羽章图标外层容器 - 主题色背景 */
+.badge-icon-wrapper {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.badge-icon-wrapper:active {
+  transform: scale(0.9);
+}
+
+/* 用户羽章图标 */
+.badge-icon-mini {
+  width: 46rpx;
+  height: 46rpx;
+  border-radius: 50%;
+}
+
+/* 羽章占位圆圈 - 无徽章时显示透明圆圈作为入口 */
+.badge-placeholder {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx dashed rgba(0, 0, 0, 0.15);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.badge-placeholder:active {
+  transform: scale(0.9);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Badge 登录 / XXI */
+.badge {
+  background: var(--button-gradient, linear-gradient(135deg, #4facfe 0%, #00f2fe 100%));
+  color: #ffffff;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  transition: all 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.badge:active {
+  transform: scale(0.92);
+}
+
+.badge:not(:empty) {
+  background: var(--button-gradient, linear-gradient(135deg, #4facfe 0%, #00f2fe 100%));
+}
+
+/* 位置信息 */
+.location {
+  color: #6b7280;
+  font-size: 26rpx;
+  margin-top: -10rpx;
+  margin-bottom: 28rpx;
+  text-align: left;
+  z-index: 2;
+  position: relative;
+}
+
+/* 信息行 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+  z-index: 2;
+  position: relative;
+}
+
+.info-block {
+  flex: 1;
+  text-align: center;
+}
+
+.info-block .label {
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-bottom: 4rpx;
+}
+
+.info-block .value {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ⚡锯齿分隔线 */
+.zigzag {
+  height: 12rpx;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8rpx,
+    #e5e7eb 8rpx,
+    #e5e7eb 16rpx
+  );
+  margin-top: -5rpx;
+  margin-bottom: -2rpx;
+  z-index: 2;
+  position: relative;
+}
+
+/* 底部信息区域 */
+.bottom {
+  padding: 28rpx 32rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  position: relative;
+}
+
+.bottom .code-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+
+.bottom .code {
+  flex: 1;
+  text-align: center;
+}
+
+.label {
+  display: block;
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-bottom: 6rpx;
+}
+
+.value {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1d29;
+}
+
+/* 条形码优化 */
+.barcode-image {
+  width: 100%;
+  max-width: 360rpx;
+  height: 65rpx;
+  display: block;
+  margin: 30rpx auto 0;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 4rpx;
+  padding: 2rpx 0;
+  box-shadow: 0 2rpx 4rpx rgba(0,0,0,0.08);
+  z-index: 2;
+  position: relative;
+}

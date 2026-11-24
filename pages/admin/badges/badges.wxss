@@ -1,0 +1,181 @@
+@import "../admin-common.wxss";
+
+/* 羽章管理页专属细节 */
+
+/* 两个筛选器并排，保持与搜索框同高 */
+.filters {
+  display: flex;
+  margin-bottom: 24rpx;
+}
+
+.filter {
+  flex: 1;
+}
+
+.filter + .filter {
+  margin-left: 16rpx;
+}
+
+.filter__inner {
+  display: flex;
+  align-items: center;
+  height: 84rpx;
+  padding: 0 22rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+
+.filter__label {
+  margin-right: 12rpx;
+  font-size: 19rpx;
+  letter-spacing: 2rpx;
+  color: var(--faint);
+}
+
+.filter__value {
+  flex: 1;
+  font-size: 25rpx;
+  color: var(--ink);
+}
+
+.filter__chevron {
+  width: 10rpx;
+  height: 10rpx;
+  border-right: 2rpx solid #c8c2b5;
+  border-bottom: 2rpx solid #c8c2b5;
+  transform: rotate(45deg);
+  margin-left: 10rpx;
+}
+
+.loading {
+  padding: 90rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+  letter-spacing: 2rpx;
+  color: var(--faint);
+}
+
+/* 羽章图标略大于列表字形图标，作为视觉锚点 */
+.badge__icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 20rpx;
+  padding: 10rpx;
+  box-sizing: border-box;
+  background: #f7f3eb;
+  border: 1rpx solid #f0eadf;
+}
+
+.badge__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge__name {
+  flex: 1;
+  min-width: 0;
+  margin-right: 12rpx;
+}
+
+.badge__foot {
+  display: flex;
+  align-items: center;
+  margin-top: 14rpx;
+}
+
+.badge__points {
+  margin-right: 14rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* 稀有度只在标签上做低饱和区分 */
+.rarity--common {
+  background: #f2eee5;
+  color: #8b857a;
+}
+
+.rarity--rare {
+  background: #e9eef1;
+  color: #52646f;
+}
+
+.rarity--epic {
+  background: #efe9ef;
+  color: #6c5770;
+}
+
+.rarity--legendary {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+/* 授予面板中的羽章信息 */
+.selected-badge {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26rpx;
+  padding: 20rpx;
+  background: #faf7f0;
+  border: 1rpx solid #eee7da;
+  border-radius: 18rpx;
+}
+
+.selected-badge__icon {
+  width: 84rpx;
+  height: 84rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.selected-badge__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.selected-badge__name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.selected-badge__desc {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* 搜索结果下拉面板 */
+.search-results {
+  margin-top: 12rpx;
+  padding: 0 20rpx;
+  background: #faf7f0;
+  border: 1rpx solid #eee7da;
+  border-radius: 16rpx;
+  max-height: 420rpx;
+  overflow-y: auto;
+}
+
+/* 已选用户卡片 */
+.selected {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26rpx;
+  padding: 16rpx 20rpx;
+  background: #faf7f0;
+  border: 1rpx solid #eee7da;
+  border-radius: 18rpx;
+}
+
+.selected .person {
+  flex: 1;
+  padding: 0;
+  border-bottom: none;
+}

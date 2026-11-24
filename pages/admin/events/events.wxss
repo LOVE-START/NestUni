@@ -1,0 +1,66 @@
+@import "../admin-common.wxss";
+
+/* 活动管理页专属细节 */
+
+.detail-body {
+  padding-bottom: 40rpx;
+}
+
+/* 坐标标记用低饱和陶土色，替代原 emoji 提示 */
+.card__meta--map {
+  color: var(--accent);
+}
+
+/* 活动状态标签：同一色系内的明度区分，避免彩虹色 */
+.tag--draft {
+  background: #f2eee5;
+  color: #8b857a;
+}
+
+.tag--published {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.tag--completed {
+  background: #eef1e9;
+  color: #5f6b52;
+}
+
+.tag--cancelled {
+  background: #f2ede9;
+  color: #9a6a5c;
+}
+
+/* 参与者状态沿用同一套语义色 */
+.tag--pending {
+  background: #f2eee5;
+  color: #8b857a;
+}
+
+.tag--approved {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.tag--rejected {
+  background: #f2ede9;
+  color: #9a6a5c;
+}
+
+.tag--checked_in,
+.tag--checked {
+  background: #eef1e9;
+  color: #5f6b52;
+}
+
+/* 参与者行内状态与操作较密，压缩操作入口的横向间距 */
+.person .tag {
+  flex-shrink: 0;
+  margin-right: 6rpx;
+}
+
+.participant__actions .link-btn {
+  padding-left: 12rpx;
+  padding-right: 12rpx;
+}

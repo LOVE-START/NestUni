@@ -1,0 +1,21 @@
+<!-- 通用聊天导航栏 - 顶部间距由状态栏高度控制，避免被状态栏/灵动岛遮挡 -->
+<view class="nav-bar" style="background: {{gradient}}; padding-top: calc({{statusBarHeight}}px - 5rpx);">
+  <view class="nav-bar__content">
+    <!-- 左侧：返回键 + 可选操作按钮 -->
+    <view class="nav-bar__left">
+      <back-button fixed="{{false}}" home="{{home}}" />
+      <view class="nav-bar__actions" wx:if="{{showNewChat || showHistory}}">
+        <view class="nav-btn" wx:if="{{showNewChat}}" bindtap="onNewChat">
+          <image class="nav-btn__icon" src="/images/newchat.png" mode="aspectFit"></image>
+        </view>
+        <view class="nav-btn" wx:if="{{showHistory}}" bindtap="onHistory">
+          <image class="nav-btn__icon" src="/images/history.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+    <!-- 中间标题（可选） -->
+    <view class="nav-bar__title" wx:if="{{title}}">{{title}}</view>
+    <!-- 右侧占位保持布局平衡 -->
+    <view class="nav-bar__placeholder"></view>
+  </view>
+</view>

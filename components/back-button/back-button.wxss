@@ -1,0 +1,53 @@
+/* Global Back Button */
+.global-back {
+  width: 62rpx;
+  height: 62rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* 固定定位模式 - 浮在页面之上，top 留出状态栏与胶囊按钮的空间 */
+.global-back--fixed {
+  position: fixed;
+  top: 100rpx;
+  left: 20rpx;
+  z-index: 9999;
+  backdrop-filter: blur(10rpx);
+}
+
+/* 绝对定位模式 - 覆盖在封面等定位父容器上，位置与固定模式保持一致 */
+.global-back--absolute {
+  position: absolute;
+  top: 100rpx;
+  left: 24rpx;
+  z-index: 10;
+  backdrop-filter: blur(8rpx);
+}
+
+/* 实心白色变体 - 用于图片封面等复杂背景，保证按钮清晰可见 */
+.global-back--solid {
+  width: 76rpx;
+  height: 76rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.global-back:active {
+  transform: scale(0.9);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* 实心变体按下时仅轻微缩放，保留白色底避免视觉跳变 */
+.global-back--solid:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.back-icon {
+  width: 40rpx;
+  height: 40rpx;
+}

@@ -1,0 +1,66 @@
+<view class="my-applications-card-wrapper">
+  <view class="my-applications-card" style="--button-gradient: {{theme.gradientButton}}">
+    <!-- 顶部封面 -->
+    <view class="ripple-container">
+      <image 
+        class="cover" 
+        src="{{coverImage}}" 
+        mode="aspectFill"
+        bindtap="onCoverImageTap"
+      ></image>
+      <!-- 波纹效果 -->
+      <view 
+        class="ripple" 
+        wx:for="{{ripples}}" 
+        wx:key="id"
+        style="left: {{item.x}}px; top: {{item.y}}px;"
+      ></view>
+    </view>
+
+    <!-- 内容主体 -->
+    <view class="content">
+      <view class="title-row">
+        <text class="card-title">我的报名</text>
+        <text class="view-all" bindtap="goToMyApplications" style="color: {{theme.colors.primary || '#4facfe'}}">All</text>
+      </view>
+
+      <view class="location">
+        <text>My Applications & Recruitment Status</text>
+      </view>
+
+      <!-- 报名列表 -->
+      <view class="list-container">
+        <view 
+          class="item {{item.isDefault ? 'default-item' : ''}}" 
+          wx:for="{{formattedApplications}}" 
+          wx:key="id" 
+          bindtap="viewApplicationDetail" 
+          data-id="{{item.id}}"
+        >
+          <image class="item-icon" src="{{item.recruitment_cover || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+          <view class="item-content">
+            <text class="item-title">{{item.recruitment_title}}</text>
+            <view class="item-desc-container">
+              <text class="item-desc">{{item.club_name}}</text>
+              <text class="item-time">{{item.submitted_at}}</text>
+            </view>
+          </view>
+          <view class="status-container">
+            <text class="item-status {{item.status}}" style="background: {{theme.gradientButton}}">{{item.statusText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 中间锯齿分割线 -->
+    <view class="zigzag"></view>
+
+    <!-- 底部信息 -->
+    <view class="bottom">
+      <view class="quote-container">
+        <text class="quote-text">"{{currentQuote.text}}"</text>
+        <text class="quote-author">— {{currentQuote.author}}</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,174 @@
+<view class="badges-page">
+  <!-- 返回按钮 -->
+  <back-button></back-button>
+  
+  <!-- 魔法装饰背景 -->
+  <view class="magic-bg">
+    <view class="stars">
+      <view class="star star-1"></view>
+      <view class="star star-2"></view>
+      <view class="star star-3"></view>
+      <view class="star star-4"></view>
+      <view class="star star-5"></view>
+    </view>
+  </view>
+  
+  <!-- 顶部装饰边框 -->
+  <view class="page-header">
+    <view class="header-ornament left"></view>
+    <view class="header-title">
+      <text class="title-main">羽章殿堂</text>
+      <text class="title-sub">Hall of Badges</text>
+    </view>
+    <view class="header-ornament right"></view>
+  </view>
+  
+  <!-- 收藏统计卷轴 -->
+  <view class="scroll-section">
+    <view class="scroll-header">
+      <view class="scroll-seal"></view>
+      <text class="scroll-title">收藏记录</text>
+    </view>
+    <view class="scroll-content">
+      <view class="collection-stats">
+        <view class="stat-item main-stat">
+          <view class="stat-frame">
+            <text class="stat-number">{{stats.total_badges || 0}}</text>
+            <text class="stat-divider">/</text>
+            <text class="stat-total">{{badges.length}}</text>
+          </view>
+          <text class="stat-label">已收集</text>
+        </view>
+        <view class="stat-divider-line"></view>
+        <view class="rarity-stats">
+          <view class="rarity-item legendary">
+            <text class="rarity-count">{{stats.legendary_count || 0}}</text>
+            <text class="rarity-name">传说</text>
+          </view>
+          <view class="rarity-item epic">
+            <text class="rarity-count">{{stats.epic_count || 0}}</text>
+            <text class="rarity-name">史诗</text>
+          </view>
+          <view class="rarity-item rare">
+            <text class="rarity-count">{{stats.rare_count || 0}}</text>
+            <text class="rarity-name">稀有</text>
+          </view>
+          <view class="rarity-item common">
+            <text class="rarity-count">{{stats.common_count || 0}}</text>
+            <text class="rarity-name">普通</text>
+          </view>
+        </view>
+      </view>
+      <!-- 进度条 -->
+      <view class="progress-scroll">
+        <view class="progress-track">
+          <view class="progress-fill" style="width: {{progressPercent}}%"></view>
+        </view>
+        <text class="progress-text">收集进度 {{progressPercent}}%</text>
+      </view>
+    </view>
+    <view class="scroll-footer"></view>
+  </view>
+  
+  <!-- 分类筛选 -->
+  <view class="filter-section">
+    <view class="filter-label">
+      <text class="label-text">分类筛选</text>
+      <view class="label-line"></view>
+    </view>
+    
+    <!-- 类型筛选 -->
+    <view class="filter-row">
+      <text class="filter-title">类型</text>
+      <scroll-view class="filter-scroll" scroll-x enable-flex>
+        <view class="filter-options">
+          <view class="filter-btn {{activeTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="onTabChange">
+            <text>全部</text>
+          </view>
+          <view class="filter-btn {{activeTab === 'achievement' ? 'active' : ''}}" data-tab="achievement" bindtap="onTabChange">
+            <text>成就</text>
+          </view>
+          <view class="filter-btn {{activeTab === 'level' ? 'active' : ''}}" data-tab="level" bindtap="onTabChange">
+            <text>等级</text>
+          </view>
+          <view class="filter-btn {{activeTab === 'identity' ? 'active' : ''}}" data-tab="identity" bindtap="onTabChange">
+            <text>身份</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    
+    <!-- 稀有度筛选 -->
+    <view class="filter-row">
+      <text class="filter-title">稀有度</text>
+      <scroll-view class="filter-scroll" scroll-x enable-flex>
+        <view class="filter-options">
+          <view class="filter-btn {{activeRarity === 'all' ? 'active' : ''}}" data-rarity="all" bindtap="onRarityChange">
+            <text>全部</text>
+          </view>
+          <view class="filter-btn rarity-common {{activeRarity === 'common' ? 'active' : ''}}" data-rarity="common" bindtap="onRarityChange">
+            <text>普通</text>
+          </view>
+          <view class="filter-btn rarity-rare {{activeRarity === 'rare' ? 'active' : ''}}" data-rarity="rare" bindtap="onRarityChange">
+            <text>稀有</text>
+          </view>
+          <view class="filter-btn rarity-epic {{activeRarity === 'epic' ? 'active' : ''}}" data-rarity="epic" bindtap="onRarityChange">
+            <text>史诗</text>
+          </view>
+          <view class="filter-btn rarity-legendary {{activeRarity === 'legendary' ? 'active' : ''}}" data-rarity="legendary" bindtap="onRarityChange">
+            <text>传说</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+  
+  <!-- 羽章展示区 -->
+  <view class="badges-section">
+    <view class="section-header">
+      <view class="header-decoration"></view>
+      <text class="section-title">羽章图鉴</text>
+      <text class="section-count">共 {{filteredBadges.length}} 枚</text>
+      <view class="header-decoration"></view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredBadges.length === 0}}" class="empty-state">
+      <view class="empty-scroll">
+        <text class="empty-text">暂无符合条件的羽章</text>
+        <text class="empty-hint">试试其他筛选条件吧</text>
+      </view>
+    </view>
+    
+    <!-- 羽章网格 -->
+    <view wx:else class="badges-grid">
+      <block wx:for="{{filteredBadges}}" wx:key="id">
+        <badge-card 
+          badge="{{item}}" 
+          isLocked="{{!item.is_earned}}"
+          isWorn="{{item.is_worn}}"
+          bindtap="onBadgeTap"
+        />
+      </block>
+    </view>
+  </view>
+  
+  <!-- 底部装饰 -->
+  <view class="page-footer">
+    <view class="footer-ornament"></view>
+    <text class="footer-text">~ 探索更多羽章 ~</text>
+    <view class="footer-ornament"></view>
+  </view>
+  
+  <!-- 羽章详情弹窗 -->
+  <badge-modal 
+    show="{{showBadgeModal}}" 
+    badge="{{selectedBadge}}"
+    isWorn="{{isWorn}}"
+    displayedCount="{{displayedCount}}"
+    maxDisplay="{{maxDisplay}}"
+    bindclose="onModalClose"
+    bindwear="onWearBadge"
+    bindunwear="onUnwearBadge"
+  />
+</view>

@@ -1,0 +1,1537 @@
+/* pages/edit/edit.wxss */
+/* 引入公共样式 */
+@import "./edit-common.wxss";
+
+.no-permission-page {
+  width: 100vw;
+  height: 100vh;
+  background: #f8fafc;
+}
+
+/* ========== 加载中页面样式 ========== */
+
+/* 加载中页面 - 权限检查期间显示 */
+.loading-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* 加载旋转动画 */
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e2e8f0;
+  border-top-color: var(--theme-primary, #ffafbd);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 24rpx;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ========== 页面布局样式 ========== */
+
+/* 页面外层容器 - 固定高度以支持内部滚动 */
+/* [MODIFY] 使用 height: 100vh 替代 min-height: 100vh，修复 iOS WebKit 下 flex 子元素高度坍缩问题 */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  padding-top: 60rpx;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* 可滚动内容区域 */
+.content-scroll {
+  flex: 1;
+  height: 0;
+}
+
+/* 页面容器 */
+.container {
+  padding: 24rpx;
+  padding-bottom: 80rpx;
+}
+
+/* ========== 标签页样式 - 现代化滑动设计 ========== */
+
+/* 标签页容器 - 横向滚动 */
+.tab-container {
+  display: flex;
+  background: white;
+  padding: 16rpx 24rpx;
+  margin: 120rpx 24rpx 24rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 隐藏滚动条 */
+.tab-container::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* 标签项 - 胶囊式设计 */
+.tab {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 20rpx 28rpx;
+  font-size: 28rpx;
+  color: #64748b;
+  border-radius: 24rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  margin-right: 12rpx;
+  font-weight: 500;
+}
+
+.tab:last-child {
+  margin-right: 0;
+}
+
+/* 标签项激活状态 - 使用主题渐变 */
+.tab.active {
+  color: white;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  font-weight: 600;
+  box-shadow: 0 6rpx 20rpx rgba(255, 175, 189, 0.4);
+  transform: scale(1.02);
+}
+
+/* ========== 表单容器样式 - 大卡片设计 ========== */
+
+.form-container {
+  background: white;
+  border-radius: 28rpx;
+  padding: 36rpx 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  border: 1rpx solid rgba(255, 255, 255, 0.8);
+}
+
+/* ========== 表单项样式 ========== */
+
+.form-item {
+  margin-bottom: 36rpx;
+  position: relative;
+}
+
+/* 表单标签 - 带装饰条 */
+.form-item .label {
+  display: block;
+  font-size: 30rpx;
+  color: #1e293b;
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+/* 标签左侧装饰条 - 使用主题渐变 */
+.form-item .label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 24rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+/* 输入框基础样式 */
+.input {
+  width: 100%;
+  height: 96rpx;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  color: #334155;
+}
+
+/* 输入框聚焦状态 - 使用主题色 */
+.input:focus {
+  border-color: var(--theme-primary, #ffafbd);
+  background: white;
+  box-shadow: 0 0 0 4rpx var(--theme-shadow, rgba(255, 175, 189, 0.15));
+}
+
+/* 多行文本框 */
+.textarea {
+  width: 100%;
+  height: 240rpx;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  resize: none;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  color: #334155;
+  line-height: 1.6;
+}
+
+/* 多行文本框聚焦状态 */
+.textarea:focus {
+  border-color: var(--theme-primary, #ffafbd);
+  background: white;
+  box-shadow: 0 0 0 4rpx var(--theme-shadow, rgba(255, 175, 189, 0.15));
+}
+
+/* 选择器样式 */
+.picker {
+  width: 100%;
+  height: 96rpx;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  line-height: 96rpx;
+  box-sizing: border-box;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  color: #334155;
+}
+
+/* ========== 按钮样式 ========== */
+
+/* 保存按钮 - 使用主题渐变 */
+.save-btn {
+  width: 100%;
+  height: 100rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: white;
+  border-radius: 24rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 175, 189, 0.4);
+  margin-top: 40rpx;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.save-btn::after {
+  border: none;
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(255, 175, 189, 0.4);
+}
+
+/* 添加按钮 - 使用主题渐变 */
+.add-btn {
+  width: 100%;
+  height: 96rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 6rpx 20rpx rgba(255, 175, 189, 0.35);
+  transition: all 0.3s ease;
+}
+
+.add-btn::after {
+  border: none;
+}
+
+.add-btn:active {
+  transform: scale(0.98);
+}
+
+/* ========== 内容容器样式 ========== */
+
+/* 操作按钮区域 */
+.actions {
+  margin-bottom: 32rpx;
+}
+
+/* 内容容器 */
+.content-container {
+  background: transparent;
+  margin-top: -10rpx;
+}
+
+/* ========== 列表项样式 - 卡片化设计 ========== */
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* ========== 公告卡片样式 ========== */
+
+.announcement-card {
+  background: white;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f1f5f9;
+}
+
+.announcement-card:active {
+  transform: scale(0.99);
+  box-shadow: 0 3rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 公告内容区域 */
+.announcement-body {
+  padding: 28rpx 32rpx;
+}
+
+/* 公告标题行 */
+.announcement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  gap: 16rpx;
+}
+
+.announcement-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+/* 标题装饰条 - 使用主题渐变 */
+.announcement-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+/* 发布时间 - 右侧显示 */
+.announcement-time {
+  font-size: 24rpx;
+  color: #94a3b8;
+  flex-shrink: 0;
+  padding: 6rpx 16rpx;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+}
+
+/* 公告内容区域 - 完整显示 */
+.announcement-content {
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16rpx;
+}
+
+/* 内容文字 - 自动换行 */
+.content-text {
+  font-size: 30rpx;
+  color: #334155;
+  line-height: 1.8;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+/* 信息行 */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+/* 信息点 - 使用主题渐变 */
+.info-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+/* 信息文字 - 深棕色 */
+.info-text {
+  font-size: 28rpx;
+  color: #665e8d;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-text.location-text {
+  flex: none;
+  max-width: 400rpx;
+}
+
+.info-text.clubs-text {
+  font-weight: 500;
+  color: var(--theme-primary, #ffafbd);
+}
+
+/* 公告图片缩略图 */
+.announcement-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.announcement-thumbnail {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  object-fit: cover;
+  border: 2rpx solid #f1f5f9;
+  transition: transform 0.3s ease;
+}
+
+.announcement-thumbnail:active {
+  transform: scale(1.05);
+}
+
+/* 公告操作按钮 */
+.announcement-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f1f5f9;
+}
+
+/* ========== 活动卡片样式 ========== */
+
+.event-card {
+  background: white;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f1f5f9;
+}
+
+.event-card:active {
+  transform: scale(0.99);
+  box-shadow: 0 3rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 封面图片区域 */
+.event-cover {
+  position: relative;
+  width: 100%;
+  height: 280rpx;
+  overflow: hidden;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.event-card:active .cover-image {
+  transform: scale(1.05);
+}
+
+/* 发布状态牌：与审核状态牌共用实体浅底，避免同一张封面上出现两种风格 */
+.event-status-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 21rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+  color: #6f6a62;
+  background: rgba(255, 252, 247, 0.94);
+}
+
+/* 活动内容区域 */
+.event-body {
+  padding: 28rpx 32rpx;
+}
+
+/* 标题行 - 标题和分类标签 */
+.event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  gap: 16rpx;
+}
+
+.event-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.5rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+/* 标题装饰条 - 使用主题渐变 */
+.event-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+/* 活动分类标签 - 使用主题渐变 */
+.event-category-tag {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: white;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+/* 活动信息组 */
+.event-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16rpx;
+}
+
+/* 坐标徽章 - 使用主题渐变 */
+.coords-badge {
+  display: flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.coords-text-mini {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* 操作按钮区域 */
+.event-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f1f5f9;
+}
+
+/* ========== 拒绝原因样式 ========== */
+
+.reject-reason-box {
+  margin-top: 16rpx;
+  padding: 20rpx 24rpx;
+  background: #fef2f2;
+  border-radius: 14rpx;
+  border: 1rpx solid #fecaca;
+}
+
+.reject-reason-header {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 10rpx;
+}
+
+.reject-reason-icon {
+  font-size: 24rpx;
+}
+
+.reject-reason-title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.reject-reason-text {
+  font-size: 26rpx;
+  color: #991b1b;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+/* 活动按钮 - 统一样式 */
+.event-btn {
+  width: 140rpx !important;
+  height: 64rpx !important;
+  min-width: 140rpx;
+  max-width: 140rpx;
+  padding: 0 !important;
+  margin: 0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 64rpx;
+  box-sizing: border-box;
+}
+
+.event-btn::after {
+  border: none;
+}
+
+/* 编辑按钮 - 浅黄色 */
+.edit-btn {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #d97706;
+  box-shadow: 0 4rpx 12rpx rgba(217, 119, 6, 0.15);
+}
+
+.edit-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(217, 119, 6, 0.2);
+}
+
+/* 删除按钮 - 浅粉色 */
+.delete-btn {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  box-shadow: 0 4rpx 12rpx rgba(220, 38, 38, 0.15);
+}
+
+.delete-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(220, 38, 38, 0.2);
+}
+
+/* 提醒按钮 - 浅蓝色 */
+.remind-btn {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #2563eb;
+  box-shadow: 0 4rpx 12rpx rgba(37, 99, 235, 0.15);
+}
+
+.remind-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(37, 99, 235, 0.2);
+}
+
+/* ========== 招新卡片样式 ========== */
+
+.recruitment-card {
+  background: white;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f1f5f9;
+}
+
+.recruitment-card:active {
+  transform: scale(0.99);
+  box-shadow: 0 3rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 招新封面图片区域 */
+.recruitment-cover {
+  position: relative;
+  width: 100%;
+  height: 280rpx;
+  overflow: hidden;
+}
+
+/* 招新状态徽章 - 磨砂玻璃效果 */
+.recruitment-status-badge {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12rpx);
+  -webkit-backdrop-filter: blur(12rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 招新内容区域 */
+.recruitment-body {
+  padding: 28rpx 32rpx;
+}
+
+/* 招新标题行 */
+.recruitment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  gap: 16rpx;
+}
+
+.recruitment-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+/* 标题装饰条 - 使用主题渐变 */
+.recruitment-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+/* 招新状态标签 - 使用主题渐变 */
+.recruitment-status-tag {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: white;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+/* 招新信息组 */
+.recruitment-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16rpx;
+}
+
+/* 招新操作按钮 */
+.recruitment-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f1f5f9;
+}
+
+/* ========== 成员卡片样式 - 紧凑单行布局 ========== */
+
+.member-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f1f5f9;
+  gap: 20rpx;
+}
+
+.member-card:active {
+  transform: scale(0.995);
+  box-shadow: 0 1rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 成员头像 - 紧凑尺寸 */
+.member-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  flex-shrink: 0;
+  border: 2rpx solid white;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 成员信息区域 - 水平布局 */
+.member-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0;
+}
+
+/* 名称区域 - 昵称和学号垂直排列 */
+.member-name-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 4rpx;
+}
+
+/* 成员昵称 */
+.member-nickname {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 成员学号 - 与昵称左对齐 */
+.member-student-id {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+/* 成员角色标签 */
+.member-role-tag {
+  padding: 8rpx 18rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+.member-role-tag.leader {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #b45309;
+}
+
+.member-role-tag.member {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #475569;
+}
+
+/* 成员操作按钮区域 - 图标按钮 */
+.member-actions {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+/* 操作图标按钮 */
+.action-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+}
+
+.action-icon .iconfont {
+  font-size: 28rpx;
+  font-style: normal;
+}
+
+/* 操作图标图片 */
+.action-icon-img {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.action-icon:active {
+  transform: scale(0.9);
+}
+
+/* 毕业按钮 */
+.action-icon.graduate {
+  color: #f59e0b;
+}
+
+.action-icon.graduate:active {
+  background: rgba(251, 191, 36, 0.15);
+}
+
+/* 恢复按钮 */
+.action-icon.restore {
+  color: #10b981;
+}
+
+.action-icon.restore:active {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+/* 角色按钮 */
+.action-icon.role {
+  color: #3b82f6;
+}
+
+.action-icon.role:active {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* 删除按钮 */
+.action-icon.delete {
+  color: #ef4444;
+}
+
+.action-icon.delete:active {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* 毕业成员卡片样式 */
+.member-card.graduated {
+  opacity: 0.6;
+  background: #fafafa;
+}
+
+.member-card.graduated .member-nickname {
+  color: #94a3b8;
+}
+
+.member-card.graduated .member-student-id {
+  color: #cbd5e1;
+}
+
+/* 毕业成员头像灰度 */
+.member-avatar.grayscale {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+/* ========== 分页按钮样式 ========== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40rpx;
+  gap: 24rpx;
+}
+
+.page-btn {
+  padding: 18rpx 32rpx;
+  font-size: 28rpx;
+  border-radius: 16rpx;
+  border: none;
+  background: white;
+  color: var(--theme-primary, #ffafbd);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.page-btn::after {
+  border: none;
+}
+
+.page-btn[disabled] {
+  opacity: 0.4;
+  background: #f1f5f9;
+  color: #94a3b8;
+  box-shadow: none;
+}
+
+.page-btn:active:not([disabled]) {
+  transform: scale(0.95);
+}
+
+.page-info {
+  font-size: 28rpx;
+  color: #64748b;
+  font-weight: 500;
+  min-width: 100rpx;
+  text-align: center;
+}
+
+/* ========== 表单组样式 ========== */
+
+.form-group {
+  margin-bottom: 32rpx;
+  position: relative;
+}
+
+/* ========== 图片上传区域样式 ========== */
+
+.image-upload-section {
+  margin-bottom: 40rpx;
+  padding: 28rpx;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 20rpx;
+  border: 1rpx solid #e2e8f0;
+}
+
+.gallery-item {
+  width: calc(50% - 10rpx);
+  display: flex;
+  flex-direction: column;
+  min-height: 280rpx;
+}
+
+.upload-btn {
+  background-color: white;
+  color: #64748b;
+  border: 2rpx dashed #cbd5e1;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.upload-btn::after {
+  border: none;
+}
+
+.upload-btn:active {
+  border-color: var(--theme-primary, #ffafbd);
+  background: #fff5f7;
+}
+
+.delete-image-btn {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: none;
+  padding: 12rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  margin-top: 12rpx;
+  align-self: center;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.delete-image-btn::after {
+  border: none;
+}
+
+.delete-image-btn.small {
+  padding: 8rpx 16rpx;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+/* 添加图片按钮 - 使用主题渐变 */
+.add-image-btn {
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  color: white;
+  border: none;
+  padding: 20rpx 24rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  width: 100%;
+  margin-top: 16rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 175, 189, 0.25);
+}
+
+.add-image-btn::after {
+  border: none;
+}
+
+.add-image-btn:active {
+  transform: scale(0.98);
+}
+
+/* ========== 社团信息提示 ========== */
+
+.clubs-info {
+  margin-bottom: 24rpx;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe4e8 100%);
+  border-radius: 12rpx;
+}
+
+/* ========== 搜索结果样式 ========== */
+
+.member-modal-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-results {
+  margin-top: 16rpx;
+  max-height: 400rpx;
+  overflow-y: auto;
+  background: white;
+  border-radius: 16rpx;
+  border: 1rpx solid #e2e8f0;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid #f1f5f9;
+  transition: all 0.2s ease;
+  gap: 16rpx;
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item:active {
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe4e8 100%);
+}
+
+.search-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #f1f5f9;
+  flex-shrink: 0;
+}
+
+.search-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  flex: 1;
+}
+
+.search-nickname {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.search-student-id {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+.search-empty {
+  padding: 40rpx;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 28rpx;
+}
+
+/* 已选择用户卡片 */
+.selected-user-card {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe4e8 100%);
+  border-radius: 16rpx;
+  border: 2rpx solid var(--theme-primary, #ffafbd);
+  gap: 16rpx;
+}
+
+.selected-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #f1f5f9;
+  flex-shrink: 0;
+  border: 2rpx solid white;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.selected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  flex: 1;
+}
+
+.selected-nickname {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.selected-student-id {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+/* 清除按钮 - 图标样式 */
+.selected-user-card .clear-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.selected-user-card .clear-btn::after {
+  border: none;
+}
+
+.selected-user-card .clear-btn:active {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+/* ========== 分区标题样式 ========== */
+
+.form-section .section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24rpx;
+  display: block;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+/* 分区标题装饰条 - 使用主题渐变 */
+.form-section .section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+/* ========== 报名表单设置样式 ========== */
+
+.default-fields {
+  margin-bottom: 32rpx;
+}
+
+.field-group-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 20rpx;
+}
+
+.default-field-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+/* 默认字段标签 - 使用浅绿色配色 */
+.default-field-tag {
+  padding: 14rpx 28rpx;
+  background: #ffffff;
+  color: #4ab169;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: 1rpx solid rgba(34, 197, 94, 0.3);
+}
+
+/* ========== 空状态样式 ========== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  background: white;
+  border-radius: 24rpx;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ========== 图片预览容器样式 ========== */
+
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  height: 240rpx;
+  margin-bottom: 12rpx;
+  border: 2rpx dashed #cbd5e1;
+  border-radius: 16rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.image-preview-container:active {
+  border-color: var(--theme-primary, #ffafbd);
+  background-color: #fff5f7;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16rpx;
+}
+
+.image-preview.qr-code-preview {
+  object-fit: contain;
+  background: white;
+}
+
+.poster-preview-container {
+  height: 480rpx;
+}
+
+.image-preview.poster-preview {
+  object-fit: contain;
+  background: white;
+}
+
+/* ========== 选择器显示样式 ========== */
+
+.picker-display {
+  padding: 0 28rpx;
+  line-height: 96rpx;
+}
+
+/* ========== 招新要求容器样式 ========== */
+
+.requirements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.remove-requirement-btn {
+  padding: 18rpx 24rpx;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.remove-requirement-btn::after {
+  border: none;
+}
+
+/* 添加要求按钮 - 使用主题色 */
+.add-requirement-btn {
+  padding: 24rpx;
+  background: white;
+  color: var(--theme-primary, #ffafbd);
+  border: 2rpx dashed var(--theme-primary, #ffafbd);
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.add-requirement-btn::after {
+  border: none;
+}
+
+.add-requirement-btn:active {
+  background: #fff5f7;
+}
+
+/* ========== 审核状态样式 ========== */
+
+/* 状态只通过文字与色点表达，卡片本身保持统一白底，不做染色、描边或降透明 */
+
+/* 封面图上的状态牌：实体浅底替代玻璃拟态，在图片上清楚但不抢眼 */
+.approval-status-badge {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 21rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+  background: rgba(255, 252, 247, 0.94);
+  color: #6f6a62;
+}
+
+/* 三种状态只用低饱和文字色区分 */
+.approval-status-badge.pending {
+  color: #a2762f;
+}
+
+.approval-status-badge.approved {
+  color: #5a7d63;
+}
+
+.approval-status-badge.rejected {
+  color: #a35f5f;
+}
+
+/* 标题行的状态标记：色点 + 加粗文字，不用胶囊与边框 */
+.approval-status-tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  padding: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+  color: #8a8f99;
+}
+
+/* 色点取自文字色，状态可被快速扫读 */
+.approval-status-tag::before {
+  content: '';
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+  background: currentColor;
+}
+
+.approval-status-tag.pending {
+  color: #a2762f;
+}
+
+.approval-status-tag.approved {
+  color: #5a7d63;
+}
+
+.approval-status-tag.rejected {
+  color: #a35f5f;
+}
+
+/* ========== 公告审核状态样式 ========== */
+
+/* 公告与活动共用同一套状态表达：低饱和文字加粗 + 色点 */
+.announcement-approval-tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  padding: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+  color: #8a8f99;
+}
+
+.announcement-approval-tag::before {
+  content: '';
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+  background: currentColor;
+}
+
+.announcement-approval-tag.pending {
+  color: #a2762f;
+}
+
+.announcement-approval-tag.approved {
+  color: #5a7d63;
+}
+
+.announcement-approval-tag.rejected {
+  color: #a35f5f;
+}
+
+/* 公告元数据区域 */
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.announcement-time {
+  font-size: 24rpx;
+  color: #94a3b8;
+}

@@ -1,0 +1,7 @@
+/* ec-canvas 组件样式 - 确保 canvas 正确定位 */
+.ec-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+}

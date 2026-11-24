@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "活动地图",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "back-button": "/components/back-button/back-button"
+  }
+}

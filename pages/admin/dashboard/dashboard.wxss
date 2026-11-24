@@ -1,0 +1,449 @@
+/* 管理员控制台
+   设计方向：编辑式极简（暖纸底 + 墨色文字 + 单一陶土色强调）
+   刻意避免：高饱和彩虹渐变、emoji 图标、多重阴影与描边堆叠 */
+
+page {
+  background: #f4f1ea;
+}
+
+.container {
+  /* 页面级设计变量，保证配色与线条在一个来源维护 */
+  --ink: #1b1a17;
+  --muted: #8b857a;
+  --faint: #a9a294;
+  --hairline: #e9e3d7;
+  --surface: #fffdf9;
+  --accent: #a8502f;
+  --accent-tint: #f7e9e0;
+  --accent-line: #edd8ca;
+
+  min-height: 100vh;
+  background: #f4f1ea;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 48rpx);
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ---------- 页头 ---------- */
+
+/* 顶部有极淡的暖色晕染，作为纸面质感，不抢标题 */
+.masthead {
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  padding-bottom: 40rpx;
+  background: linear-gradient(180deg, #eee7d9 0%, #f4f1ea 82%);
+}
+
+.masthead__bar {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 12rpx 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+/* 品牌 Logo：白色透明底的图形需要深色底托衬托
+   配色取自页面基调：深墨到暖棕，避免高饱和粉色与暖纸底冲突，同时让白色图形更清晰
+   图片本身四周留有透明留白，因此底托做得更小、图片放大后裁切，视觉上底托贴合图形 */
+.brand__logo {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 26rpx;
+  background: linear-gradient(135deg, #26221d 0%, #4a3f33 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+/* 图片尺寸大于底托，靠裁切去掉透明留白，使白色图形尽量填满底托 */
+.brand__logo-img {
+  width: 100rpx;
+  height: 100rpx;
+  flex-shrink: 0;
+}
+
+.brand__words {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand__name {
+  font-size: 24rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.brand__tag {
+  font-size: 16rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+  margin-top: 4rpx;
+}
+
+/* 退出入口弱化为轻量胶囊，避免抢占首屏视觉焦点 */
+.logout {
+  padding: 10rpx 22rpx;
+  border: 1rpx solid #ddd5c6;
+  border-radius: 999rpx;
+  background: rgba(255, 253, 249, 0.6);
+}
+
+.logout--pressed {
+  background: #ffffff;
+}
+
+.logout__text {
+  font-size: 22rpx;
+  color: #6f6a5f;
+  letter-spacing: 2rpx;
+}
+
+.masthead__headline {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25rpx;
+}
+
+.masthead__date {
+  font-size: 22rpx;
+  color: var(--faint);
+  letter-spacing: 3rpx;
+}
+
+/* 标题行：大标题与退出按钮同处一行，退出按钮随标题垂直居中 */
+.masthead__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16rpx;
+}
+
+/* 大标题用衬线体，形成编辑式版面感 */
+.masthead__title {
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 68rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.masthead__meta {
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+
+/* ---------- 内容区 ---------- */
+
+.content {
+  padding: 0 40rpx;
+}
+
+/* 统一的卡面：暖白底 + 发丝描边 + 极轻阴影 */
+.panel {
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 26rpx;
+  box-shadow: 0 2rpx 12rpx rgba(27, 26, 23, 0.03);
+  overflow: hidden;
+}
+
+/* ---------- 待审核提醒 ---------- */
+
+.alert {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 24rpx 28rpx;
+  background: var(--accent-tint);
+  border: 1rpx solid var(--accent-line);
+  border-radius: 20rpx;
+}
+
+/* 呼吸点：用光圈强调「有待处理事项」 */
+.alert__dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 6rpx;
+  background: var(--accent);
+  box-shadow: 0 0 0 8rpx rgba(168, 80, 47, 0.12);
+  margin-right: 22rpx;
+  flex-shrink: 0;
+}
+
+.alert__text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #7a3b22;
+  font-weight: 500;
+}
+
+.alert__cta {
+  font-size: 25rpx;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+.alert--pressed {
+  opacity: 0.86;
+}
+
+/* ---------- 数据指标 ---------- */
+
+.metrics {
+  display: flex;
+  align-items: stretch;
+  padding: 38rpx 10rpx;
+}
+
+.metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 数字用窄体/衬线组合，等宽感更强，便于扫读 */
+.metric__value {
+  font-family: 'DIN Alternate', 'Times New Roman', 'Songti SC', serif;
+  font-size: 60rpx;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 1rpx;
+  color: var(--ink);
+}
+
+.metric__label {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+  letter-spacing: 4rpx;
+}
+
+.metric__split {
+  width: 1rpx;
+  background: #efe9dd;
+  margin: 6rpx 0;
+}
+
+/* ---------- 微信绑定状态 ---------- */
+
+.bind {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  padding: 22rpx 28rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 253, 249, 0.55);
+  border: 1rpx solid var(--hairline);
+}
+
+.bind__indicator {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 5rpx;
+  background: #c9a227;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+/* 已绑定：指示点转为沉静的绿，避免大面积成功色块 */
+.bind__indicator--on {
+  background: #4d7d5c;
+}
+
+.bind__text {
+  flex: 1;
+  font-size: 23rpx;
+  color: #7c766a;
+}
+
+.bind__action {
+  font-size: 23rpx;
+  color: var(--ink);
+  font-weight: 600;
+  padding-bottom: 2rpx;
+  border-bottom: 1rpx solid #c9c2b4;
+}
+
+/* ---------- 管理入口 ---------- */
+
+.section {
+  margin-top: 44rpx;
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 6rpx;
+  margin-bottom: 18rpx;
+}
+
+.section__title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 3rpx;
+}
+
+.section__note {
+  font-size: 21rpx;
+  color: var(--faint);
+  letter-spacing: 1rpx;
+}
+
+.list {
+  padding: 10rpx 0;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 26rpx;
+  transition: background-color 0.15s ease;
+}
+
+/* 行间发丝线左侧对齐文字，避免通栏线条割裂视觉 */
+.row + .row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 112rpx;
+  right: 26rpx;
+  height: 1rpx;
+  background: #f2ede4;
+}
+
+.row--pressed {
+  background: #faf7f0;
+}
+
+/* 字符形图标块：用单个汉字替代 emoji，风格统一且无需图片资源 */
+.row__glyph {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: #f2eee5;
+  color: #4a4438;
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 22rpx;
+  flex-shrink: 0;
+}
+
+/* AI 助手使用唯一的强调色，提示其与其他管理模块的差异 */
+.row__glyph--accent {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.row__glyph--latin {
+  font-size: 21rpx;
+  letter-spacing: 1rpx;
+  font-weight: 700;
+}
+
+.row__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.row__name {
+  font-size: 29rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.row__desc {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #9d968a;
+}
+
+/* 待审数量：轻量胶囊，不抢主标题 */
+.row__count {
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 10rpx;
+  border-radius: 18rpx;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: 20rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+}
+
+/* 纯 CSS 绘制的箭头，避免字体符号在不同机型下大小不一 */
+.row__chevron {
+  width: 14rpx;
+  height: 14rpx;
+  border-top: 2rpx solid #c8c2b5;
+  border-right: 2rpx solid #c8c2b5;
+  transform: rotate(45deg);
+  margin-left: 4rpx;
+  flex-shrink: 0;
+}
+
+/* ---------- 载入动效 ---------- */
+
+/* 区块依次上浮，节奏统一；克制使用，避免满屏动画 */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.masthead {
+  animation: rise 0.4s ease both;
+}
+
+.alert,
+.metrics,
+.bind,
+.section {
+  animation: rise 0.5s ease both;
+}
+
+.alert {
+  animation-delay: 0.04s;
+}
+
+.metrics {
+  animation-delay: 0.08s;
+}
+
+.bind {
+  animation-delay: 0.12s;
+}
+
+.section {
+  animation-delay: 0.16s;
+}

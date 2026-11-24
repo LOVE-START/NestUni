@@ -1,0 +1,294 @@
+<view class="container" wx:if="{{showContent}}">
+  <view class="masthead" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav__back" hover-class="nav__back--pressed" hover-stay-time="60" bindtap="goBack">
+        <view class="nav__arrow"></view>
+      </view>
+    </view>
+    <view class="lead">
+      <text class="lead__eyebrow">EVENT PROGRAMME</text>
+      <text class="lead__title">活动管理</text>
+      <text class="lead__meta">{{eventPagination.total}} 场活动 · 第 {{eventPagination.page}} / {{eventPagination.totalPages || 1}} 页</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="toolbar">
+      <view class="search">
+        <view class="search__glyph"></view>
+        <input class="search__input" placeholder="搜索活动" placeholder-class="search__placeholder" bindinput="onEventSearch" value="{{eventSearch}}" />
+      </view>
+      <view class="btn btn--solid btn--compact" hover-class="btn--pressed" bindtap="showAddEventModal">活动</view>
+    </view>
+
+    <view class="cards">
+      <view class="card" wx:for="{{events}}" wx:key="id">
+        <view class="card__head">
+          <view class="glyph">活</view>
+          <view class="card__main">
+            <text class="card__title">{{item.title}}</text>
+            <view class="card__meta-row">
+              <text class="tag tag--{{item.status}}">{{item.status_label}}</text>
+              <text class="card__meta">{{item.date}} {{item.time}}</text>
+            </view>
+            <text class="card__meta">{{item.location}}</text>
+            <text class="card__meta" wx:if="{{item.related_clubs_names}}">关联 · {{item.related_clubs_names}}</text>
+            <text class="card__meta card__meta--map" wx:if="{{item.latitude && item.longitude}}">已标注地图坐标</text>
+          </view>
+        </view>
+        <view class="card__actions">
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="viewEventDetail" data-id="{{item.id}}">详情</view>
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="editEvent" data-id="{{item.id}}">编辑</view>
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="changeEventStatus" data-id="{{item.id}}" data-status="{{item.status}}">状态</view>
+          <view class="link-btn link-btn--danger" hover-class="link-btn--pressed" bindtap="deleteEvent" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{events.length === 0}}">
+      <view class="empty__seal"><view class="empty__dash"></view></view>
+      <text class="empty__title">暂无活动</text>
+      <text class="empty__desc">调整搜索关键词，或创建第一场活动</text>
+    </view>
+
+    <view class="pager" wx:if="{{eventPagination.totalPages > 1}}">
+      <view class="pager__btn {{eventPagination.page <= 1 ? 'pager__btn--disabled' : ''}}" bindtap="prevEventPage">上一页</view>
+      <text class="pager__info">{{eventPagination.page}} / {{eventPagination.totalPages}}</text>
+      <view class="pager__btn {{eventPagination.page >= eventPagination.totalPages ? 'pager__btn--disabled' : ''}}" bindtap="nextEventPage">下一页</view>
+    </view>
+  </view>
+</view>
+
+<!-- 添加 / 编辑活动 -->
+<view class="mask" wx:if="{{showAddEventModal}}">
+  <view class="sheet">
+    <view class="sheet__grip"></view>
+    <view class="sheet__head">
+      <view>
+        <text class="sheet__eyebrow">EVENT EDITOR</text>
+        <text class="sheet__title">{{editEventId ? '编辑活动' : '新增活动'}}</text>
+      </view>
+      <view class="sheet__close" bindtap="closeAddEventModal"><view class="sheet__close-x"></view></view>
+    </view>
+
+    <scroll-view class="sheet__body" scroll-y>
+      <view class="form__group">
+        <text class="form__label">活动标题</text>
+        <input class="form__input" placeholder="请输入活动标题" placeholder-class="form__placeholder" data-field="title" bindinput="onEventFormChange" value="{{eventForm.title}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动日期</text>
+        <picker mode="date" value="{{eventForm.date}}" bindchange="onDateChange" start="2020-01-01" end="2030-12-31">
+          <view class="form__value {{eventForm.date ? '' : 'form__value--empty'}}">
+            <text>{{eventForm.date || '请选择日期'}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动时间</text>
+        <picker mode="time" value="{{eventForm.time}}" bindchange="onTimeChange">
+          <view class="form__value {{eventForm.time ? '' : 'form__value--empty'}}">
+            <text>{{eventForm.time || '请选择时间'}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动地点</text>
+        <input class="form__input" placeholder="请输入活动地点或地图选点" placeholder-class="form__placeholder" data-field="location" bindinput="onEventFormChange" value="{{eventForm.location}}" />
+        <view class="inline-actions">
+          <view class="mini-action" hover-class="mini-action--pressed" bindtap="chooseLocation">地图选点</view>
+          <view class="mini-action" hover-class="mini-action--pressed" wx:if="{{eventForm.latitude && eventForm.longitude}}" bindtap="clearLocation">清除坐标</view>
+        </view>
+        <text class="form__hint" wx:if="{{eventForm.latitude && eventForm.longitude}}">已选坐标 {{eventForm.latitude.toFixed(6)}}, {{eventForm.longitude.toFixed(6)}}</text>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动分类</text>
+        <picker mode="selector" range="{{eventCategories}}" range-key="name" value="{{selectedCategoryIndex}}" bindchange="onCategoryChange">
+          <view class="form__value">
+            <text>{{eventCategories[selectedCategoryIndex].name}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动状态</text>
+        <picker mode="selector" range="{{eventStatusOptions}}" range-key="label" value="{{eventStatusIndex}}" bindchange="onStatusChange">
+          <view class="form__value">
+            <text>{{selectedStatusLabel}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">关联社团</text>
+        <checkbox-group bindchange="onClubGroupChange">
+          <view class="checks">
+            <label class="check" wx:for="{{clubOptions}}" wx:key="id">
+              <checkbox value="{{item.id}}" color="#a8502f" />
+              <text class="check__text">{{item.name}}</text>
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动描述</text>
+        <textarea class="form__textarea" placeholder="请输入活动描述" placeholder-class="form__placeholder" data-field="description" bindinput="onEventFormChange" value="{{eventForm.description}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">组织者</text>
+        <input class="form__input" placeholder="请输入组织者名称" placeholder-class="form__placeholder" data-field="organizer" bindinput="onEventFormChange" value="{{eventForm.organizer}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">联系方式</text>
+        <input class="form__input" placeholder="请输入联系方式" placeholder-class="form__placeholder" data-field="contact" bindinput="onEventFormChange" value="{{eventForm.contact}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">最大参与人数</text>
+        <input class="form__input" type="number" placeholder="请输入最大参与人数" placeholder-class="form__placeholder" data-field="max_participants" bindinput="onEventFormChange" value="{{eventForm.max_participants}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">报名截止时间</text>
+        <picker mode="date" value="{{eventForm.registration_deadline}}" bindchange="onRegistrationDeadlineChange" start="2020-01-01" end="2030-12-31">
+          <view class="form__value {{eventForm.registration_deadline ? '' : 'form__value--empty'}}">
+            <text>{{eventForm.registration_deadline || '可选，未设置则不限'}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动标签</text>
+        <input class="form__input" placeholder="多个标签用逗号分隔" placeholder-class="form__placeholder" data-field="tags" bindinput="onEventFormChange" value="{{eventForm.tags}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">报名要求</text>
+        <textarea class="form__textarea" placeholder="每行一个要求" placeholder-class="form__placeholder" data-field="requirements" bindinput="onEventFormChange" value="{{eventForm.requirements}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">封面图片</text>
+        <view class="uploader">
+          <view class="uploader__item" wx:if="{{eventForm.cover_image}}" bindtap="previewFormImage" data-url="{{eventForm.cover_image}}" data-field="cover_image">
+            <image class="uploader__img" src="{{eventForm.cover_image}}" mode="aspectFill"></image>
+            <view class="uploader__remove" catchtap="deleteCoverImage">×</view>
+          </view>
+          <view class="uploader__add" wx:else bindtap="selectCoverImage">选择封面图片</view>
+        </view>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">活动图片</text>
+        <view class="uploader">
+          <block wx:for="{{eventForm.images}}" wx:key="index">
+            <view class="uploader__item" wx:if="{{item}}">
+              <image class="uploader__img" src="{{item}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{item}}" data-field="images"></image>
+              <view class="uploader__remove" catchtap="deleteEventImage" data-index="{{index}}">×</view>
+            </view>
+            <view class="uploader__add" wx:else bindtap="selectEventImage" data-index="{{index}}">选择图片</view>
+          </block>
+          <view class="uploader__add" bindtap="addImageSlot">添加图片</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="sheet__footer">
+      <view class="btn btn--ghost" bindtap="closeAddEventModal">取消</view>
+      <view class="btn btn--solid" bindtap="saveEvent">保存</view>
+    </view>
+  </view>
+</view>
+
+<!-- 活动详情 -->
+<view class="mask" wx:if="{{showEventDetailModal}}">
+  <view class="sheet">
+    <view class="sheet__grip"></view>
+    <view class="sheet__head">
+      <view>
+        <text class="sheet__eyebrow">EVENT PROFILE</text>
+        <text class="sheet__title">活动详情</text>
+      </view>
+      <view class="sheet__close" bindtap="closeEventDetailModal"><view class="sheet__close-x"></view></view>
+    </view>
+
+    <scroll-view class="sheet__body detail-body" scroll-y>
+      <text class="detail__title">{{currentEvent.title}}</text>
+
+      <view class="drows">
+        <view class="drow">
+          <text class="drow__key">时间</text>
+          <text class="drow__val">{{currentEvent.date}} {{currentEvent.time}}</text>
+        </view>
+        <view class="drow">
+          <text class="drow__key">地点</text>
+          <text class="drow__val">{{currentEvent.location}}</text>
+        </view>
+        <view class="drow" wx:if="{{currentEvent.related_clubs_names}}">
+          <text class="drow__key">关联社团</text>
+          <text class="drow__val">{{currentEvent.related_clubs_names}}</text>
+        </view>
+        <view class="drow">
+          <text class="drow__key">组织者</text>
+          <text class="drow__val {{currentEvent.organizer ? '' : 'drow__val--empty'}}">{{currentEvent.organizer || '未填写'}}</text>
+        </view>
+        <view class="drow">
+          <text class="drow__key">联系方式</text>
+          <text class="drow__val {{currentEvent.contact ? '' : 'drow__val--empty'}}">{{currentEvent.contact || '未填写'}}</text>
+        </view>
+        <view class="drow">
+          <text class="drow__key">人数上限</text>
+          <text class="drow__val {{currentEvent.max_participants ? '' : 'drow__val--empty'}}">{{currentEvent.max_participants || '不限'}}</text>
+        </view>
+      </view>
+
+      <text class="detail__label">DESCRIPTION</text>
+      <text class="detail__text">{{currentEvent.description || '暂无活动描述'}}</text>
+
+      <view wx:if="{{currentEvent.cover_image}}">
+        <text class="detail__label">COVER</text>
+        <view class="uploader">
+          <view class="uploader__item" bindtap="previewImage" data-url="{{currentEvent.cover_image}}">
+            <image class="uploader__img" src="{{currentEvent.cover_image}}" mode="aspectFill"></image>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{currentEvent.images && currentEvent.images.length > 0}}">
+        <text class="detail__label">GALLERY</text>
+        <view class="uploader">
+          <view class="uploader__item" wx:for="{{currentEvent.images}}" wx:key="index" bindtap="previewImage" data-url="{{item}}">
+            <image class="uploader__img" src="{{item}}" mode="aspectFill"></image>
+          </view>
+        </view>
+      </view>
+
+      <text class="detail__label">PARTICIPANTS · {{eventParticipants.length}}</text>
+      <view class="person" wx:for="{{eventParticipants}}" wx:key="user_id">
+        <image class="person__avatar" src="{{item.avatar_url}}" mode="aspectFill" binderror="onAvatarError" data-index="{{index}}"></image>
+        <view class="person__main">
+          <text class="person__name">{{item.nickname}}</text>
+          <text class="person__meta">{{item.student_id}}</text>
+        </view>
+        <text class="tag tag--{{item.status}}">{{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已批准' : item.status === 'rejected' ? '已拒绝' : '已签到'}}</text>
+        <view class="person__actions participant__actions">
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="changeParticipantStatus" data-user-id="{{item.user_id}}" data-current-status="{{item.status}}">状态</view>
+          <view class="link-btn link-btn--danger" hover-class="link-btn--pressed" bindtap="removeParticipant" data-user-id="{{item.user_id}}">移除</view>
+        </view>
+      </view>
+      <text class="empty__desc" wx:if="{{eventParticipants.length === 0}}">暂无参与者</text>
+    </scroll-view>
+  </view>
+</view>

@@ -1,0 +1,141 @@
+/* 管理员登录页
+   编辑式极简：暖纸底、单一陶土光晕、衬线标题、发丝线输入框 */
+
+.login {
+  position: relative;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 120rpx 48rpx calc(80rpx + env(safe-area-inset-bottom));
+  background: #f4f1ea;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* 右上角低饱和环境光，避免纯色背景的单薄 */
+.login__ambient {
+  position: absolute;
+  top: -260rpx;
+  right: -220rpx;
+  width: 720rpx;
+  height: 720rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 80, 47, 0.1) 0%, rgba(168, 80, 47, 0) 68%);
+  pointer-events: none;
+}
+
+.login__brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 64rpx;
+  animation: rise 0.5s ease both;
+}
+
+.login__logo {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 28rpx;
+  background: #1b1a17;
+  padding: 12rpx;
+  box-sizing: border-box;
+}
+
+.login__name {
+  margin-top: 28rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 56rpx;
+  font-weight: 700;
+  letter-spacing: 12rpx;
+  color: #1b1a17;
+}
+
+.login__tag {
+  margin-top: 12rpx;
+  font-size: 18rpx;
+  letter-spacing: 6rpx;
+  color: #a9a294;
+}
+
+.login__panel {
+  position: relative;
+  padding: 44rpx 40rpx 40rpx;
+  background: #fffdf9;
+  border: 1rpx solid #e9e3d7;
+  border-radius: 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(27, 26, 23, 0.04);
+  animation: rise 0.6s ease both;
+  animation-delay: 0.08s;
+}
+
+.login__eyebrow {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  color: #a9a294;
+}
+
+.login__title {
+  display: block;
+  margin-top: 10rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: #1b1a17;
+}
+
+/* 输入框只用底部发丝线，保持版面安静 */
+.login__field {
+  margin-top: 40rpx;
+  padding-bottom: 14rpx;
+  border-bottom: 1rpx solid #e9e3d7;
+}
+
+.login__label {
+  display: block;
+  font-size: 19rpx;
+  letter-spacing: 3rpx;
+  color: #a9a294;
+}
+
+.login__input {
+  margin-top: 12rpx;
+  font-size: 30rpx;
+  color: #1b1a17;
+  height: 52rpx;
+  line-height: 52rpx;
+}
+
+.login__placeholder {
+  color: #bcb4a5;
+}
+
+.login__btn {
+  margin-top: 48rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 16rpx;
+  background: #1b1a17;
+  color: #fffdf9;
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 6rpx;
+}
+
+.login__btn::after {
+  border: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

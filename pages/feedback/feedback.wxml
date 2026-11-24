@@ -1,0 +1,123 @@
+<!--pages/feedback/feedback.wxml-->
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="title">Contact Me</view>
+  </view>
+
+  <!-- 个人信息卡片 -->
+  <view class="profile-card">
+    <!-- 装饰元素 -->
+    <view class="decoration-elements">
+      <view class="decoration-item">✨</view>
+      <view class="decoration-item">🌟</view>
+      <view class="decoration-item">✨</view>
+    </view>
+
+    <view class="avatar-container">
+      <view class="avatar-circle">
+        <view class="avatar-inner">
+          <image class="avatar-image" src="https://api.example.com/uploads/nest/general/cat.png" mode="aspectFill"></image>
+        </view>
+      </view>
+    </view>
+    
+    <view class="profile-name">Zero Night</view>
+    
+    <!-- 重新设计的书信风格文字部分 -->
+    <view class="profile-bio">
+      <!-- 书信风格顶部装饰 -->
+      <view class="letter-header">
+       
+      </view>
+      
+      <view class="bio-divider">
+        <view class="bio-divider-line"></view>
+        <view class="bio-divider-icon"> </view>
+        <view class="bio-divider-line"></view>
+      </view>
+      
+      <!-- 逐条显示的段落 -->
+      <view class="bio-paragraph fade-in-item {{showParagraph1 ? 'fade-in-item-show' : ''}}">
+        非常幸运 我们在这里再次相遇
+      </view>
+      
+      <view class="bio-paragraph fade-in-item {{showParagraph2 ? 'fade-in-item-show' : ''}}">
+        非常感谢你也喜欢这个小程序
+      </view>
+      
+      <view class="bio-paragraph fade-in-item {{showParagraph3 ? 'fade-in-item-show' : ''}}">
+        这一次也同样欢迎你 
+      </view>
+      <view class="bio-paragraph fade-in-item {{showParagraph4 ? 'fade-in-item-show' : ''}}">
+        有任何的问题 任何好的想法 
+      </view>
+      
+      <view class="bio-paragraph fade-in-item {{showParagraph5 ? 'fade-in-item-show' : ''}}">
+        新的社团 好的创意 没有被发现的活动
+      </view>
+      
+      <view class="bio-paragraph fade-in-item {{showParagraph6 ? 'fade-in-item-show' : ''}}">
+        有想说的话
+      </view>
+
+      <view class="bio-paragraph fade-in-item {{showParagraph7 ? 'fade-in-item-show' : ''}}">
+        都快来找我哦 
+      </view>
+      
+      <view class="bio-highlight fade-in-item {{showHighlight ? 'fade-in-item-show' : ''}}">
+        <text class="bio-highlight-text">✨因为它本就是为你而存在的✨</text>
+      </view>
+      
+      <!-- 信件落款 -->
+      <view class="letter-signature fade-in-item {{showSignature ? 'fade-in-item-show' : ''}}">
+        <view class="signature-line"></view>
+        <view class="signature-text">Best wish</view>
+      </view>
+      
+      <view class="bio-divider fade-in-item {{showDivider ? 'fade-in-item-show' : ''}}">
+        <view class="bio-divider-line"></view>
+        <view class="bio-divider-icon">💛</view>
+        <view class="bio-divider-line"></view>
+      </view>
+    </view>
+    
+    <!-- 联系方式卡片 -->
+    <view class="contact-list">
+      <!-- 微信 -->
+      <view class="contact-item" bindtap="copyWechat">
+        <view class="contact-icon-container">
+          <text class="emoji-icon">💬</text>
+        </view>
+        <view class="contact-info">
+          <view class="contact-label">WeChat</view>
+          <view class="contact-value">Zero__Night</view>
+        </view>
+        <view class="copy-btn">Copy</view>
+      </view>
+
+      <!-- 邮箱 -->
+      <view class="contact-item" bindtap="copyEmail">
+        <view class="contact-icon-container">
+          <text class="emoji-icon">✉️</text>
+        </view>
+        <view class="contact-info">
+          <view class="contact-label">Email</view>
+          <view class="contact-value">candy_night@163.com</view>
+        </view>
+        <view class="copy-btn">Copy</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部装饰 -->
+  <view class="footer-decoration">
+    <view class="footer-stars">
+      <view class="star-item" wx:for="{{12}}" wx:key="index">✦</view>
+    </view>
+    <view class="footer-text">Made with ❤️ by Zero Night</view>
+  </view>
+</view>

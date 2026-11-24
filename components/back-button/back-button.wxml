@@ -1,0 +1,3 @@
+<view class="global-back {{fixed && !absolute ? 'global-back--fixed' : ''}} {{absolute ? 'global-back--absolute' : ''}} {{solid ? 'global-back--solid' : ''}}" bindtap="goBack">
+  <image src="/images/back.png" class="back-icon" mode="aspectFit"></image>
+</view>

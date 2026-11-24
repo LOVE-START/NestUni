@@ -1,0 +1,79 @@
+<!--components/comments/comments.wxml-->
+<view class="comments-container">
+  <!-- 发表评论 -->
+  <view wx:if="{{showInput}}" class="comment-input-container">
+    <view class="comment-input-wrapper">
+      <textarea 
+        class="comment-input" 
+        placeholder="分享你的感受..." 
+        value="{{newComment}}"
+        bindinput="onCommentInput"
+      ></textarea>
+      <view class="post-comment-btn-wrapper">
+        <view class="post-comment-btn" bindtap="postComment" style="background: {{theme.gradientButton || 'linear-gradient(135deg, #FF4B2B, #FF416C)'}}">
+          <image class="post-icon" src="/images/post.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 评论列表 -->
+  <view class="comments-list">
+    <view 
+      wx:for="{{comments}}" 
+      wx:key="id" 
+      class="comment-item"
+      bindlongpress="onDeleteComment"
+      data-comment="{{item}}"
+    >
+      <view class="comment-header">
+        <image class="user-avatar" src="{{item.avatar_url || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="comment-user">
+          <view class="user-info-row">
+            <view class="user-name">{{item.nickname}}</view>
+            <!-- 用户羽章展示 -->
+            <view wx:if="{{item.badges && item.badges.length > 0}}" class="user-badges">
+              <block wx:for="{{item.badges}}" wx:for-item="badge" wx:key="id">
+                <image 
+                  class="badge-icon badge-{{badge.rarity}}" 
+                  src="{{badge.icon}}" 
+                  mode="aspectFit"
+                  catchtap="onBadgeTap"
+                  data-badge="{{badge}}"
+                ></image>
+              </block>
+            </view>
+          </view>
+          <view class="comment-info">
+            <view class="comment-time">{{item.formattedDate}}</view>
+          </view>
+        </view>
+     
+      </view>
+      <view class="comment-content">{{item.content}}</view>
+      
+    </view>
+    
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more-container">
+      <button wx:if="{{!commentLoading}}" class="load-more-btn" bindtap="loadMoreComments">加载更多</button>
+      <view wx:else class="loading-more">
+        <text>加载中...</text>
+      </view>
+    </view>
+    
+    <!-- 没有更多数据 -->
+    <view wx:elif="{{comments.length > 0 && !hasMore}}" class="no-more-data">
+      <text> ♡ End ♡ </text> 
+    </view>
+    
+    <!-- 暂无评论 -->
+    <view wx:elif="{{comments.length === 0 && !commentLoading}}" class="no-comments">
+      <view class="no-comment">
+        <image class="no-comment-icon" src="/images/default-avatar.png" mode="aspectFit"></image>
+        <view class="no-comment-tip">暂无分享</view>
+        <view class="no-comment-desc">成为第一个表达的人吧！</view>
+      </view>
+    </view>
+  </view>
+</view>

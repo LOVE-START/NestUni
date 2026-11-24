@@ -1,0 +1,55 @@
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+
+# Node.js
+node_modules/
+miniprogram_npm/
+
+# AI工具配置目录
+.workbuddy/
+.trae/
+
+# 环境变量与密钥文件
+.env
+backend/.env
+.env.local
+.env.production
+.env.development
+*.key
+*.pem
+
+# 微信开发者工具私有配置
+project.private.config.json
+
+# 打包压缩包
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 日志文件
+logs/
+*.log
+
+# 上传文件目录
+uploads/
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 临时文件
+*.tmp
+*.temp
+.cache/

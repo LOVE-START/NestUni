@@ -1,0 +1,130 @@
+/**
+ * 图片上传组件样式
+ * @description 提供统一的图片上传样式
+ */
+
+/* 容器 */
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 上传区域 */
+.upload-area {
+  width: 200rpx;
+  height: 200rpx;
+  border: 1rpx dashed #ccc;
+  border-radius: 10rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #fafafa;
+}
+
+.upload-area.small {
+  width: 150rpx;
+  height: 150rpx;
+}
+
+/* 预览图片 */
+.preview-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+  object-fit: cover;
+}
+
+.preview-image.contain {
+  object-fit: contain;
+  background: #ffffff;
+}
+
+/* 上传占位符 */
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-icon {
+  font-family: "iconfont" !important;
+  font-size: 48rpx;
+  font-style: normal;
+  color: #999;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+/* 上传提示 */
+.upload-hint {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+/* 删除按钮 */
+.btn-delete {
+  margin-top: 20rpx;
+  padding: 12rpx 24rpx;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(220, 38, 38, 0.15);
+}
+
+.btn-delete::after {
+  border: none;
+}
+
+.btn-delete:active {
+  transform: scale(0.98);
+}
+
+/* 图片画廊容器 */
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+/* 画廊项 */
+.gallery-item {
+  position: relative;
+  width: 150rpx;
+  height: 150rpx;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+  object-fit: cover;
+}
+
+/* 移除按钮 */
+.remove-btn {
+  position: absolute;
+  top: -15rpx;
+  right: -15rpx;
+  width: 44rpx;
+  height: 44rpx;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #dc2626;
+  font-size: 24rpx;
+  z-index: 10;
+  box-shadow: 0 2rpx 8rpx rgba(220, 38, 38, 0.2);
+}

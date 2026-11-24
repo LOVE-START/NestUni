@@ -1,0 +1,131 @@
+page {
+	background: #f6f7fb;
+	color: #2c2f36;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.page-padding {
+	padding: 24rpx;
+}
+
+.section-title {
+	font-size: 32rpx;
+	font-weight: 700;
+	color: #1f2430;
+	margin: 8rpx 0 16rpx;
+}
+
+.subtitle {
+	font-size: 26rpx;
+	color: #7a808a;
+}
+
+.card {
+	background: #ffffff;
+	border-radius: 20rpx;
+	box-shadow: 0 8rpx 28rpx rgba(10, 16, 34, 0.06);
+	padding: 24rpx;
+}
+
+.card--clickable { 
+	transition: transform .1s ease; 
+}
+.card--clickable:active { 
+	transform: scale(0.98); 
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+}
+
+.muted {
+	color: #8a9099;
+}
+
+.btn {
+	background: #f0f3f7;
+	color: #1f2430;
+	padding: 18rpx 28rpx;
+	border-radius: 14rpx;
+}
+
+.btn-primary {
+	background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+	color: #fff;
+	padding: 20rpx 28rpx;
+	border-radius: 16rpx;
+	box-shadow: 0 8rpx 20rpx rgba(79,172,254,0.35);
+}
+
+.btn-ghost {
+	background: transparent;
+	color: #1f7ae0;
+	border: 2rpx solid #d6e6ff;
+}
+
+.input {
+	background: #f3f5f9;
+	border-radius: 12rpx;
+	padding: 18rpx 20rpx;
+	font-size: 28rpx;
+}
+
+.search-bar {
+	background: #f3f5f9;
+	border-radius: 999rpx;
+	padding: 14rpx 22rpx;
+}
+
+.chips { display:flex; flex-wrap:wrap; margin-top: 12rpx; }
+.chip {
+	font-size: 22rpx;
+	color: #4a5568;
+	background: #eef2f7;
+	padding: 8rpx 14rpx;
+	border-radius: 999rpx;
+	margin-right: 10rpx;
+	margin-top: 10rpx;
+}
+
+.hero {
+	position: relative;
+	width: 100%;
+	height: 360rpx;
+	border-bottom-left-radius: 20rpx;
+	border-bottom-right-radius: 20rpx;
+	overflow: hidden;
+}
+.hero__img { 
+	width:100%; 
+	height:100%; 
+}
+.hero__mask {
+	position:absolute;left:0;right:0;top:0;bottom:0;
+	background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
+}
+.hero__title {
+	position:absolute;left:24rpx;bottom:24rpx;right:24rpx;
+	color:#fff;font-size: 40rpx;font-weight: 800;
+}
+
+.divider { height: 1rpx; background: #edf0f5; margin: 16rpx 0; }
+
+.list-item { padding: 16rpx 0; }
+.list-item + .list-item { border-top: 1rpx solid #f0f2f7; }
+
+.avatar { width:96rpx;height:96rpx;border-radius:48rpx; }
+
+.profile-header {
+	background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+	border-radius: 0 0 28rpx 28rpx;
+	padding: 32rpx 24rpx;
+}
+
+.small { font-size: 22rpx; }

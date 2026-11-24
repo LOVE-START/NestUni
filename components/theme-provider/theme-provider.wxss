@@ -1,0 +1,5 @@
+/* theme-provider.wxss */
+.theme-provider {
+  width: 100%;
+  height: 100%;
+}

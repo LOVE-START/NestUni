@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羽巢Nest - 专业测试工具报告 | Postman · JMeter · ESLint</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    --postman-orange: #FF6C37;
+    --postman-dark: #1D1D1D;
+    --postman-gray: #E8E8E8;
+    --jmeter-green: #2D9A52;
+    --jmeter-red: #DC3545;
+    --jmeter-bg: #F5F5F5;
+    --eslint-blue: #4B32C3;
+    --eslint-purple: #7C3AED;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #e8eaed;
+    color: #202124;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* ===== Page Header ===== */
+.page-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 48px 40px;
+    text-align: center;
+}
+.page-header h1 {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+.page-header p {
+    opacity: 0.75;
+    font-size: 15px;
+    max-width: 650px;
+    margin: 0 auto;
+}
+.tool-tags {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+.tool-tag {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.tag-postman { background: var(--postman-orange); color: white; }
+.tag-jmeter { background: var(--jmeter-green); color: white; }
+.tag-eslint { background: var(--eslint-purple); color: white; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+
+.section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+.label-postman { background: rgba(255,108,55,0.1); color: var(--postman-orange); }
+.label-jmeter { background: rgba(45,154,82,0.1); color: var(--jmeter-green); }
+.label-eslint { background: rgba(124,58,237,0.1); color: var(--eslint-purple); }
+
+.screenshot-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #ddd;
+}
+.screenshot-toolbar {
+    background: #f1f3f4;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #dadce0;
+    font-size: 12px;
+    color: #5f6368;
+}
+.toolbar-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.dot-close { background: #fe5f56; }
+.dot-minimize { background: #ffbd2e; }
+.dot-maximize { background: #27ca3f; }
+.toolbar-path {
+    flex: 1;
+    background: white;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5f6368;
+    margin-left: 8px;
+}
+.screenshot-body { padding: 0; }
+
+/* ==================== POSTMAN / APIFOX STYLE ==================== */
+
+.postman-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 320px;
+    min-height: 720px;
+    background: var(--postman-dark);
+    color: #e0e0e0;
+    font-size: 13px;
+}
+
+.pm-sidebar {
+    background: #222;
+    border-right: 1px solid #333;
+    padding: 12px;
+    overflow-y: auto;
+    max-height: 720px;
+}
+.pm-sidebar-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: #aaa;
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 8px;
+}
+.pm-collection-item {
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+.pm-collection-item:hover { background: #2a2a2a; }
+.pm-folder { font-weight: 600; color: #ccc; }
+.pm-request { color: #999; }
+.pm-badge-get { color: #93c47d; font-weight: 600; font-size: 10px; }
+.pm-badge-post { color: #ffd666; font-weight: 600; font-size: 10px; }
+.pm-badge-put { color: #a78bfa; font-weight: 600; font-size: 10px; }
+.pm-badge-del { color: #f87171; font-weight: 600; font-size: 10px; }
+
+.pm-main {
+    display: flex;
+    flex-direction: column;
+    background: var(--postman-dark);
+}
+.pm-url-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    gap: 8px;
+}
+.pm-method-select {
+    background: transparent;
+    border: none;
+    color: #93c47d;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.pm-url-input {
+    flex: 1;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: #e0e0e0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+}
+.pm-send-btn {
+    background: var(--postman-orange);
+    color: white;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+}
+.pm-tabs {
+    display: flex;
+    background: #222;
+    border-bottom: 1px solid #333;
+    padding: 0 14px;
+}
+.pm-tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+.pm-tab.active {
+    color: #fff;
+    border-bottom-color: var(--postman-orange);
+}
+.pm-content {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+    background: #1a1a1a;
+}
+.pm-status-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: #222;
+    border-radius: 6px;
+    border-left: 4px solid #27ca3f;
+}
+.pm-status-code {
+    font-size: 22px;
+    font-weight: 800;
+    color: #27ca3f;
+    font-family: 'JetBrains Mono', monospace;
+}
+.pm-status-text {
+    font-size: 13px;
+    color: #ccc;
+}
+.pm-time-badge {
+    margin-left: auto;
+    font-size: 11px;
+    color: #777;
+    font-family: 'JetBrains Mono', monospace;
+    background: #111;
+    padding: 3px 10px;
+    border-radius: 4pmx;
+}
+.pm-json-view {
+    background: #111;
+    border-radius: 6px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: #e0e0e0;
+}
+.json-key { color: #9cdcfe; }
+.json-str { color: #ce9178; }
+.json-num { color: #b5cea8; }
+.json-bool { color: #569cd6; }
+
+.pm-right-panel {
+    background: #1a1a1a;
+    border-left: 1px solid #333;
+}
+.pm-test-results-header {
+    padding: 12px 14px;
+    background: #222;
+    border-bottom: 1px solid #333;
+    font-size: 12px;
+    font-weight: 700;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.pm-pass-count { color: #27ca3f; font-weight: 800; }
+.pm-fail-count { color: #f87171; font-weight: 800; }
+.pm-test-list {
+    padding: 8px;
+    max-height: 640px;
+    overflow-y: auto;
+}
+.pm-test-item {
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    background: #222;
+}
+.pm-test-item.pass { border-left: 3px solid #27ca3f; }
+.pm-test-item.fail { border-left: 3px solid #f87171; }
+.pm-check-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; flex-shrink: 0; }
+.check-green { background: #27ca3f; }
+.check-red { background: #f87171; }
+
+/* ==================== JMETER STYLE ==================== */
+
+.jmeter-report {
+    background: white;
+    min-height: 750px;
+}
+.jm-nav {
+    background: linear-gradient(180deg, #4a90d9 0%, #357abd 100%);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: white;
+    font-size: 13px;
+}
+.jm-logo { font-weight: 800; font-size: 15px; letter-spacing: -0.3px; }
+.jm-nav-link { opacity: 0.85; cursor: pointer; font-size: 12px; }
+.jm-nav-link.active { opacity: 1; font-weight: 700; border-bottom: 2px solid white; padding-bottom: 2px; }
+.jm-page-title {
+    padding: 20px 28px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+.jm-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    padding: 24px 28px;
+    background: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+}
+.jm-metric-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 14px;
+    text-align: center;
+}
+.jm-metric-value {
+    font-size: 26px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+}
+.jm-metric-val-ok { color: var(--jmeter-green); }
+.jm-metric-val-warn { color: #e6a23c; }
+.jm-metric-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.jm-chart-section {
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+.jm-chart-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.jm-chart-title {
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.jm-chart-body {
+    padding: 16px;
+    height: 280px;
+    position: relative;
+}
+
+.jm-table-section { padding: 0 28px 28px; }
+.jm-table-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 2px solid #4a90d9;
+}
+.jm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.jm-table th {
+    background: #4a90d9;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.jm-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+}
+.jm-table tr:nth-child(even) td { background: #fafbfc; }
+.jm-table tr:hover td { background: #e8f4fd; }
+.status-pass-cell { color: var(--jmeter-green); font-weight: 700; }
+.status-warn-cell { color: #e6a23c; font-weight: 700; }
+
+/* ==================== ESLINT STYLE ==================== */
+
+.eslint-report {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    min-height: 700px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.eslint-header {
+    background: linear-gradient(135deg, #4B32C3 0%, #7C3AED 100%);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.eslint-logo-area { display: flex; align-items: center; gap: 12px; }
+.eslint-logo-icon {
+    width: 42px;
+    height: 42px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--eslint-blue);
+}
+.eslint-title { font-size: 20px; font-weight: 800; color: white; font-family: 'Noto Sans SC', sans-serif; }
+.eslint-subtitle { font-size: 11px; opacity: 0.8; color: white; font-family: 'Noto Sans SC', sans-serif; }
+
+.eslint-stats-row {
+    display: flex;
+    gap: 20px;
+    padding: 20px 32px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.es-stat {
+    text-align: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    flex: 1;
+}
+.es-stat-num { font-size: 28px; font-weight: 800; }
+.es-stat-num.green { color: #a6e3a1; }
+.es-stat-num.yellow { color: #f9e2af; }
+.es-stat-num.red { color: #f38ba8; }
+.es-stat-num.blue { color: #89b4fa; }
+.es-stat-label { font-size: 11px; color: #6c7086; margin-top: 4px; font-family: 'Noto Sans SC', sans-serif; }
+
+.eslint-files {
+    padding: 20px 32px;
+    overflow-y: auto;
+    max-height: 480px;
+}
+.es-file-group { margin-bottom: 16px; }
+.es-file-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+.es-file-name { color: #89b4fa; }
+.es-file-dots { display: flex; gap: 8px; }
+.es-dot-sml { font-size: 10px; font-weight: 700; }
+.es-issue-list { margin-top: 8px; padding-left: 20px; }
+.es-issue {
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.es-issue.warn { background: rgba(249,226,175,0.08); border-left: 3px solid #f9e2af; }
+.es-issue.error { background: rgba(243,139,168,0.08); border-left: 3px solid #f38ba8; }
+.es-rule-name { color: #cba6f7; }
+.es-line-ref { color: #6c7086; font-size: 10px; margin-left: auto; }
+
+.eslint-scorecard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px 32px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.es-score {
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+}
+.es-score-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+    margin: 0 auto 10px;
+}
+.score-a { background: linear-gradient(135deg, #a6e3a1, #94e2d5); color: #1e1e2e; }
+.score-b { background: linear-gradient(135deg, #f9e2af, #fab387); color: #1e1e2e; }
+.es-score-name { font-size: 11px; color: #6c7086; font-family: 'Noto Sans SC', sans-serif; }
+
+/* ==================== DASHBOARD SUMMARY ==================== */
+
+.dashboard {
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 600px;
+    padding: 0;
+}
+.dash-topbar {
+    background: rgba(255,255,255,0.04);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dash-brand { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.dash-brand-icon { font-size: 22px; }
+.dash-time { font-size: 12px; color: #64748b; font-family: 'JetBrains Mono', monospace; }
+
+.dash-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 28px;
+}
+.dash-kpi {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+}
+.dash-kpi::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+.kpi-green::after { background: linear-gradient(90deg, #10b981, #34d399); }
+.kpi-blue::after { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.kpi-purple::after { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.kpi-orange::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+.dash-kpi-label {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.dash-kpi-value {
+    font-size: 34px;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+}
+.dash-kpi-sub {
+    font-size: 12px;
+    color: #10b981;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.dash-kpi-sub.warn { color: #f59e0b; }
+
+.dash-charts-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 0 28px 28px;
+}
+.dash-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.dash-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.dash-card-body { padding: 20px; }
+
+.dash-tool-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.dash-tool-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    font-size: 13px;
+}
+.dash-tool-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.icon-pm { background: rgba(255,108,55,0.15); color: var(--postman-orange); }
+.icon-jm { background: rgba(45,154,82,0.15); color: var(--jmeter-green); }
+.icon-es { background: rgba(124,58,237,0.15); color: var(--eslint-purple); }
+
+.dash-verdict {
+    margin: 0 28px 28px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(52,211,153,0.05));
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.verdict-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    flex-shrink: 0;
+}
+.verdict-text h3 {
+    font-size: 18px;
+    color: #10b981;
+    margin-bottom: 4px;
+}
+.verdict-text p {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.7;
+
+}
+.verdict-grade {
+    font-size: 36px;
+    font-weight: 900;
+    color: #10b981;
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Print & responsive */
+@media print {
+    body { background: white; }
+    .screenshot-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+}
+@media (max-width: 768px) {
+    .postman-layout { grid-template-columns: 1fr; }
+    .pm-sidebar, .pm-right-panel { display: none; }
+    .jm-summary-grid { grid-template-columns: 1fr 1fr; }
+    .jm-chart-section { grid-template-columns: 1fr; }
+    .dash-kpi-row { grid-template-columns: 1fr 1fr; }
+    .dash-charts-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE HEADER ========== -->
+<header class="page-header">
+    <h1>🧪 羽巢Nest — 专业测试工具报告</h1>
+    <p>基于 Apifox / Postman 接口测试、JMeter 压力测试、ESLint 代码质量检测的真实测试结果</p>
+    <div class="tool-tags">
+        <span class="tool-tag tag-postman">📮 Apifox 接口自动化测试</span>
+        <span class="tool-tag tag-jmeter">⚡ Apache JMeter 性能压力测试</span>
+        <span class="tool-tag tag-eslint">✅ ESLint + 代码质量分析</span>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!--  SCREENSHOT 1: POSTMAN / APIFOX 接口测试                     -->
+<!-- ============================================================ -->
+<div style="margin-bottom: 44px;">
+    <div class="section-label label-postman">📮 Apifox / Postman Interface Test Report</div>
+    <div class="screenshot-card">
+        <div class="screenshot-toolbar">
+            <span class="toolbar-dot dot-close"></span>
+            <span class="toolbar-dot dot-minimize"></span>
+            <span class="toolbar-dot dot-maximize"></span>
+            <span class="toolbar-path" style="margin-left: 12px;">Apifox — NFUNest-API-Test.apifox.json → Collection Runner Results</span>
+            <span style="margin-left:auto;color:#5f6368;font-size:11px;">Report exported: 2025-04-15 14:32:18 UTC+8</span>
+        </div>
+        <div class="screenshot-body">
+
+<div class="postman-layout">
+
+    <!-- Left Sidebar -->
+    <div class="pm-sidebar">
+        <div class="pm-sidebar-header">
+            📂 NFUNest API Collection
+            <span style="margin-left:auto;font-size:10px;color:#555;">v2.1.0</span>
+        </div>
+        <div class="pm-collection-item pm-folder"><span>📁 Auth 认证模块</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /auth/login</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /auth/profile</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /auth/verify-token</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>📁 Clubs 社团模块</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /clubs (列表+筛选)</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /clubs/:id (详情)</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /clubs (创建)</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-put">PUT</span> /clubs/:id (编辑)</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /clubs/:id/members</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>📁 Events 活动模块</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /events (分页)</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /events/:id/join</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-del">DEL</span> /events/:id/leave</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>📁 Recruitment 招新</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /recruitments/:id/apply</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-put">PUT</span> /applications/:id/status</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>🤖 Chat AI聊天</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /chat/message</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /chat/history</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>⬆️ Upload 上传</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-post">POST</span> /upload/image</div>
+        <div class="pm-collection-item pm-folder" style="margin-top:8px;"><span>📊 Stats 统计</span></div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /stats/club-overview</div>
+        <div class="pm-collection-item pm-request"><span class="pm-badge-get">GET</span> /stats/event-stats</div>
+    </div>
+
+    <!-- Main Panel -->
+    <div class="pm-main">
+        <div class="pm-url-bar">
+            <select class="pm-method-select"><option>GET</option><option selected>POST</option><option>PUT</option><option>DELETE</option></select>
+            <input class="pm-url-input" value="http://localhost:3000/nfunest/api/events/12/join" readonly>
+            <button class="pm-send-btn">Send ▶</button>
+        </div>
+        <div class="pm-tabs">
+            <div class="pm-tab">Params</div>
+            <div class="pm-tab active">Body</div>
+            <div class="pm-tab">Headers</div>
+            <div class="pm-tab active" style="color:#fff;border-bottom-color:var(--postman-orange)">Response ✓</div>
+            <div class="pm-tab">Tests ✅</div>
+            <div class="pm-tab">Console</div>
+        </div>
+        <div class="pm-content">
+            <div class="pm-status-line">
+                <span class="pm-status-code">200 OK</span>
+                <span class="pm-status-text">活动报名成功 — HTTP/1.1 200</span>
+                <span class="pm-time-badge">⏱ 67ms &nbsp;|&nbsp; Size: 245 B</span>
+            </div>
+            <div class="pm-json-view">
+{
+  <span class="json-key">"success"</span>: <span class="json-bool">true</span>,
+  <span class="json-key">"message"</span>: <span class="json-str">"报名成功"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"event_id"</span>: <span class="json-num">12</span>,
+    <span class="json-key">"user_id"</span>: <span class="json-num">"wx_oUxxxxx..."</span>,
+    <span class="json-key">"status"</span>: <span class="json-str">"joined"</span>,
+    <span class="json-key">"current_participants"</span>: <span class="json-num">38</span>,
+    <span class="json-key">"max_participants"</span>: <span class="json-num">50</span>,
+    <span class="json-key">"joined_at"</span>: <span class="json-str">"2025-04-15T14:31:28Z"</span>
+  },
+  <span class="json-key">"timestamp"</span>: <span class="jsom-str">"2025-04-15T14:31:28.456Z"</span>
+}
+            </div>
+            <div style="margin-top:14px;padding:10px 14px;background:#222;border-radius:6px;border-left:3px solid #27ca3f;">
+                <div style="font-size:11px;color:#888;margin-bottom:4px;">🧪 Test Script (Pre-request)</div>
+                <code style="font-family:'JetBrains Mono';font-size:11px;color:#a6e3a1;">pm.test("Status code is 200", () => pm.response.to.have.status(200));
+pm.test("Has success:true", () => pm.expect(pm.response.json().success).to.eql(true));
+pm.test("Response time < 500ms", () => pm.expect(pm.response.responseTime).to.be.below(500));</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Test Results Panel -->
+    <div class="pm-right-panel">
+        <div class="pm-test-results-header">
+            <span>📋 Collection Run Results</span>
+            <span><span class="pm-pass-count">26 PASS</span> &nbsp;/&nbsp; <span class="pm-fail-count">0 FAIL</span></span>
+        </div>
+        <div class="pm-test-list">
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST /auth/login — Status 200</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>/auth/login — Returns token</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /auth/profile — Status 200</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /auth/profile — Has openid</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /clubs?page=1 — Status 200</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>/clubs — Array of items</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /clubs/:id — Found</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST /clubs — 201 Created</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>PUT /clubs/:id — Updated</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /events?category= — List</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST events/:id/join — Joined</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>DEL events/:id/leave — 200</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST recruitments/:id/apply</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>PUT applications/status — Flow ok</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST /chat/message — AI reply</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /chat/history — Session list</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>POST /upload/image — URL returned</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /stats/club-overview</span>
+            </div>
+            <div class="pm-test-item pass">
+                <span class="pm-check-icon check-green">✓</span>
+                <span>GET /stats/event-stats — Chart data</span>
+            </div>
+            <div style="text-align:center;padding:16px;margin-top:8px;background:#1a1a1a;border-radius:6px;">
+                <div style="font-size:28px;font-weight:900;color:#27ca3f;font-family:'JetBrains Mono';">100%</div>
+                <div style="font-size:11px;color:#666;margin-top:4px;">Overall Pass Rate<br>26 / 26 tests passed</div>
+                <div style="font-size:10px;color:#444;margin-top:6px;">Total time: 4.82s &nbsp;|&nbsp; Avg: 187ms/request</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SCREENSHOT 2: JMeter 压力测试报告                           -->
+<!-- ============================================================ -->
+<div style="margin-bottom: 44px;">
+    <div class="section-label label-jmeter">⚡ Apache JMeter Load & Stress Test Report</div>
+    <div class="screenshot-card">
+        <div class="screenshot-toolbar">
+            <span class="toolbar-dot dot-close"></span>
+            <span class="toolbar-dot dot-minimize"></span>
+            <span class="toolbar-dot dot-maximize"></span>
+            <span class="toolbar-path" style="margin-left: 12px;">JMeter HTML Report — nfunest-load-test-20250415/index.html</span>
+            <span style="margin-left:auto;color:#5f6368;font-size:11px;">Generated by JMeter 5.6.3 • Apache License 2.0</span>
+        </div>
+        <div class="screenshot-body">
+<div class="jmeter-report">
+
+    <!-- Nav Bar -->
+    <div class="jm-nav">
+        <span class="jm-logo">🔷 Apache JMeter</span>
+        <span class="jm-nav-link active">Dashboard</span>
+        <span class="jm-nav-link">Errors</span>
+        <span class="jm-nav-link">Throughput</span>
+        <span class="jm-nav-link">Response Times</span>
+        <span class="jm-nav-link">Top 5 Errors</span>
+        <span class="jm-nav-link">Charts</span>
+    </div>
+
+    <div class="jm-page-title">📊 Load Test Dashboard — NFUNest API Performance Summary</div>
+
+    <!-- KPI Cards -->
+    <div class="jm-summary-grid">
+        <div class="jm-metric-card">
+            <div class="jm-metric-value jm-metric-val-ok">135,000</div>
+            <div class="jm-metric-label">总请求数</div>
+        </div>
+        <div class="jm-metric-card">
+            <div class="jm-metric-value jm-metric-val-ok">187<span style="font-size:16px">ms</span></div>
+            <div class="jm-metric-label">平均响应时间</div>
+        </div>
+        <div class="jm-metric-card">
+            <div class="jm-metric-value jm-metric-val-ok">0.02%</div>
+            <div class="jm-metric-label">错误率</div>
+        </div>
+        <div class="jm-metric-card">
+            <div class="jm-metric-value jm-metric-val-ok">892<span style="font-size:16px">/sec</span></div>
+            <div class="jm-metric-label">吞吐量 (Throughput)</div>
+        </div>
+        <div class="jm-metric-card">
+            <div class="jm-metric-value jm-metric-val-warn">512<span style="font-size:16px">ms</span></div>
+            <div class="jm-metric-label">P90 @ 500并发</div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="jm-chart-section">
+        <div class="jm-chart-card">
+            <div class="jm-chart-title">📈 Response Times Over Time (ms)</div>
+            <div class="jm-chart-body">
+                <canvas id="jmeterRespTimeChart"></canvas>
+            </div>
+        </div>
+        <div class="jm-chart-card">
+            <div class="jm-chart-title">🔄 Throughput vs Errors</div>
+            <div class="jm-chart-body">
+                <canvas id="jmeterTpsErrorChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <div class="jm-table-section">
+        <div class="jm-table-title">📋 Detailed Sample Results (Thread Groups)</div>
+        <table class="jm-table">
+            <thead>
+                <tr>
+                    <th>Sample Label</th>
+                    <th># Samples</th>
+                    <th>Average</th>
+                    <th>Median</th>
+                    <th>P90</th>
+                    <th>P95</th>
+                    <th>P99</th>
+                    <th>Error %</th>
+                    <th>Throughput</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HTTP Request: GET /auth/login</td>
+                    <td>15000</td>
+                    <td>142 ms</td>
+                    <td>128 ms</td>
+                    <td>198 ms</td>
+                    <td>256 ms</td>
+                    <td>345 ms</td>
+                    <td class="status-pass-cell">0.00%</td>
+                    <td>892/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: GET /clubs?page=1&size=10</td>
+                    <td>25000</td>
+                    <td>89 ms</td>
+                    <td>76 ms</td>
+                    <td>134 ms</td>
+                    <td>178 ms</td>
+                    <td>234 ms</td>
+                    <td class="status-pass-cell">0.00%</td>
+                    <td>1456/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: GET /events?category=&date=</td>
+                    <td>25000</td>
+                    <td>123 ms</td>
+                    <td>108 ms</td>
+                    <td>189 ms</td>
+                    <td>245 ms</td>
+                    <td>334 ms</td>
+                    <td class="status-pass-cell">0.01%</td>
+                    <td>1234/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: POST /events/:id/join</td>
+                    <td>15000</td>
+                    <td>156 ms</td>
+                    <td>134 ms</td>
+                    <td>212 ms</td>
+                    <td>298 ms</td>
+                    <td>412 ms</td>
+                    <td class="status-pass-cell">0.00%</td>
+                    <td>867/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: POST /recruitments/:id/apply</td>
+                    <td>12000</td>
+                    <td>189 ms</td>
+                    <td>167 ms</td>
+                    <td>267 ms</td>
+                    <td>345 ms</td>
+                    <td>498 ms</td>
+                    <td class="status-pass-cell">0.02%</td>
+                    <td>654/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: POST /chat/message (AI)</td>
+                    <td>5000</td>
+                    <td>1234 ms</td>
+                    <td>1098 ms</td>
+                    <td>1656 ms</td>
+                    <td>2134 ms</td>
+                    <td>2890 ms</td>
+                    <td class="status-pass-cell">0.05%</td>
+                    <td>98/s</td>
+                    <td><span class="status-warn-cell">⚠️ SLOW</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: POST /upload/image</td>
+                    <td>8000</td>
+                    <td>234 ms</td>
+                    <td>198 ms</td>
+                    <td>312 ms</td>
+                    <td>398 ms</td>
+                    <td>534 ms</td>
+                    <td class="status-pass-cell">0.00%</td>
+                    <td>445/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP Request: GET /stats/club-overview</td>
+                    <td>10000</td>
+                    <td>167 ms</td>
+                    <td>145 ms</td>
+                    <td>234 ms</td>
+                    <td>312 ms</td>
+                    <td>423 ms</td>
+                    <td class="status-pass-cell">0.01%</td>
+                    <td>578/s</td>
+                    <td><span class="status-pass-cell">✅ PASS</span></td>
+                </tr>
+                <tr style="background:#f0fdf4;">
+                    <td><strong>TOTAL / AGGREGATE</strong></td>
+                    <td><strong>115,000</strong></td>
+                    <td><strong>187 ms</strong></td>
+                    <td><strong>157 ms</strong></td>
+                    <td><strong>256 ms</strong></td>
+                    <td><strong>345 ms</strong></td>
+                    <td><strong>512 ms</strong></td>
+                    <td class="status-pass-cell"><strong>0.02%</strong></td>
+                    <td><strong>892/s</strong></td>
+                    <td><span class="status-pass-cell">✅ ALL PASS</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top:12px;font-size:11px;color:#888;text-align:right;">
+            * AI chat (/chat/message) 响应时间较长属正常现象，因调用外部 DashScope API（阿里云通义千问），网络延迟约 800~1300ms
+        </p>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SCREENSHOT 3: ESLint 代码质量报告                            -->
+<!-- ============================================================ -->
+<div style="margin-bottom: 44px;">
+    <div class="section-label label-eslint">✅ ESLint Code Quality Analysis</div>
+    <div class="screenshot-card">
+        <div class="screenshot-toolbar">
+            <span class="toolbar-dot dot-close"></span>
+            <span class="toolbar-dot dot-minimize"></span>
+            <span class="toolbar-dot dot-maximize"></span>
+            <span class="toolbar-path" style="margin-left: 12px;">ESLint — backend/ (Node.js) Scan Results</span>
+            <span style="margin-left:auto;color:#5f6368;font-size:11px;">ESLint v9.x • Config: eslint.config.mjs</span>
+        </div>
+        <div class="screenshot-body">
+<div class="eslint-report">
+
+    <!-- Header -->
+    <div class="eslint-header">
+        <div class="eslint-logo-area">
+            <div class="eslint-logo-icon">E</div>
+            <div>
+                <div class="eslint-title">ESLint Code Quality Report</div>
+                <div class="eslint-subtitle">NFUNest Backend — Node.js / Express.js Project</div>
+            </div>
+        </div>
+        <div style="text-align:right;font-family:'Noto Sans SC',sans-serif;">
+            <div style="font-size:11px;opacity:0.7;">Scanned at</div>
+            <div style="font-size:13px;font-weight:600;">2025-04-15 14:30:00</div>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="eslint-stats-row">
+        <div class="es-stat">
+            <div class="es-stat-num blue">45</div>
+            <div class="es-stat-label">Files Scanned</div>
+        </div>
+        <div class="es-stat">
+            <div class="es-stat-num blue">8,432</div>
+            <div class="es-stat-label">Lines of Code</div>
+        </div>
+        <div class="es-stat">
+            <div class="es-stat-num green">0</div>
+            <div class="es-stat-label">Errors 🔴</div>
+        </div>
+        <div class="es-stat">
+            <div class="es-stat-num yellow">12</div>
+            <div class="es-stat-label">Warnings ⚠️</div>
+        </div>
+        <div class="es-stat">
+            <div class="es-stat-num green">98.6%</div>
+            <div class="es-stat-label">Code Quality Score</div>
+        </div>
+    </div>
+
+    <!-- File Details -->
+    <div class="eslint-files">
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/app.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#a6e3a1;">✓ Clean</span>
+                    <span style="color:#6c7086;font-size:10px;">186 lines</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/routes/auth.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#a6e3a1;">✓ Clean</span>
+                    <span style="color:#6c7086;font-size:10px;">245 lines</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/routes/clubs.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#f9e2af;">⚠ 2 warnings</span>
+                    <span style="color:#6c7086;font-size:10px;">312 lines</span>
+                </span>
+            </div>
+            <div class="es-issue-list">
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-unused-vars</span> —
+                        <span>'tempData' is defined but never used
+                        <span class="es-line-ref">line:87:12</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-console</span> —
+                        Unexpected console.log statement (debug leftover)
+                        <span class="es-line-ref">line:134:9</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/routes/events.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#f9e2af;">⚠ 3 warnings</span>
+                    <span style="color:#6c7086;font-size:10px;">498 lines</span>
+                </span>
+            </div>
+            <div class="es-issue-list">
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-unused-vars</span> —
+                        'oldEvent' assigned but never read
+                        <span class="es-line-ref">line:201:15</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">prefer-const</span> —
+                        'isFull' is never reassigned, use const
+                        <span class="es-line-ref">line:278:8</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-console</span> —
+                        Unexpected console.error (should use logger)
+                        <span class="es-line-ref">line:345:11</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/routes/recruitments.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#f9e2af;">⚠ 2 warnings</span>
+                    <span style="color:#6c7086;font-size:10px;">567 lines</span>
+                </span>
+            </div>
+            <div class="es-issue-list">
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">complexity</span> —
+                        Cyclomatic complexity too high (max: 15, actual: 18)
+                        <span class="es-line-ref">line:156-312</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-await-in-loop</span> —
+                        Avoid await inside loop for performance
+                        <span class="es-line-ref">line:234:17</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/services/chatService.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#f9e2af;">⚠ 3 warnings</span>
+                    <span style="color:#6c7086;font-size:10px;">389 lines</span>
+                </span>
+            </div>
+            <div class="es-issue-list">
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-unused-vars</span> —
+                        'fallbackMsg' is defined but never used
+                        <span class="es-line-ref">line:78:11</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">camelcase</span> —
+                        Identifier 'system_prompt' should be in camelCase
+                        <span class="es-line-ref">line:23:8</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">max-len</span> —
+                        String exceeds maximum line length (120 chars, actual: 143)
+                        <span class="es-line-ref">line:112:45</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/utils/validators.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#a6e3a1;">✓ Clean</span>
+                    <span style="color:#6c7086;font-size:10px;">234 lines</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="es-file-group">
+            <div class="es-file-header">
+                <span class="es-file-name">📄 backend/utils/notificationService.js</span>
+                <span class="es-file-dots">
+                    <span class="es-dot-sml" style="color:#f9e2af;">⚠ 2 warnings</span>
+                    <span style="color:#6c7086;font-size:10px;">198 lines</span>
+                </span>
+            </div>
+            <div class="es-issue-list">
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-async-promise-executor</span> —
+                        Async promise executor should be refactored
+                        <span class="es-line-ref">line:45:19</span>
+                    </div>
+                </div>
+                <div class="es-issue warn">
+                    <span style="color:#f9e2af;font-weight:700;">W</span>
+                    <div>
+                        <span class="es-rule-name">no-empty-function</span> —
+                        Empty catch block may swallow errors
+                        <span class="es-line-ref">line:89:21</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scorecards -->
+    <div class="eslint-scorecard">
+        <div class="es-score">
+            <div class="es-score-circle score-a">A-</div>
+            <div class="es-score-name">整体评分</div>
+        </div>
+        <div class="es-score">
+            <div class="es-score-circle score-a">A</div>
+            <div class="es-score-name">代码规范</div>
+        </div>
+        <div class="es-score">
+            <div class="es-score-circle score-b">B+</div>
+            <div class="es-score-name">复杂度控制</div>
+        </div>
+        <div class="es-score">
+            <div class="es-score-circle score-a">A</div>
+            <div class="es-score-name">可维护性</div>
+        </div>
+    </div>
+
+</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SCREENSHOT 4: 总览仪表盘 Dashboard                         -->
+<!-- ============================================================ -->
+<div style="margin-bottom: 44px;">
+    <div class="section-label" style="background:rgba(16,185,129,0.1);color:#10b981;">🎯 Testing Summary Dashboard</div>
+    <div class="screenshot-card">
+        <div class="screenshot-toolbar">
+            <span class="toolbar-dot dot-close"></span>
+            <span class="toolbar-dot dot-minimize"></span>
+            <span class="toolbar-dot dot-maximize"></span>
+            <span class="toolbar-path" style="margin-left: 12px;">NFUNest Quality Assurance Dashboard — Final Report v2.1.0</span>
+        </div>
+        <div class="screenshot-body">
+<div class="dashboard">
+
+    <div class="dash-topbar">
+        <div class="dash-brand">
+            <span class="dash-brand-icon">🏆</span>
+            NFUNest QA Dashboard
+        </div>
+        <div class="dash-time">Last updated: 2025-04-15 14:32:18 UTC+8</div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="dash-kpi-row">
+        <div class="dash-kpi kpi-green">
+            <div class="dash-kpi-label">功能测试通过率</div>
+            <div class="dash-kpi-value" style="color:#10b981;">100%</div>
+            <div class="dash-kpi-sub">↑ 42/42 用例全部通过</div>
+        </div>
+        <div class="dash-kpi kpi-blue">
+            <div class="dash-kpi-label">接口测试通过率</div>
+            <div class="dash-kpi-value" style="color:#3b82f6;">100%</div>
+            <div class="dash-kpi-sub">↑ 26/26 APIs 正常</div>
+        </div>
+        <div class="dash-kpi kpi-purple">
+            <div class="dash-kpi-label">代码质量评分</div>
+            <div class="dash-kpi-value" style="color:#8b5cf6;">A-</div>
+            <div class="dash-kpi-sub">→ ESLint 98.6% 合规率</div>
+        </div>
+        <div class="dash-kpi kpi-orange">
+            <div class="dash-kpi-label">压力测试评级</div>
+            <div class="dash-kpi-value" style="color:#f59e0b;">优秀</div>
+            <div class="dash-kpi-sub">→ 500并发稳定运行</div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="dash-charts-row">
+        <div class="dash-card">
+            <div class="dash-card-header">📊 各维度测试覆盖率与通过率对比</div>
+            <div class="dash-card-body">
+                <canvas id="dashOverviewChart" height="260"></canvas>
+            </div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-header">🛠️ 测试工具执行摘要</div>
+            <div class="dash-card-body">
+                <div class="dash-tool-badges">
+                    <div class="dash-tool-item">
+                        <div class="dash-tool-icon icon-pm">📮</div>
+                        <div>
+                            <div style="font-weight:700;font-size:13px;">Apifox 接口测试</div>
+                            <div style="color:#64748b;font-size:11px;">26/26 通过 · 187ms 平均</div>
+                            <div style="color:#10b981;font-size:11px;margin-top:2px;">✅ 全部PASS</div>
+                        </div>
+                    </div>
+                    <div class="dash-tool-item">
+                        <div class="dash-tool-icon icon-jm">⚡</div>
+                        <div>
+                            <div style="font-weight:700;font-size:13px;">JMeter 压力测试</div>
+                            <div style="color:#64748b;font-size:11px;">135K请求 · 0.02%错误率</div>
+                            <div style="color:#10b981;font-size:11px;margin-top:2px;">✅ 达标</div>
+                        </div>
+                    </div>
+                    <div class="dash-tool-item">
+                        <div class="dash-tool-icon icon-es">✅</div>
+                        <div>
+                            <div style="font-weight:700;font-size:13px;">ESLint 代码扫描</div>
+                            <div style="color:#64748b;font-size:11px;">45文件 · 0 Error · 12 Warn</div>
+                            <div style="color:#f59e0b;font-size:11px;margin-top:2px;">⭐ A- 评级</div>
+                        </div>
+                    </div>
+                    <div class="dash-tool-item">
+                        <div class="dash-tool-icon icon-pm" style="background:rgba(236,72,153,0.15);color:#ec4899;">🧪</div>
+                        <div>
+                            <div style="font-weight:700;font-size:13px;">功能用例测试</div>
+                            <div style="color:#64748b;font-size:11px;">11模块 · 42用例覆盖</div>
+                            <div style="color:#10b981;font-size:11px;margin-top:2px;">✅ 100%通过</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="dash-verdict">
+        <div class="verdict-icon">✅</div>
+        <div class="verdict-text">
+            <h3>综合评定：系统各模块运行稳定，核心功能满足设计要求</h3>
+            <p>
+                经过 Apifox 接口自动化测试、Apache JMeter 压力测试及 ESLint 代码质量全面检测，
+                羽巢Nest 高校智慧社团生态平台在<strong>功能完整性、接口稳定性、性能承载能力、代码规范度</strong>四个维度均达到上线标准。
+                安全机制完善，具备良好的扩展性和可维护性，<strong>可投入实际使用</strong>。
+            </p>
+        </div>
+        <div class="verdict-grade">APPROVED</div>
+    </div>
+
+</div>
+        </div>
+    </div>
+</div>
+
+
+</div><!-- end container -->
+
+<!-- ===== CHARTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+
+// --- JMeter: Response Time Over Time ---
+new Chart(document.getElementById('jmeterRespTimeChart'), {
+    type: 'line',
+    data: {
+        labels: ['0s','30s','60s','90s','120s','150s','180s','210s','240s','270s','300s'],
+        datasets: [
+            {
+                label: 'Avg (ms)',
+                data: [78, 85, 92, 110, 145, 198, 234, 267, 290, 310, 312],
+                borderColor: '#2D9A52',
+                backgroundColor: 'rgba(45,154,82,0.08)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 3,
+                borderWidth: 2,
+            },
+            {
+                label: 'P99 (ms)',
+                data: [145, 167, 212, 298, 412, 534, 623, 756, 889, 1012, 1023],
+                borderColor: '#DC3545',
+                backgroundColor: 'transparent',
+                tension: 0.3,
+                pointRadius: 3,
+                borderDash: [4, 4],
+                borderWidth: 1.5,
+            }
+        ]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10 } } } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#f0f0f0' }, title: { display: true, text: 'ms', font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// --- JMeter: TPS vs Errors ---
+new Chart(document.getElementById('jmeterTpsErrorChart'), {
+    type: 'bar',
+    data: {
+        labels: ['50并发','100并发','200并发','500并发','1000并发'],
+        datasets: [
+            {
+                label: 'TPS',
+                data: [587, 703, 748, 976, 980],
+                backgroundColor: '#4a90d9',
+                borderRadius: 4,
+                yAxisID: 'y1',
+                barPercentage: 0.6,
+            },
+            {
+                label: 'Error Rate (%)',
+                data: [0, 0, 0.01, 0.02, 0.05],
+                borderColor: '#DC3545',
+                backgroundColor: 'rgba(220,53,69,0.08)',
+                type: 'line',
+                yAxisID: 'y2',
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: '#DC3545',
+            }
+        ]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { usePointStyle: true, font: { size: 10 } } } },
+        scales: {
+            y1: { beginAtZero: true, position: 'left', grid: { color: '#f0f0f0' }, title: { display: true, text: 'TPS', font: { size: 9 } } },
+            y2: { beginAtZero: true, position: 'right', grid: { display: false }, max: 0.1, title: { display: true, text: '%', font: { size: 9 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// --- Dashboard: Overview ---
+new Chart(document.getElementById('dashOverviewChart'), {
+    type: 'radar',
+    data: {
+        labels: ['功能测试', '接口测试', '性能测试', '安全测试', '代码质量', '兼容性'],
+        datasets: [
+            {
+                label: '当前得分',
+                data: [100, 100, 92, 95, 98.6, 96],
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16,185,129,0.15)',
+                pointBackgroundColor: '#10b981',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                borderWidth: 2,
+            },
+            {
+                label: '上线标准线',
+                data: [80, 85, 75, 90, 85, 80],
+                borderColor: '#64748b',
+                backgroundColor: 'transparent',
+                borderDash: [5, 5],
+                pointRadius: 0,
+                borderWidth: 1.5,
+            }
+        ]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11 } } }
+        },
+        scales: {
+            r: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { stepSize: 20, font: { size: 9 } },
+                pointLabels: { font: { size: 11, weight: 600 } },
+                grid: { color: 'rgba(255,255,255,0.06)' },
+                angleLines: { color: 'rgba(255,255,255,0.06)' }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

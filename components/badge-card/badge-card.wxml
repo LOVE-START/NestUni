@@ -1,0 +1,31 @@
+<view class="badge-card badge-{{badge.rarity}} badge-{{size}} {{isLocked ? 'locked' : ''}} {{isWorn ? 'worn' : ''}} {{isTapped ? 'tapped' : ''}}" bindtap="onTap">
+  <!-- 已佩戴标识 - 金色闪烁圆点 -->
+  <view wx:if="{{isWorn && !isLocked}}" class="worn-badge"></view>
+  
+  <!-- 点击光效 -->
+  <view class="click-burst {{isTapped ? 'active' : ''}}"></view>
+  
+  <!-- 粒子爆发效果 -->
+  <view class="particle-container {{isTapped ? 'active' : ''}}">
+    <view class="particle p1"></view>
+    <view class="particle p2"></view>
+    <view class="particle p3"></view>
+    <view class="particle p4"></view>
+    <view class="particle p5"></view>
+    <view class="particle p6"></view>
+    <view class="particle p7"></view>
+    <view class="particle p8"></view>
+  </view>
+  
+  <!-- 光芒扩散效果 -->
+  <view class="glow-ring {{isTapped ? 'active' : ''}}"></view>
+  
+  <view class="badge-icon">
+    <image wx:if="{{badge.icon}}" src="{{badge.icon}}" mode="aspectFit"></image>
+    <view wx:if="{{isLocked}}" class="lock-overlay">
+      <text class="lock-icon">🔒</text>
+    </view>
+  </view>
+  <view wx:if="{{showName}}" class="badge-name">{{badge.name}}</view>
+  <view wx:if="{{showName && !isLocked}}" class="badge-rarity">{{rarityNames[badge.rarity]}}</view>
+</view>

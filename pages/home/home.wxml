@@ -1,0 +1,92 @@
+<view class="page">
+	<theme-provider bind:themeChange="onThemeChange">
+		<!-- 公告弹窗组件 -->
+		<announcement-modal 
+			show="{{showAnnouncement}}" 
+			title="{{announcementTitle}}"
+			content="{{announcementContent}}"
+			image="{{announcementImage}}"
+			announcementVersion="{{announcementVersion}}"
+			bind:confirm="onAnnouncementConfirm"
+			bind:close="onAnnouncementClose"
+		/>
+		
+		<!-- Hero 区域：点击可自定义壁纸 -->
+		<view class="hero-kawaii" bindtap="onHeroWallpaperTap">
+			<image class="hero__img-kawaii" src="{{heroWallpaper || defaultHeroImage}}" mode="aspectFill" />
+			<view class="hero__mask-kawaii"></view>
+			<view class="hero__title-kawaii">Refine Your Campus Life</view>
+		</view>
+
+		<view class="page-padding-kawaii">
+			<!-- Search -->
+			<view class="search-wrapper-kawaii">
+				<text class="icon-search-kawaii">🔍</text>
+				<input class="input-kawaii input--rounded-kawaii" placeholder="搜索社团与活动" confirm-type="search" bindinput="onSearchInput" bindconfirm="onSearchConfirm" value="{{keyword}}" />
+				<view class="ai-icon-kawaii" bindtap="goToAIChat">
+					<image src="/images/aichat.png" mode="aspectFit" />
+				</view>
+			</view>
+
+			<!-- Categories -->
+			<scroll-view scroll-x="true" class="categories-kawaii" enable-flex="true" show-scrollbar="false">
+				<view class="categories-container-kawaii">
+					<block wx:for="{{categories}}" wx:key="name">
+						<view class="chip--circle-kawaii {{currentCategory===item.name?'chip--active-kawaii':''}}" data-name="{{item.name}}" bindtap="onTapCategory" style="{{currentCategory===item.name ? '--active-gradient: ' + theme.gradient : ''}}">
+							<image class="chip-icon" src="{{item.icon}}" mode="aspectFit" />
+							<text class="chip-text">{{item.name}}</text>
+						</view>
+					</block>
+				</view>
+			</scroll-view>
+
+			<!-- Product/Club grid -->
+			<block wx:if="{{clubs.length === 0}}">
+				<view class="empty-kawaii">暂无社团数据</view>
+			</block>
+
+			<view class="grid-kawaii">
+				<block wx:for="{{clubs}}" wx:key="id">
+					<view class="card-kawaii card--club-kawaii" bindtap="goDetail" data-id="{{item.id}}">
+						<view class="card__media-kawaii">
+							<image src="{{item.coverImage}}" mode="aspectFill" lazy-load="true" />
+							<view class="card__overlay-kawaii">
+								<view class="card__badge-kawaii">
+									<text class="badge__text-kawaii">{{item.memberCount || 0}}人</text>
+								</view>
+								<!-- 招新ing标签：显示在人数右边 -->
+								<view class="card__recruit-badge-kawaii" wx:if="{{item.isRecruiting}}">
+									<text class="recruit-badge__text-kawaii">招新ing</text>
+								</view>
+							</view>
+						</view>
+						<view class="card__body-kawaii">
+							<view class="card__header-kawaii">
+								<text class="card__title-kawaii">{{item.name}}</text>
+							</view>
+							<text class="card__subtitle-kawaii">{{item.shortIntro}}</text>
+							<view class="card__tags-kawaii">
+								<block wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">
+									<text class="card__tag-kawaii">{{tag}}</text>
+								</block>
+							</view>
+							<view class="card__footer-kawaii">
+								<view class="card__location-kawaii">
+									<text class="location__icon-kawaii">📍</text>
+									<text class="location__text-kawaii">{{item.level === 'school' ? '校级' : item.level === 'college' ? '院级' : '校内'}}</text>
+								</view>
+								<view class="card__status-kawaii {{item.category === 'academic' ? 'status--active-kawaii' : 'status--inactive-kawaii'}}" style="--status-gradient: {{theme.gradient}}">
+									<text class="status__text-kawaii">{{item.category === 'academic' ? '学术' : item.category || '其他'}}</text>
+								</view>
+							</view>
+						</view>
+					</view>
+				</block>
+			</view>
+		</view>
+
+		<view class="safe-bottom-kawaii"></view>
+
+		<bottom-bar active="home" />
+	</theme-provider>
+</view>

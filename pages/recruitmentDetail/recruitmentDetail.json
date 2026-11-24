@@ -1,0 +1,9 @@
+{
+	"navigationStyle": "custom",
+	"enablePullDownRefresh": true,
+	"usingComponents": {
+		"back-button": "/components/back-button/back-button",
+		"theme-provider": "/components/theme-provider/theme-provider",
+		"login-modal": "/components/login-modal/login-modal"
+	}
+}

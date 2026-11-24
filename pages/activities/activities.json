@@ -1,0 +1,8 @@
+{
+	"navigationStyle": "custom",
+	"enablePullDownRefresh": true,
+	"usingComponents": {
+		"bottom-bar": "/components/bottom-bar/bottom-bar",
+		"theme-provider": "/components/theme-provider/theme-provider"
+	}
+}

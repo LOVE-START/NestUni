@@ -1,0 +1,120 @@
+<view class="modal-overlay {{show ? 'show' : ''}}" wx:if="{{show}}" bindtap="onClose">
+  <!-- 背景粒子系统 -->
+  <view class="particle-system particle-{{badge.rarity}}">
+    <!-- 光芒射线 -->
+    <view class="light-rays">
+      <view class="ray ray-1"></view>
+      <view class="ray ray-2"></view>
+      <view class="ray ray-3"></view>
+      <view class="ray ray-4"></view>
+      <view class="ray ray-5"></view>
+      <view class="ray ray-6"></view>
+      <view class="ray ray-7"></view>
+      <view class="ray ray-8"></view>
+    </view>
+    
+    <!-- 飘落粒子 -->
+    <view class="floating-particles">
+      <view class="float-particle fp-1"></view>
+      <view class="float-particle fp-2"></view>
+      <view class="float-particle fp-3"></view>
+      <view class="float-particle fp-4"></view>
+      <view class="float-particle fp-5"></view>
+      <view class="float-particle fp-6"></view>
+      <view class="float-particle fp-7"></view>
+      <view class="float-particle fp-8"></view>
+      <view class="float-particle fp-9"></view>
+      <view class="float-particle fp-10"></view>
+      <view class="float-particle fp-11"></view>
+      <view class="float-particle fp-12"></view>
+    </view>
+    
+    <!-- 闪烁星点 -->
+    <view class="sparkles">
+      <view class="sparkle s-1"></view>
+      <view class="sparkle s-2"></view>
+      <view class="sparkle s-3"></view>
+      <view class="sparkle s-4"></view>
+      <view class="sparkle s-5"></view>
+      <view class="sparkle s-6"></view>
+    </view>
+  </view>
+  
+  <view class="modal-container" catchtap>
+    <!-- 顶部引言 -->
+    <text class="quote-text" wx:if="{{badge.quote}}">"{{badge.quote}}"</text>
+
+    <!-- 羽章大图区域 -->
+    <view class="badge-image-area">
+      <image class="badge-main-image" src="{{badge.icon}}" mode="aspectFit"></image>
+      <!-- 稀有度气泡 -->
+      <view class="rarity-bubble" wx:if="{{badge.obtain_rate != null}}">
+        <text class="rarity-rate">仅{{badge.obtain_rate}}%</text>
+        <text class="rarity-label">的人获得</text>
+      </view>
+      <!-- 未解锁遮罩 -->
+      <view class="lock-overlay" wx:if="{{!badge.is_earned}}">
+        <text class="lock-icon">🔒</text>
+      </view>
+    </view>
+
+    <!-- 羽章名称 - 带麦穗装饰 -->
+    <view class="badge-name-row">
+      <image class="wheat-ear left" src="/images/leftmai.png" mode="aspectFit"></image>
+      <text class="badge-name">{{badge.name}}</text>
+      <text class="badge-level" wx:if="{{badge.level}}">Lv.{{badge.level}}</text>
+      <image class="wheat-ear right" src="/images/rightmai.png" mode="aspectFit"></image>
+    </view>
+
+    <!-- 描述文字 -->
+    <text class="badge-desc">{{badge.description || ''}}</text>
+    <view class="desc-hint" wx:if="{{badge.description}}">
+      <text class="hint-icon">ⓘ</text>
+    </view>
+
+    <!-- 获得时间 -->
+    <text class="obtain-time" wx:if="{{badge.is_earned && formattedDate}}">{{formattedDate}} 获得</text>
+
+    <!-- 奖励卡片 -->
+    <view class="reward-card" wx:if="{{badge.reward && badge.is_earned}}">
+      <view class="reward-info">
+        <text class="reward-amount">{{badge.reward.value}}</text>
+        <view class="reward-detail">
+          <text class="reward-title">{{badge.reward.name}}</text>
+          <text class="reward-rule">{{badge.reward.condition}}</text>
+          <text class="reward-expire" wx:if="{{badge.reward.expire}}">{{badge.reward.expire}}</text>
+        </view>
+      </view>
+      <view class="claim-btn" bindtap="onClaimReward">
+        <text class="claim-text">领取</text>
+      </view>
+    </view>
+
+    <!-- 佩戴按钮 -->
+    <button 
+      class="wear-btn {{isWorn ? 'wearing' : ''}}" 
+      bindtap="onToggleWear"
+      wx:if="{{badge.is_earned}}"
+    >
+      <text class="wear-text">{{isWorn ? '取消佩戴' : '佩戴'}}</text>
+    </button>
+
+    <!-- 未解锁提示 -->
+    <text class="lock-hint" wx:if="{{!badge.is_earned}}">未解锁该羽章</text>
+
+    <!-- 底部缩略图列表 -->
+    <scroll-view class="thumb-list" scroll-x wx:if="{{badgeList.length > 0}}">
+      <view
+        class="thumb-item {{item.id === badge.id ? 'active' : ''}}"
+        wx:for="{{badgeList}}"
+        wx:key="id"
+        bindtap="onSwitchBadge"
+        data-id="{{item.id}}"
+      >
+        <image class="thumb-img" src="{{item.icon}}" mode="aspectFit"></image>
+        <view class="thumb-dot active" wx:if="{{item.id === badge.id}}"></view>
+        <view class="thumb-dot" wx:else></view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

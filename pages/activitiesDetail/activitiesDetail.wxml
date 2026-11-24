@@ -1,0 +1,179 @@
+<!-- 活动详情页面 -->
+<theme-provider id="themeProvider">
+  <view class="activities-detail-page">
+    <block wx:if="{{event}}">
+      <!-- 顶部封面 -->
+      <view class="cover-container">
+        <swiper class="cover-swiper" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{5000}}" circular="{{true}}">
+          <swiper-item wx:for="{{[cachedCoverImage]}}" wx:key="index">
+            <image class="cover-image" src="{{item}}" mode="aspectFill" bindtap="previewCoverImage" data-url="{{cachedCoverImage}}"></image>
+          </swiper-item>
+        </swiper>
+        
+        <!-- 活动分类标签 -->
+        <view wx:if="{{event.category}}" class="event-category-tag" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{event.category}}</view>
+
+        <!-- 返回按钮 -->
+        <back-button absolute="{{true}}" solid="{{true}}" custom-back="{{true}}" bind:back="goBack"></back-button>
+        
+        <!-- 活动状态标签 -->
+        <view class="event-status {{event.statusClass}}" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+          <text>{{event.statusText}}</text>
+        </view>
+      </view>
+
+      <!-- 活动信息卡片 -->
+      <view class="event-card">
+        <view class="event-header">
+          <view class="event-title-info">
+            <view class="event-name" style="--decoration-bg: {{theme.gradient}}">{{event.title}}</view>
+          </view>
+          <!-- 报名按钮 -->
+          <block wx:if="{{permissionChecked && hasPermission}}">
+            <button 
+              wx:if="{{!isJoined}}" 
+              class="join-button" 
+              bindtap="joinEvent"
+              style="background-image: var(--decoration-bg, {{theme.gradient}})">
+              报名参加
+            </button>
+            <button 
+              wx:else 
+              class="cancel-join-button" 
+              bindtap="cancelJoin"
+              style="background-image: var(--decoration-bg, {{theme.gradient}})">
+              取消报名
+            </button>
+          </block>
+        </view>
+
+        <!-- 活动信息徽章 -->
+        <view class="info-badges">
+          <view class="stat-item">
+            <view class="badge-circle date-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/calendar.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{event.formattedDate || event.date}}</text>
+            <text class="badge-label">日期</text>
+          </view>
+
+          <view class="stat-item">
+            <view class="badge-circle time-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/time.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{event.time}}</text>
+            <text class="badge-label">时间</text>
+          </view>
+
+          <view class="stat-item location-clickable" bindtap="goToEventMap">
+            <view class="badge-circle location-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/locatione.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{event.shortLocation || event.location_name || event.location}}</text>
+            <text class="badge-label">地点</text>
+            <text class="location-arrow">›</text>
+          </view>
+        </view>
+
+      </view>
+
+      <!-- 活动介绍 -->
+      <view class="section-container">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">活动介绍</view>
+        </view>
+        <view class="section-content">
+          <view class="event-full-description">{{event.description}}</view>
+        </view>
+      </view>
+
+      <!-- 活动图片 -->
+      <view wx:if="{{event.images && event.images.length > 0}}" class="section-container">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">活动图片</view>
+        </view>
+        <view class="event-images-container">
+          <view class="event-images">
+            <image 
+              wx:for="{{cachedImages}}" 
+              wx:key="index" 
+              class="event-image" 
+              src="{{item}}" 
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-url="{{item}}"
+            ></image>
+          </view>
+        </view>
+      </view>
+
+      <!-- 报名信息 -->
+      <view class="section-container">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">报名信息</view>
+        </view>
+        <view class="registration-info">
+          <view wx:if="{{event.registrationDeadline || event.registration_deadline}}" class="info-item">
+            <text class="label">报名截止:</text>
+            <text class="value">{{event.formattedRegistrationDeadline || event.registrationDeadline || event.registration_deadline}}</text>
+          </view>
+          <view wx:if="{{event.contact}}" class="info-item">
+            <text class="label">联系方式:</text>
+            <text class="value">{{event.contact}}</text>
+          </view>
+          <view wx:if="{{event.organizer}}" class="info-item">
+            <text class="label">主办方:</text>
+            <text class="value">{{event.organizer}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 标签和要求 -->
+      <view class="section-container">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">标签与要求</view>
+        </view>
+        <view class="tags-requirements">
+          <!-- 标签展示 -->
+          <view wx:if="{{event.tags && event.tags.length > 0}}" class="tags-container">
+            <view wx:for="{{event.tags}}" wx:key="index" class="tag-item" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{item}}</view>
+          </view>
+          <view wx:elif="{{event.tags}}" class="tags-container">
+            <text class="empty-hint">暂无标签</text>
+          </view>
+          
+          <!-- 要求展示 -->
+          <view wx:if="{{event.requirements && event.requirements.length > 0}}" class="requirements-container">
+            <view wx:for="{{event.requirements}}" wx:key="index" class="requirement-item">{{item}}</view>
+          </view>
+          <view wx:elif="{{event.requirements}}" class="requirements-container">
+            <text class="empty-hint">暂无特殊要求</text>
+          </view>
+          
+          <!-- 无标签和要求时的提示 -->
+          <view wx:if="{{!event.tags && !event.requirements}}" class="tags-requirements">
+            <text class="empty-hint">该活动暂无标签和特殊要求</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-container" wx:if="{{permissionChecked && hasPermission}}">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">评论</view>
+        </view>
+        <comments 
+          target-type="event" 
+          target-id="{{event.id}}"
+          bind:commentPosted="onCommentPosted"
+          bind:commentDeleted="onCommentDeleted">
+        </comments>
+      </view>
+    </block>
+
+    <!-- 加载状态 -->
+    <view wx:else class="loading-container">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">加载中...</view>
+    </view>
+  </view>
+</theme-provider>

@@ -1,0 +1,183 @@
+<!-- 社团详情页面 -->
+<theme-provider id="themeProvider">
+  <view class="club-detail-container">
+    <!-- 加载状态 -->
+    <block wx:if="{{!club}}">
+      <view class="loading-container">
+        <view class="loading-spinner"></view>
+        <view class="loading-text">加载中...</view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <!-- 顶部封面 -->
+      <view class="cover-container">
+        <swiper class="cover-swiper" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{5000}}" circular="{{true}}">
+          <swiper-item wx:for="{{club.gallery || [club.cover_image]}}" wx:key="index">
+            <image class="cover-image" src="{{item}}" mode="aspectFill"></image>
+          </swiper-item>
+        </swiper>
+        
+        <!-- 社团分类标签 -->
+        <view wx:if="{{club.category}}" class="club-category-tag" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{club.category}}</view>
+
+        <!-- 返回按钮 -->
+        <back-button absolute="{{true}}" solid="{{true}}" custom-back="{{true}}" bind:back="goBack"></back-button>
+      </view>
+
+      <!-- 社团信息卡片 -->
+      <view class="club-card">
+        <view class="club-header">
+          <image class="club-logo" src="{{club.logo}}" mode="aspectFill"></image>
+          <view class="club-title-info">
+            <view class="club-name" style="--decoration-bg: {{theme.gradient}}">{{club.name}}</view>
+          </view>
+          
+          <!-- 操作按钮区域 -->
+          <view class="action-buttons">
+            <!-- 招新按钮（有招新信息时显示） -->
+            <view wx:if="{{recruitment}}" class="recruitment-button-container">
+              <button class="recruitment-button" bindtap="goToRecruitment" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+                <text class="recruitment-icon">📝</text>
+                <text>招新</text>
+              </button>
+            </view>
+            
+            <!-- 编辑按钮（仅会长可见，解密后显示） -->
+            <view wx:if="{{isClubLeader && showEditButton}}" class="edit-button-container">
+              <button class="edit-button" bindtap="editClubInfo" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+                <image class="edit-icon" src="/images/edit.png" mode="aspectFit"></image>
+                <text>编辑</text>
+              </button>
+            </view>
+          </view>
+        </view>
+
+        <!-- 社团信息徽章 -->
+        <view class="info-badges">
+          <view class="stat-item clickable" bindtap="onStatItemClick" data-stat="members">
+            <view class="badge-circle members-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/people.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{club.member_count}}</text>
+            <text class="badge-label">成员</text>
+          </view>
+
+          <view class="stat-item clickable" bindtap="onStatItemClick" data-stat="events">
+            <view class="badge-circle events-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/activity1.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{clubEvents.length || 0}}</text>
+            <text class="badge-label">活动</text>
+          </view>
+
+          <!-- 替换评级为公告数量 -->
+          <view class="stat-item clickable" bindtap="onStatItemClick" data-stat="announcements">
+            <view class="badge-circle announcements-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="badge-icon" src="/images/announcement.png" mode="aspectFit"></image>
+            </view>
+            <text class="badge-value">{{clubAnnouncements.length || 0}}</text>
+            <text class="badge-label">公告</text>
+          </view>
+        </view>
+
+        <!-- 社团简介 -->
+        <view class="club-description" style="--decoration-bg: {{theme.gradient}}">
+          <view class="decoration-strip"></view>
+          {{club.short_intro}}
+        </view>
+      </view>
+
+      <!-- 社团介绍 -->
+      <view class="section-container">
+        <view class="section-header clickable" bindtap="onSectionHeaderClick" id="intro-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">Introduction 介绍</view>
+        </view>
+        <view class="section-content">
+          <view class="club-full-description">{{club.description}}</view>
+        </view>
+      </view>
+
+      <!-- 社团相册 -->
+      <view wx:if="{{club.gallery && club.gallery.length > 0}}" class="section-container">
+        <view class="section-header clickable" bindtap="onSectionHeaderClick" id="gallery-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">Album 相册</view>
+        </view>
+        <view class="gallery-container">
+          <scroll-view class="gallery-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}">
+            <view class="gallery-list">
+              <view class="gallery-item" wx:for="{{club.gallery}}" wx:key="index" bindtap="viewGallery" data-index="{{index}}">
+                <image class="gallery-image" src="{{item}}" mode="aspectFill"></image>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+
+      <!-- 社团公告 -->
+      <view wx:if="{{clubAnnouncements && clubAnnouncements.length > 0}}" class="section-container">
+        <view class="section-header clickable" bindtap="onSectionHeaderClick" id="announcement-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">Announcement 公告</view>
+        </view>
+        <view class="announcements-container">
+          <block wx:for="{{clubAnnouncements}}" wx:key="id">
+            <view class="announcement-card">
+              <view class="announcement-header">
+                <view class="announcement-title">{{item.title}}</view>
+                <view class="announcement-date">{{item.formattedCreatedAt}}</view>
+              </view>
+              <view class="announcement-content">{{item.content}}</view>
+              <view wx:if="{{item.images && item.images.length > 0}}" class="announcement-images">
+                <block wx:for="{{item.images}}" wx:key="index">
+                  <image 
+                    class="announcement-image" 
+                    src="{{item}}" 
+                    mode="aspectFill" 
+                    bindtap="previewAnnouncementImage" 
+                    data-url="{{item}}" 
+                    data-images="{{item.images}}"
+                    data-announcement-id="{{item.id}}"
+                    data-image-index="{{index}}"
+                  ></image>
+                </block>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 社团活动 -->
+      <view wx:if="{{clubEvents && clubEvents.length > 0}}" class="section-container">
+        <view class="section-header">
+          <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}"> Activities 活动</view>
+        </view>
+        <view class="events-container">
+          <block wx:for="{{clubEvents}}" wx:key="id">
+            <view class="event-card" bindtap="viewEvent" data-id="{{item.id}}">
+              <view class="event-cover">
+                <image class="event-cover-image" src="{{item.cover_image || '/images/default-event.png'}}" mode="aspectFill"></image>
+                <view class="event-overlay">
+                  <view wx:if="{{item.category}}" class="event-category" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{item.category}}</view>
+                </view>
+              </view>
+              <view class="event-content">
+                <view class="event-title">{{item.title}}</view>
+                <view class="event-meta">
+                  <view class="event-date">
+                    <image class="meta-icon" src="/images/times.png" mode="aspectFit"></image>
+                    <text>{{item.formattedDate}}</text>
+                  </view>
+                  <view class="event-location">
+                    <image class="meta-icon" src="/images/location.png" mode="aspectFit"></image>
+                    <text>{{item.location}}</text>
+                  </view>
+                </view>
+                <view class="event-description">{{item.description}}</view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+</theme-provider>

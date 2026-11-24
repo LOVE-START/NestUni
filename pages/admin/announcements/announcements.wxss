@@ -1,0 +1,22 @@
+@import "../admin-common.wxss";
+
+/* 公告管理页专属细节 */
+
+.detail-body {
+  padding-bottom: 40rpx;
+}
+
+/* 列表缩略图：小尺寸方图，保持卡片节奏 */
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 14rpx;
+}
+
+.thumb {
+  width: 112rpx;
+  height: 112rpx;
+  margin: 0 12rpx 12rpx 0;
+  border-radius: 10rpx;
+  background: #f2eee5;
+}

@@ -1,0 +1,6 @@
+{
+	"navigationStyle": "custom",
+	"usingComponents": {
+		"theme-provider": "/components/theme-provider/theme-provider"
+	}
+}

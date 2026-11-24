@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "theme-provider": "/components/theme-provider/theme-provider",
+    "chat-nav-bar": "/components/chat-nav-bar/chat-nav-bar"
+  },
+  "navigationStyle": "custom"
+}

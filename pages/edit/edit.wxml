@@ -1,0 +1,778 @@
+<!-- pages/edit/edit.wxml -->
+
+<view wx:if="{{!permissionChecked}}" class="loading-page">
+  <view class="loading-spinner"></view>
+  <text class="loading-text">没完成...</text>
+</view>
+
+<view wx:elif="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+</view>
+
+<view wx:elif="{{permissionChecked && hasPermission}}" class="page-wrapper" style="--decoration-bg: {{theme.gradient}}; --theme-primary: {{theme.colors.primary}}; --theme-shadow: rgba(255, 175, 189, 0.15);">
+  <back-button wx:if="{{!(showAddAnnouncementModal || showAddEventModal || showAddMemberModal || showAddRecruitmentModal)}}"></back-button>
+  
+  <!-- 页面切换标签 -->
+  <view class="tab-container">
+    <view class="tab {{currentTab === 'club' ? 'active' : ''}}" data-tab="club" bindtap="switchTab">社团信息</view>
+    <view class="tab {{currentTab === 'announcement' ? 'active' : ''}}" data-tab="announcement" bindtap="switchTab">公告管理</view>
+    <view class="tab {{currentTab === 'event' ? 'active' : ''}}" data-tab="event" bindtap="switchTab">活动管理</view>
+    <view class="tab {{currentTab === 'recruitment' ? 'active' : ''}}" data-tab="recruitment" bindtap="switchTab">招新管理</view>
+    <view class="tab {{currentTab === 'member' ? 'active' : ''}}" data-tab="member" bindtap="switchTab">成员管理</view>
+    <view class="tab {{currentTab === 'analysis' ? 'active' : ''}}" data-tab="analysis" bindtap="switchTab">数据分析</view>
+  </view>
+  
+  <!-- 可滚动内容区域 -->
+  <scroll-view class="content-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}">
+    <view class="container">
+  
+  <!-- 社团信息编辑页面 -->
+  <view wx:if="{{currentTab === 'club'}}" class="tab-content">
+    <view class="form-container">
+      <view class="form-item">
+        <text class="label">社团名称 *</text>
+        <input class="input" placeholder="请输入社团名称" 
+               bindinput="onInputChange" 
+               data-field="name"
+               value="{{clubInfo.name}}" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">简短介绍</text>
+        <input class="input" placeholder="请输入简短介绍" 
+               bindinput="onInputChange" 
+               data-field="short_intro"
+               value="{{clubInfo.short_intro}}" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">社团分类</text>
+        <picker bindchange="onCategoryChange" value="{{categories.indexOf(clubInfo.category)}}" range="{{categories}}">
+          <view class="picker">{{clubInfo.category || '请选择分类'}}</view>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">社团级别</text>
+        <picker bindchange="onLevelChange" value="{{clubInfo.level === 'school' ? 1 : 0}}" range="{{['学院级', '校级']}}">
+          <view class="picker">{{clubInfo.level === 'school' ? '校级' : '学院级'}}</view>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">详细介绍</text>
+        <textarea class="textarea" placeholder="请输入社团详细介绍" 
+                  bindinput="onInputChange" 
+                  data-field="description"
+                  value="{{clubInfo.description}}" />
+      </view>
+      
+      <!-- Logo上传 -->
+      <view class="form-item">
+        <text class="label">社团Logo</text>
+        <image-upload 
+          imageUrl="{{clubInfo.logo}}"
+          placeholder="上传Logo"
+          hint="建议尺寸200x200像素"
+          bind:change="onLogoChange"
+          bind:delete="onLogoDelete"
+        />
+      </view>
+      
+      <!-- 封面图上传 -->
+      <view class="form-item">
+        <text class="label">封面图片</text>
+        <image-upload 
+          imageUrl="{{clubInfo.cover_image}}"
+          placeholder="上传封面"
+          hint="建议尺寸750x400像素"
+          bind:change="onCoverImageChange"
+          bind:delete="onCoverImageDelete"
+        />
+      </view>
+      
+      <!-- 相册上传 -->
+      <view class="form-item">
+        <text class="label">社团相册</text>
+        <image-upload 
+          images="{{clubInfo.gallery}}"
+          multiple="{{true}}"
+          maxCount="{{9}}"
+          placeholder="添加图片"
+          bind:change="onGalleryChange"
+          bind:delete="onGalleryImageDelete"
+          bind:preview="onGalleryPreview"
+        />
+      </view>
+      
+      <button class="save-btn" bindtap="saveClubInfo">保存社团信息</button>
+    </view>
+  </view>
+  
+  <!-- 公告管理页面 -->
+  <view wx:if="{{currentTab === 'announcement'}}" class="tab-content">
+    <view class="content-container">
+      <view class="actions">
+        <button class="add-btn" bindtap="showAddAnnouncementModal">公告</button>
+      </view>
+      
+      <view wx:if="{{announcements.length > 0}}" class="list-container announcement-list">
+        <view class="announcement-card {{item.approval_status === 'pending' ? 'pending-approval' : ''}} {{item.approval_status === 'rejected' ? 'rejected-approval' : ''}}" wx:for="{{announcements}}" wx:key="id">
+          <!-- 内容区域 -->
+          <view class="announcement-body">
+            <!-- 标题行 -->
+            <view class="announcement-header">
+              <text class="announcement-title">{{item.title || '无标题'}}</text>
+              <view class="announcement-approval-tag {{item.approval_status}}">{{item.approval_status_label}}</view>
+            </view>
+            
+            <!-- 时间显示 -->
+            <view class="announcement-meta">
+              <text class="announcement-time">{{item.formatted_created_at}}</text>
+            </view>
+            
+            <!-- 公告内容 - 完整显示 -->
+            <view class="announcement-content">
+              <text class="content-text">{{item.content || '暂无内容'}}</text>
+            </view>
+            
+            <!-- 拒绝原因 -->
+            <view class="reject-reason-box" wx:if="{{item.approval_status === 'rejected' && item.reject_reason}}">
+              <view class="reject-reason-header">
+                <text class="reject-reason-icon">⚠️</text>
+                <text class="reject-reason-title">拒绝原因</text>
+              </view>
+              <text class="reject-reason-text">{{item.reject_reason}}</text>
+            </view>
+            
+            <!-- 图片缩略图 -->
+            <view class="announcement-images" wx:if="{{item.images && item.images.length > 0 && item.images[0]}}">
+              <image 
+                wx:for="{{item.images}}" 
+                wx:for-item="img" 
+                wx:key="index" 
+                wx:if="{{img}}"
+                class="announcement-thumbnail" 
+                src="{{img}}" 
+                mode="aspectFill"
+                catchtap="previewAnnouncementListImage"
+                data-url="{{img}}"
+                data-images="{{item.images}}"
+              />
+            </view>
+            
+            <!-- 操作按钮 -->
+            <view class="announcement-actions">
+              <button class="event-btn edit-btn" bindtap="editAnnouncement" data-id="{{item.id}}">编辑</button>
+              <button class="event-btn delete-btn" bindtap="deleteAnnouncement" data-id="{{item.id}}">删除</button>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view wx:else class="empty-state">
+        <text class="empty-icon">📢</text>
+        <text class="empty-text">暂无公告</text>
+      </view>
+      
+      <view class="pagination" wx:if="{{announcementPagination.totalPages > 1}}">
+        <button class="page-btn" bindtap="prevAnnouncementPage" disabled="{{announcementPagination.page <= 1}}">上一页</button>
+        <text class="page-info">{{announcementPagination.page}} / {{announcementPagination.totalPages}}</text>
+        <button class="page-btn" bindtap="nextAnnouncementPage" disabled="{{announcementPagination.page >= announcementPagination.totalPages}}">下一页</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 活动管理页面 -->
+  <view wx:if="{{currentTab === 'event'}}" class="tab-content">
+    <view class="content-container">
+      <view class="actions">
+        <button class="add-btn" bindtap="showAddEventModal">活动</button>
+      </view>
+      
+      <view wx:if="{{events.length > 0}}" class="list-container event-list">
+        <view class="event-card {{item.approval_status === 'pending' ? 'pending-approval' : ''}} {{item.approval_status === 'rejected' ? 'rejected-approval' : ''}}" wx:for="{{events}}" wx:key="id">
+          <!-- 封面图片区域 -->
+          <view class="event-cover" wx:if="{{item.cover_image}}">
+            <image class="cover-image" src="{{item.cover_image}}" mode="aspectFill" bindtap="previewEventListImage" data-url="{{item.cover_image}}" data-images="{{item.images}}" />
+            <view class="event-status-badge">{{item.status_label}}</view>
+            <view class="approval-status-badge {{item.approval_status}}">{{item.approval_status_label}}</view>
+          </view>
+          
+          <!-- 内容区域 -->
+          <view class="event-body">
+            <!-- 标题行 -->
+            <view class="event-header">
+              <text class="event-title">{{item.title}}</text>
+              <view class="event-category-tag" wx:if="{{item.category}}">{{item.category}}</view>
+              <view class="approval-status-tag {{item.approval_status}}" wx:if="{{!item.cover_image}}">{{item.approval_status_label}}</view>
+            </view>
+            
+            <!-- 信息区域 -->
+            <view class="event-info-group">
+              <view class="info-row">
+                <text class="info-dot"></text>
+                <text class="info-text">{{item.date}} {{item.time}}</text>
+              </view>
+              <view class="info-row">
+                <text class="info-dot"></text>
+                <text class="info-text location-text">{{item.location}}</text>
+                <view wx:if="{{item.latitude && item.longitude}}" class="coords-badge">
+                  <text class="coords-text-mini">已定位</text>
+                </view>
+              </view>
+              <view class="info-row" wx:if="{{item.related_clubs_names}}">
+                <text class="info-dot"></text>
+                <text class="info-text clubs-text">{{item.related_clubs_names}}</text>
+              </view>
+            </view>
+            
+            <!-- 拒绝原因 -->
+            <view class="reject-reason-box" wx:if="{{item.approval_status === 'rejected' && item.reject_reason}}">
+              <view class="reject-reason-header">
+                <text class="reject-reason-icon">⚠️</text>
+                <text class="reject-reason-title">拒绝原因</text>
+              </view>
+              <text class="reject-reason-text">{{item.reject_reason}}</text>
+            </view>
+            
+            <!-- 操作按钮 -->
+            <view class="event-actions">
+              <button class="event-btn remind-btn" bindtap="sendEventNotify" data-id="{{item.id}}" data-title="{{item.title}}" data-date="{{item.date}}" data-time="{{item.time}}" data-location="{{item.location}}">通知</button>
+              <button class="event-btn edit-btn" bindtap="editEvent" data-id="{{item.id}}">编辑</button>
+              <button class="event-btn delete-btn" bindtap="deleteEvent" data-id="{{item.id}}">删除</button>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view wx:else class="empty-state">
+        <text class="empty-icon">🎪</text>
+        <text class="empty-text">暂无活动</text>
+      </view>
+      
+      <view class="pagination" wx:if="{{eventPagination.totalPages > 1}}">
+        <button class="page-btn" bindtap="prevEventPage" disabled="{{eventPagination.page <= 1}}">上一页</button>
+        <text class="page-info">{{eventPagination.page}} / {{eventPagination.totalPages}}</text>
+        <button class="page-btn" bindtap="nextEventPage" disabled="{{eventPagination.page >= eventPagination.totalPages}}">下一页</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 招新管理页面 -->
+  <view wx:if="{{currentTab === 'recruitment'}}" class="tab-content">
+    <view class="content-container">
+      <view class="actions">
+        <button class="add-btn" bindtap="showAddRecruitmentModal">招新</button>
+      </view>
+      
+      <view wx:if="{{recruitments.length > 0}}" class="list-container recruitment-list">
+        <view class="recruitment-card" wx:for="{{recruitments}}" wx:key="id">
+          <!-- 封面图片区域 -->
+          <view class="recruitment-cover" wx:if="{{item.cover_image}}">
+            <image class="cover-image" src="{{item.cover_image}}" mode="aspectFill" />
+            <view class="recruitment-status-badge">{{item.statusText}}</view>
+          </view>
+          
+          <!-- 内容区域 -->
+          <view class="recruitment-body">
+            <!-- 标题行 -->
+            <view class="recruitment-header">
+              <text class="recruitment-title">{{item.title}}</text>
+              <view class="recruitment-status-tag" wx:if="{{!item.cover_image}}">{{item.statusText}}</view>
+            </view>
+            
+            <!-- 信息区域 -->
+            <view class="recruitment-info-group">
+              <view class="info-row" wx:if="{{item.start_time}}">
+                <text class="info-dot"></text>
+                <text class="info-text">开始: {{item.start_time}}</text>
+              </view>
+              <view class="info-row" wx:if="{{item.end_time}}">
+                <text class="info-dot"></text>
+                <text class="info-text">截止: {{item.end_time}}</text>
+              </view>
+              <view class="info-row" wx:if="{{item.max_applicants}}">
+                <text class="info-dot"></text>
+                <text class="info-text">招募人数: {{item.current_applicants || 0}} / {{item.max_applicants}}</text>
+              </view>
+            </view>
+            
+            <!-- 操作按钮 -->
+            <view class="recruitment-actions">
+              <button class="event-btn edit-btn" bindtap="editRecruitment" data-id="{{item.id}}">编辑</button>
+              <button class="event-btn delete-btn" bindtap="deleteRecruitment" data-id="{{item.id}}">删除</button>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view wx:else class="empty-state">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">暂无招新</text>
+      </view>
+      
+      <view class="pagination" wx:if="{{recruitmentPagination.totalPages > 1}}">
+        <button class="page-btn" bindtap="prevRecruitmentPage" disabled="{{recruitmentPagination.currentPage <= 1}}">上一页</button>
+        <text class="page-info">{{recruitmentPagination.currentPage}} / {{recruitmentPagination.totalPages}}</text>
+        <button class="page-btn" bindtap="nextRecruitmentPage" disabled="{{recruitmentPagination.currentPage >= recruitmentPagination.totalPages}}">下一页</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 成员管理页面 -->
+  <view wx:if="{{currentTab === 'member'}}" class="tab-content">
+    <view class="content-container">
+      <view class="actions">
+        <button class="add-btn" bindtap="showAddMemberModal">成员</button>
+      </view>
+      
+      <view wx:if="{{clubMembers.length > 0}}" class="list-container member-list">
+        <view class="member-card {{item.status === 'graduated' ? 'graduated' : ''}}" wx:for="{{clubMembers}}" wx:key="user_id">
+          <image class="member-avatar {{item.status === 'graduated' ? 'grayscale' : ''}}" src="{{item.avatar_url || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="member-info">
+            <view class="member-name-section">
+              <text class="member-nickname">{{item.nickname}}</text>
+              <text class="member-student-id">{{item.student_id}}</text>
+            </view>
+            <view class="member-role-tag {{item.role}}">{{item.role === 'leader' ? '团长' : '成员'}}</view>
+          </view>
+          <view class="member-actions">
+            <view class="action-icon {{item.status === 'graduated' ? 'restore' : 'graduate'}}" 
+                  bindtap="toggleMemberStatus" 
+                  data-user-id="{{item.user_id}}" 
+                  data-current-status="{{item.status || 'active'}}">
+              <image class="action-icon-img" src="{{item.status === 'graduated' ? '/images/restore.png' : '/images/graduate.png'}}" mode="aspectFit" />
+            </view>
+            <view class="action-icon role" bindtap="changeMemberRole" data-user-id="{{item.user_id}}" data-current-role="{{item.role}}">
+              <image class="action-icon-img" src="/images/identity.png" mode="aspectFit" />
+            </view>
+            <view class="action-icon delete" bindtap="removeMember" data-user-id="{{item.user_id}}">
+              <text class="iconfont">✕</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view wx:else class="empty-state">
+        <text class="empty-icon">👥</text>
+        <text class="empty-text">暂无成员</text>
+      </view>
+      
+      <view class="pagination" wx:if="{{memberPagination.totalPages > 1}}">
+        <button class="page-btn" bindtap="prevMemberPage" disabled="{{memberPagination.page <= 1}}">上一页</button>
+        <text class="page-info">{{memberPagination.page}} / {{memberPagination.totalPages}}</text>
+        <button class="page-btn" bindtap="nextMemberPage" disabled="{{memberPagination.page >= memberPagination.totalPages}}">下一页</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 数据分析页面 -->
+  <view wx:if="{{currentTab === 'analysis'}}" class="tab-content">
+    <data-analysis clubId="{{clubId}}" />
+  </view>
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 添加/编辑公告模态框 -->
+<edit-modal 
+  show="{{showAddAnnouncementModal}}" 
+  title="{{editAnnouncementId ? '编辑公告' : '公告'}}"
+  fullscreen="{{true}}"
+  bind:close="closeAddAnnouncementModal"
+  bind:cancel="closeAddAnnouncementModal"
+  bind:confirm="saveAnnouncement"
+>
+  <view slot="content">
+    <view class="form-group">
+      <text class="form-label">公告标题</text>
+      <input class="form-input" placeholder="请输入公告标题" data-field="title" bindinput="onAnnouncementFormChange" value="{{announcementForm.title}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">公告内容</text>
+      <textarea class="form-textarea" placeholder="请输入公告内容" data-field="content" bindinput="onAnnouncementFormChange" value="{{announcementForm.content}}" />
+    </view>
+    
+    <!-- 公告图片上传 -->
+    <view class="image-upload-section">
+      <text class="section-title">公告图片</text>
+      <text class="hint-text">点击图片可预览，点击删除按钮可移除图片</text>
+      
+      <!-- 已上传的图片列表 -->
+      <view class="gallery-container" wx:if="{{announcementForm.images.length > 0}}">
+        <view class="gallery-item" wx:for="{{announcementForm.images}}" wx:key="index">
+          <view class="image-preview-container">
+            <image class="image-preview" src="{{item}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{item}}" data-field="images"></image>
+          </view>
+          <button class="delete-image-btn small" bindtap="deleteAnnouncementImage" data-index="{{index}}">删除</button>
+        </view>
+      </view>
+      
+      <!-- 添加图片按钮 -->
+      <button class="add-image-btn" bindtap="addImageSlot">
+        <text class="iconfont icon-add"></text>
+        <text>{{announcementForm.images.length > 0 ? '添加更多图片' : '添加图片'}}</text>
+      </button>
+    </view>
+  </view>
+</edit-modal>
+
+<!-- 添加/编辑活动模态框 -->
+<edit-modal 
+  show="{{showAddEventModal}}" 
+  title="{{editEventId ? '编辑活动' : '活动'}}"
+  fullscreen="{{true}}"
+  bind:close="closeAddEventModal"
+  bind:cancel="closeAddEventModal"
+  bind:confirm="saveEvent"
+>
+  <view slot="content">
+    <view class="form-group">
+      <text class="form-label">活动标题 *</text>
+      <input class="form-input" placeholder="请输入活动标题" data-field="title" bindinput="onEventFormChange" value="{{eventForm.title}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动日期 *</text>
+      <picker mode="date" value="{{eventForm.date}}" bindchange="onEventDateChange" start="2020-01-01" end="2030-12-31">
+        <view class="picker">{{eventForm.date || '请选择日期'}}</view>
+      </picker>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动时间 *</text>
+      <picker mode="time" value="{{eventForm.time}}" bindchange="onEventTimeChange">
+        <view class="picker">{{eventForm.time || '请选择时间'}}</view>
+      </picker>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动地点 *</text>
+      <view class="location-input-container">
+        <input class="form-input location-input" placeholder="请输入简化的地点 | 点击地图搜索选点" data-field="location" bindinput="onEventFormChange" value="{{eventForm.location}}" />
+        <view class="location-actions">
+          <button class="location-btn map-btn" bindtap="chooseLocation">
+            <text class="btn-icon">📍</text>
+            <text class="btn-text">地图选点</text>
+          </button>
+          <button wx:if="{{eventForm.latitude && eventForm.longitude}}" class="location-btn clear-btn" bindtap="clearLocation">
+            <text class="btn-text">清除坐标</text>
+          </button>
+        </view>
+        <view wx:if="{{eventForm.latitude && eventForm.longitude}}" class="location-coords">
+          <text class="coords-text">已选择坐标: {{eventForm.latitude.toFixed(6)}}, {{eventForm.longitude.toFixed(6)}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动分类</text>
+      <picker mode="selector" range="{{eventCategories}}" range-key="name" value="{{selectedCategoryIndex}}" bindchange="onEventCategoryChange">
+        <view class="picker">{{eventCategories[selectedCategoryIndex].name}}</view>
+      </picker>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动状态</text>
+      <picker mode="selector" range="{{eventStatusOptions}}" range-key="label" value="{{eventStatusIndex}}" bindchange="onEventStatusChange">
+        <view class="picker">{{selectedStatusLabel}}</view>
+      </picker>
+    </view>
+    
+    <!-- 社团关联选择 -->
+    <view class="form-group">
+      <text class="form-label">关联社团</text>
+      <view class="clubs-info">
+        <text class="info-text">您的社团 "{{clubInfo.name}}" 已自动关联且无法取消</text>
+      </view>
+      
+      <checkbox-group bindchange="onClubGroupChange">
+        <label class="checkbox-item {{item.id == clubId ? 'disabled' : ''}}" wx:for="{{allClubs}}" wx:key="id">
+          <checkbox value="{{item.id}}" disabled="{{item.id == clubId}}" />
+          <text class="checkbox-label">{{item.name}}</text>
+        </label>
+      </checkbox-group>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动描述</text>
+      <textarea class="form-textarea" placeholder="请输入活动描述" data-field="description" bindinput="onEventFormChange" value="{{eventForm.description}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">组织者</text>
+      <input class="form-input" placeholder="请输入组织者名称" data-field="organizer" bindinput="onEventFormChange" value="{{eventForm.organizer}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">联系方式</text>
+      <input class="form-input" placeholder="请输入联系方式" data-field="contact" bindinput="onEventFormChange" value="{{eventForm.contact}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">最大参与人数</text>
+      <input class="form-input" placeholder="请输入最大参与人数" data-field="max_participants" bindinput="onEventFormChange" value="{{eventForm.max_participants}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">报名截止日期</text>
+      <picker mode="date" value="{{eventForm.registration_deadline}}" bindchange="onEventRegistrationDeadlineChange" start="2020-01-01" end="2030-12-31">
+        <view class="picker">{{eventForm.registration_deadline || '请选择报名截止日期（可选）'}}</view>
+      </picker>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">活动标签</text>
+      <input class="form-input" placeholder="请输入标签，多个标签用逗号分隔" data-field="tags" bindinput="onEventFormChange" value="{{eventForm.tags}}" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">报名要求</text>
+      <textarea class="form-textarea" placeholder="请输入报名要求，每行一个要求" data-field="requirements" bindinput="onEventFormChange" value="{{eventForm.requirements}}" />
+    </view>
+    
+    <!-- 封面图片上传 -->
+    <view class="image-upload-section">
+      <text class="section-title">封面图片</text>
+      <view class="image-preview-container">
+        <image wx:if="{{eventForm.cover_image}}" class="image-preview" src="{{eventForm.cover_image}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{eventForm.cover_image}}" data-field="cover_image"></image>
+        <button wx:else class="upload-btn" bindtap="selectEventCoverImage">选择封面图片</button>
+      </view>
+      <button wx:if="{{eventForm.cover_image}}" class="delete-image-btn" bindtap="deleteEventCoverImage">删除封面图片</button>
+    </view>
+    
+    <!-- 活动图片上传 -->
+    <view class="image-upload-section">
+      <text class="section-title">活动图片</text>
+      <text class="hint-text">点击图片可预览，点击删除按钮可移除图片</text>
+      
+      <!-- 已上传的图片列表 -->
+      <view class="gallery-container" wx:if="{{eventForm.images.length > 0}}">
+        <view class="gallery-item" wx:for="{{eventForm.images}}" wx:key="index">
+          <view class="image-preview-container">
+            <image class="image-preview" src="{{item}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{item}}" data-field="images" data-index="{{index}}"></image>
+          </view>
+          <button class="delete-image-btn small" bindtap="deleteEventImage" data-index="{{index}}">删除</button>
+        </view>
+      </view>
+      
+      <!-- 添加图片按钮 -->
+      <button class="add-image-btn" bindtap="addEventImageSlot">
+        <text class="iconfont icon-add"></text>
+        <text>{{eventForm.images.length > 0 ? '添加更多图片' : '添加图片'}}</text>
+      </button>
+    </view>
+  </view>
+</edit-modal>
+
+<!-- 添加成员模态框 -->
+<edit-modal 
+  show="{{showAddMemberModal}}" 
+  title="添加成员"
+  confirmText="添加"
+  bind:close="closeAddMemberModal"
+  bind:cancel="closeAddMemberModal"
+  bind:confirm="addMember"
+>
+  <view slot="content" class="member-modal-content">
+    <view class="form-group">
+      <text class="form-label">学号搜索</text>
+      <view class="search-input-wrapper">
+        <input class="form-input" placeholder="请输入学号搜索" data-field="studentId" bindinput="onStudentIdInput" value="{{searchStudentId}}" />
+      </view>
+      <view class="search-results" wx:if="{{showSearchResults && searchResults.length > 0}}">
+        <view class="search-item" wx:for="{{searchResults}}" wx:key="id" bindtap="selectUser" data-index="{{index}}">
+          <image class="search-avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="search-info">
+            <text class="search-nickname">{{item.nickname}}</text>
+            <text class="search-student-id">{{item.student_id}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="search-empty" wx:if="{{showSearchResults && searchResults.length === 0}}">
+        <text>未找到匹配的用户</text>
+      </view>
+    </view>
+    
+    <view class="form-group" wx:if="{{selectedUser}}">
+      <text class="form-label">已选择用户</text>
+      <view class="selected-user-card">
+        <image class="selected-avatar" src="{{selectedUser.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="selected-info">
+          <text class="selected-nickname">{{selectedUser.nickname}}</text>
+          <text class="selected-student-id">{{selectedUser.student_id}}</text>
+        </view>
+        <view class="clear-btn" bindtap="clearUserSelection">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">角色</text>
+      <picker class="form-picker" range="{{['成员', '团长']}}" bindchange="onMemberRoleChange" value="{{memberForm.role === 'leader' ? 1 : 0}}">
+        <view class="picker-display">
+          <text>角色: {{memberForm.role === 'leader' ? '团长' : '成员'}}</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+</edit-modal>
+
+<!-- 添加/编辑招新模态框 -->
+<edit-modal 
+  show="{{showAddRecruitmentModal}}" 
+  title="{{editRecruitmentId ? '编辑招新' : '招新'}}"
+  fullscreen="{{true}}"
+  bind:close="closeAddRecruitmentModal"
+  bind:cancel="closeAddRecruitmentModal"
+  bind:confirm="saveRecruitment"
+>
+  <view slot="content">
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <text class="section-title">基本信息</text>
+      
+      <view class="form-group">
+        <text class="form-label">招新标题 *</text>
+        <input class="form-input" placeholder="请输入招新标题" data-field="title" bindinput="onRecruitmentFormChange" value="{{recruitmentForm.title}}" />
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">招新描述</text>
+        <textarea class="form-textarea" placeholder="请输入招新描述" data-field="description" bindinput="onRecruitmentFormChange" value="{{recruitmentForm.description}}" />
+      </view>
+    </view>
+    
+    <!-- 时间设置 -->
+    <view class="form-section">
+      <text class="section-title">时间设置</text>
+      
+      <view class="form-group">
+        <text class="form-label">开始时间</text>
+        <picker mode="date" value="{{recruitmentForm.start_time}}" bindchange="onStartTimeChange" start="2020-01-01" end="2030-12-31">
+          <view class="picker">{{recruitmentForm.start_time || '请选择开始日期'}}</view>
+        </picker>
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">截止时间</text>
+        <picker mode="date" value="{{recruitmentForm.end_time}}" bindchange="onEndTimeChange" start="2020-01-01" end="2030-12-31">
+          <view class="picker">{{recruitmentForm.end_time || '请选择截止日期'}}</view>
+        </picker>
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">最大招募人数</text>
+        <input class="form-input" type="number" placeholder="请输入最大招募人数（不填则不限）" data-field="max_applicants" bindinput="onRecruitmentFormChange" value="{{recruitmentForm.max_applicants}}" />
+      </view>
+    </view>
+    
+    <!-- 招新要求 -->
+    <view class="form-section">
+      <text class="section-title">招新要求</text>
+      <text class="hint-text">添加招新要求，每条一行显示</text>
+      
+      <view class="requirements-container">
+        <view class="requirement-item" wx:for="{{recruitmentForm.requirements}}" wx:key="index">
+          <input class="form-input requirement-input" placeholder="请输入要求" data-index="{{index}}" bindinput="onRequirementChange" value="{{item}}" />
+          <button class="remove-requirement-btn" bindtap="removeRequirement" data-index="{{index}}">删除</button>
+        </view>
+        <button class="add-requirement-btn" bindtap="addRequirement">+ 添加要求</button>
+      </view>
+    </view>
+    
+    <!-- 报名表单设置 -->
+    <view class="form-section">
+      <text class="section-title">报名表单设置</text>
+      
+      <!-- 默认字段 -->
+      <view class="default-fields">
+        <text class="field-group-title">基础信息</text>
+        <view class="default-field-list">
+          <text class="default-field-tag">姓名</text>
+          <text class="default-field-tag">性别</text>
+          <text class="default-field-tag">年级</text>
+          <text class="default-field-tag">专业</text>
+          <text class="default-field-tag">联系方式</text>
+          <text class="default-field-tag">自我介绍</text>
+        </view>
+        <text class="hint-text">以上字段为报名表默认必填项</text>
+      </view>
+    </view>
+    
+    <!-- 面试信息 -->
+    <view class="form-section">
+      <text class="section-title">面试信息</text>
+      
+      <view class="form-group">
+        <text class="form-label">面试形式</text>
+        <picker mode="selector" range="{{['线下面试', '线上面试']}}" bindchange="onInterviewTypeChange" value="{{recruitmentForm.interview_info.type === 'online' ? 1 : 0}}">
+          <view class="picker">{{recruitmentForm.interview_info.type === 'online' ? '线上面试' : '线下面试'}}</view>
+        </picker>
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">面试地点</text>
+        <input class="form-input" placeholder="请输入面试地点" data-field="location" bindinput="onInterviewInfoChange" value="{{recruitmentForm.interview_info.location}}" />
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">面试联系人</text>
+        <input class="form-input" placeholder="请输入联系人方式" data-field="contact" bindinput="onInterviewInfoChange" value="{{recruitmentForm.interview_info.contact}}" />
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">面试备注</text>
+        <textarea class="form-textarea" placeholder="请输入面试备注信息" data-field="notes" bindinput="onInterviewInfoChange" value="{{recruitmentForm.interview_info.notes}}" />
+      </view>
+    </view>
+    
+    <!-- 联系方式 -->
+    <view class="form-section">
+      <text class="section-title">联系方式</text>
+      
+      <view class="form-group">
+        <text class="form-label">联系方式</text>
+        <input class="form-input" placeholder="请输入联系方式（如微信、QQ等）" data-field="contact_info" bindinput="onRecruitmentFormChange" value="{{recruitmentForm.contact_info}}" />
+      </view>
+    </view>
+    
+    <!-- 封面图片上传 -->
+    <view class="form-section">
+      <text class="section-title">封面图片</text>
+      <view class="image-preview-container">
+        <image wx:if="{{recruitmentForm.cover_image}}" class="image-preview" src="{{recruitmentForm.cover_image}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{recruitmentForm.cover_image}}" data-field="cover_image"></image>
+        <button wx:else class="upload-btn" bindtap="selectRecruitmentCoverImage">选择封面图片</button>
+      </view>
+      <button wx:if="{{recruitmentForm.cover_image}}" class="delete-image-btn" bindtap="deleteRecruitmentCoverImage">删除封面图片</button>
+    </view>
+    
+    <!-- 招新海报上传 -->
+    <view class="form-section">
+      <text class="section-title">招新海报</text>
+      <text class="hint-text">上传招新海报图片，展示招新详情</text>
+      <view class="image-preview-container poster-preview-container">
+        <image wx:if="{{recruitmentForm.poster}}" class="image-preview poster-preview" src="{{recruitmentForm.poster}}" mode="aspectFit" bindtap="previewFormImage" data-url="{{recruitmentForm.poster}}" data-field="poster"></image>
+        <button wx:else class="upload-btn" bindtap="selectRecruitmentPoster">选择海报图片</button>
+      </view>
+      <button wx:if="{{recruitmentForm.poster}}" class="delete-image-btn" bindtap="deleteRecruitmentPoster">删除海报图片</button>
+    </view>
+    
+    <!-- 招新群二维码上传 -->
+    <view class="form-section">
+      <text class="section-title">招新群二维码</text>
+      <text class="hint-text">上传招新群二维码图片，方便同学扫码加入</text>
+      <view class="image-preview-container">
+        <image wx:if="{{recruitmentForm.qr_code}}" class="image-preview qr-code-preview" src="{{recruitmentForm.qr_code}}" mode="aspectFit" bindtap="previewFormImage" data-url="{{recruitmentForm.qr_code}}" data-field="qr_code"></image>
+        <button wx:else class="upload-btn" bindtap="selectRecruitmentQrCode">选择二维码图片</button>
+      </view>
+      <button wx:if="{{recruitmentForm.qr_code}}" class="delete-image-btn" bindtap="deleteRecruitmentQrCode">删除二维码图片</button>
+    </view>
+  </view>
+</edit-modal>

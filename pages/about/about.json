@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "关于我们",
+  "navigationStyle": "custom",
+  "backgroundColor": "#fff9fb",
+  "backgroundTextStyle": "light",
+  "disableScroll": true
+}

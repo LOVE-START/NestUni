@@ -1,0 +1,75 @@
+/* ═══════ Agent工具步骤条 ═══════ */
+/* 浅胶囊包裹每一步：白底承托 + 主题渐变大幅淡化，克制且不抢主回答 */
+.agent-steps {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10rpx;
+  margin: 10rpx 0 16rpx;
+}
+
+/* 单个步骤胶囊 - 药丸形，无描边、无投影 */
+.agent-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 8rpx 20rpx 8rpx 16rpx;
+  border-radius: 999rpx;
+  overflow: hidden;
+  /* 页面底色为 #ededed，先垫一层白再叠淡色，避免主题色发灰发脏 */
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* 主题色淡化装饰层 - 用伪元素承载渐变并降透明度，不影响文字可读性 */
+.agent-step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--step-gradient, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  opacity: 0.16;
+}
+
+/* 内容层浮于淡化底色之上 */
+.agent-step__mark,
+.agent-step__text {
+  position: relative;
+}
+
+/* 状态标记小圆点 */
+.agent-step__mark {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: #b4b4b4;
+  flex-shrink: 0;
+}
+
+/* 步骤文案 */
+.agent-step__text {
+  font-size: 22rpx;
+  color: #6f6f6f;
+  letter-spacing: 0.4rpx;
+  line-height: 1.5;
+}
+
+/* 已完成 - 胶囊底沿用基础淡色，仅文字退后半阶，保持最轻存在感 */
+.agent-step--success .agent-step__text { color: #7d7d7d; }
+
+/* 待确认 - 需要用户留意，胶囊底略浓、文字加深，形成唯一强调 */
+.agent-step--confirm_required::before { opacity: 0.3; }
+.agent-step--confirm_required .agent-step__mark { background: #7a7a7a; }
+.agent-step--confirm_required .agent-step__text { color: #4a4a4a; }
+
+/* 拒绝/失败 - 底色改用低饱和陶土色，与主题色区分语义 */
+.agent-step--denied::before,
+.agent-step--error::before {
+  background: linear-gradient(to right, #c9a79b, #dbc0b5);
+}
+.agent-step--denied .agent-step__mark,
+.agent-step--error .agent-step__mark { background: #a8837a; }
+.agent-step--denied .agent-step__text,
+.agent-step--error .agent-step__text { color: #8a6f66; }

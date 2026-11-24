@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "theme-provider": "/components/theme-provider/theme-provider"
+  },
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true
+}

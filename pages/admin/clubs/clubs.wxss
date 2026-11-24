@@ -1,0 +1,74 @@
+@import "../admin-common.wxss";
+
+/* 社团管理页专属细节 */
+
+.detail-body {
+  padding-bottom: 40rpx;
+}
+
+/* 详情内的小节标题 + 操作入口 */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 36rpx;
+  margin-bottom: 4rpx;
+}
+
+.section-head__title {
+  font-size: 19rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+}
+
+/* 社团公告行：标题在左，操作在右 */
+.announce-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.announce-row__title {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.announce-row__actions {
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* 搜索结果下拉面板 */
+.search-results {
+  margin-top: 12rpx;
+  padding: 0 20rpx;
+  background: #faf7f0;
+  border: 1rpx solid #eee7da;
+  border-radius: 16rpx;
+  max-height: 420rpx;
+  overflow-y: auto;
+}
+
+/* 已选用户：把 person 行嵌进浅色卡片 */
+.selected {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26rpx;
+  padding: 16rpx 20rpx;
+  background: #faf7f0;
+  border: 1rpx solid #eee7da;
+  border-radius: 18rpx;
+}
+
+.selected .person {
+  flex: 1;
+  padding: 0;
+  border-bottom: none;
+}

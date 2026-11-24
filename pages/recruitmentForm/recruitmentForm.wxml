@@ -1,0 +1,189 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view wx:if="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+  </view>
+
+  <view wx:elif="{{permissionChecked && hasPermission}}" class="form-page">
+    <!-- 自定义导航栏 -->
+    <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+      <view class="nav-content">
+        <view class="nav-left" bindtap="goBack">
+          <view class="nav-back-btn">
+            <image class="back-icon" src="/images/back.png" mode="aspectFit"></image>
+          </view>
+        </view>
+        <view class="nav-title">填写报名表</view>
+        <view class="nav-right"></view>
+      </view>
+    </view>
+
+    <!-- 招新信息头部卡片 -->
+    <view class="header-card" style="--decoration-bg: {{theme.gradient}}">
+      <view class="header-content">
+        <view class="header-icon-wrap" style="background-image: var(--decoration-bg)">
+          <image class="header-icon" src="/images/edit.png" mode="aspectFit"></image>
+        </view>
+        <view class="header-info">
+          <text class="header-title">{{recruitment.title || '报名表'}}</text>
+          <view class="header-club">
+            <image class="club-logo" src="{{recruitment.club_logo || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+            <text class="club-name">{{recruitment.club_name}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="header-decoration" style="background-image: var(--decoration-bg)"></view>
+    </view>
+
+    <view class="form-container">
+      <!-- 表单提示 -->
+      <view class="form-tips-card">
+        <view class="tips-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+          <text class="tips-icon-text">!</text>
+        </view>
+        <view class="tips-content">
+          <text class="tips-title">填写须知</text>
+          <text class="tips-text">请认真填写以下信息，带"必填"为必填项</text>
+        </view>
+      </view>
+
+      <!-- 默认字段：姓名、性别、年级、专业、联系方式、自我介绍（始终显示） -->
+      <view class="form-section">
+        <view class="section-header">
+          <view class="section-title" style="--decoration-bg: {{theme.gradient}}">基本信息</view>
+        </view>
+        <view class="form-card">
+          <!-- 姓名 -->
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">姓名</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <input 
+              class="form-input"
+              placeholder="请输入姓名"
+              placeholder-class="input-placeholder"
+              value="{{formData.name}}"
+              bindinput="onInputChange"
+              data-field="name"
+            />
+          </view>
+          
+          <!-- 性别 -->
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">性别</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <picker 
+              mode="selector"
+              range="{{genderOptions}}"
+              bindchange="onGenderChange"
+            >
+              <view class="form-picker {{formData.gender ? 'has-value' : ''}}">
+                <text>{{formData.gender || '请选择性别'}}</text>
+                <text class="picker-arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+          
+          <!-- 年级 -->
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">年级</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <picker 
+              mode="selector"
+              range="{{gradeOptions}}"
+              bindchange="onGradeChange"
+            >
+              <view class="form-picker {{formData.grade ? 'has-value' : ''}}">
+                <text>{{formData.grade || '请选择年级'}}</text>
+                <text class="picker-arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+          
+          <!-- 专业 -->
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">专业</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <input 
+              class="form-input"
+              placeholder="请输入专业"
+              placeholder-class="input-placeholder"
+              value="{{formData.major}}"
+              bindinput="onInputChange"
+              data-field="major"
+            />
+          </view>
+        </view>
+
+        <!-- 联系方式区块 -->
+        <view class="section-header">
+          <view class="section-title" style="--decoration-bg: {{theme.gradient}}">联系方式</view>
+        </view>
+        <view class="form-card">
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">联系方式</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <input 
+              class="form-input"
+              placeholder="请输入手机号或微信号"
+              placeholder-class="input-placeholder"
+              value="{{formData.contact}}"
+              bindinput="onInputChange"
+              data-field="contact"
+            />
+          </view>
+        </view>
+
+        <!-- 自我介绍区块 -->
+        <view class="section-header">
+          <view class="section-title" style="--decoration-bg: {{theme.gradient}}">自我介绍</view>
+        </view>
+        <view class="form-card">
+          <view class="form-item">
+            <view class="form-label-wrap">
+              <view class="label-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+              <text class="form-label">自我介绍</text>
+              <text class="required-badge">必填</text>
+            </view>
+            <textarea 
+              class="form-textarea"
+              placeholder="请介绍一下自己，包括兴趣爱好、特长等"
+              placeholder-class="input-placeholder"
+              value="{{formData.intro}}"
+              bindinput="onInputChange"
+              data-field="intro"
+              maxlength="500"
+              auto-height
+            />
+            <view class="textarea-counter">{{formData.intro.length || 0}}/500</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部占位 -->
+      <view class="bottom-placeholder"></view>
+    </view>
+
+    <!-- 底部提交栏 -->
+    <view class="submit-bar">
+      <view class="submit-info">
+        <text class="submit-hint">提交后可在"我的报名"中查看状态</text>
+      </view>
+      <button class="submit-btn" bindtap="submitForm" loading="{{submitting}}" disabled="{{submitting}}" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+        <text wx:if="{{!submitting}}">提交报名</text>
+      </button>
+    </view>
+  </view>
+</theme-provider>

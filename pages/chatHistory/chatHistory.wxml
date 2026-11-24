@@ -1,0 +1,39 @@
+<theme-provider bind:themeChange="onThemeChange">
+  <view wx:if="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+  </view>
+
+  <view wx:elif="{{permissionChecked && hasPermission}}" class="history-page">
+    <!-- 通用导航栏（与聊天页共用） -->
+    <chat-nav-bar gradient="{{theme.gradient}}" title="聊天历史" />
+
+    <!-- 会话列表 -->
+    <view class="session-list" wx:if="{{sessions.length > 0}}">
+      <block wx:for="{{sessions}}" wx:key="id">
+        <view class="session-item" bindtap="openSession" data-id="{{item.id}}">
+          <view class="session-info">
+            <view class="session-icon">💬</view>
+            <view class="session-content">
+              <view class="session-title">{{item.title}}</view>
+              <view class="session-time">{{item.displayTime}}</view>
+            </view>
+          </view>
+          <view class="session-delete" catchtap="deleteSession" data-id="{{item.id}}">
+            <text class="delete-icon">🗑️</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{sessions.length === 0 && !isLoading}}">
+      <view class="empty-icon">🤖</view>
+      <view class="empty-text">还没有聊天记录</view>
+      <view class="empty-hint">点击下方按钮开始和小苑对话</view>
+    </view>
+
+    <!-- 新建对话按钮 -->
+    <view class="new-chat-btn" bindtap="goToNewChat" style="background: {{theme.gradient}};">
+      <text class="new-chat-btn__text">开始新对话</text>
+    </view>
+  </view>
+</theme-provider>

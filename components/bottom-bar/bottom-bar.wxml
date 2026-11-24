@@ -1,0 +1,21 @@
+<view class="floating-bottom-bar" style="--primary-gradient: {{themeStyles.gradient}}; --primary-color: {{themeStyles.primaryColor}}; --button-gradient: {{themeStyles.gradientButton}}">
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index" 
+    class="tab-bar-item {{active === item.key ? 'active' : ''}}"
+    data-key="{{item.key}}"
+    bindtap="onTap">
+    
+    <view class="icon-container">
+      <image 
+        class="icon" 
+        src="{{item.iconPath}}" 
+        mode="aspectFit">
+      </image>
+      <!-- 选中项添加圆形装饰背景 -->
+      <view class="icon-background" wx:if="{{active === item.key}}"></view>
+    </view>
+    
+    <text class="label">{{item.text}}</text>
+  </view>
+</view>

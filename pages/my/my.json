@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "bottom-bar": "/components/bottom-bar/bottom-bar",
+    "ticket-card": "/components/ticket-card/ticket-card",
+    "clubs-events": "/components/clubs-events/clubs-events",
+    "my-applications-card": "/components/my-applications-card/my-applications-card",
+    "login-modal": "/components/login-modal/login-modal",
+    "theme-provider": "/components/theme-provider/theme-provider"
+  }
+}

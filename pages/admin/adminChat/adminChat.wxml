@@ -1,0 +1,164 @@
+<theme-provider bind:themeChange="onThemeChange">
+  <view wx:if="{{!showContent}}" class="no-permission-page">
+  </view>
+
+  <view wx:elif="{{showContent}}" class="chat-page">
+    <!-- 通用导航栏（与聊天页共用，仅保留新建对话按钮） -->
+    <chat-nav-bar
+      gradient="{{theme.gradient}}"
+      show-new-chat="{{true}}"
+      bind:newchat="newChat"
+    />
+
+    <!-- 聊天消息区域 -->
+    <scroll-view
+      class="chat-messages"
+      scroll-y="{{true}}"
+      scroll-into-view="{{scrollToId}}"
+      scroll-with-animation="{{true}}"
+      enhanced="{{true}}"
+      show-scrollbar="{{false}}"
+    >
+      <!-- 欢迎区域 -->
+      <view class="welcome-section" wx:if="{{messages.length === 0}}">
+        <image class="welcome-avatar" src="https://api.example.com/uploads/nest/general/aichat.png" mode="widthFix"></image>
+        <view class="welcome-title">你好，我是小苑·管理助手</view>
+        <view class="welcome-desc">我可以帮你查询待审核内容、执行审核操作、搜索社团和活动信息</view>
+
+        <!-- 快捷问题 -->
+        <view class="quick-questions">
+          <view
+            class="quick-question-item"
+            wx:for="{{quickQuestions}}"
+            wx:key="index"
+            data-question="{{item}}"
+            bindtap="onQuickQuestion"
+            style="--active-gradient: {{theme.gradient}}"
+          >
+            <text>{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 消息列表 -->
+      <view class="message-list">
+        <block wx:for="{{messages}}" wx:key="id">
+          <!-- 用户消息 -->
+          <view class="message-row message-row--user" wx:if="{{item.role === 'user'}}" id="{{item.id}}">
+            <view class="message-content">
+              <view class="message-bubble message-bubble--user" style="background: {{theme.gradient}};">
+                <text class="message-text message-text--user" user-select="{{true}}">{{item.content}}</text>
+              </view>
+            </view>
+            <view class="message-avatar message-avatar--user">
+              <image class="avatar-image" src="{{adminAvatar}}" mode="aspectFill"></image>
+            </view>
+          </view>
+
+          <!-- AI消息 -->
+          <view class="message-row message-row--assistant" wx:elif="{{item.role === 'assistant'}}" id="{{item.id}}">
+            <view class="message-avatar message-avatar--assistant">
+              <image class="avatar-image" src="https://api.example.com/uploads/nest/general/aiavatar.png" mode="aspectFill"></image>
+            </view>
+            <view class="message-content {{item.agent ? 'message-content--agent' : ''}}">
+              <view class="message-bubble message-bubble--assistant {{item.isError ? 'message-bubble--error' : ''}}">
+                <!-- 加载状态 -->
+                <view class="loading-dots" wx:if="{{item.isLoading}}">
+                  <view class="dot"></view>
+                  <view class="dot"></view>
+                  <view class="dot"></view>
+                </view>
+                <!-- AI消息支持长按复制 -->
+                <text class="message-text" user-select="{{true}}" wx:else>{{item.content}}</text>
+              </view>
+
+              <!-- Agent工具调用步骤条 - 展示本次对话Agent执行了哪些动作 -->
+              <agent-steps
+                wx:if="{{item.agent && item.agent.steps}}"
+                steps="{{item.agent.steps}}"
+                gradient="{{theme.gradient}}"
+              />
+
+              <!-- Agent操作确认卡片 - 写操作需管理员二次确认 -->
+              <agent-confirm-card
+                wx:if="{{item.agent && item.agent.pendingAction}}"
+                action="{{item.agent.pendingAction}}"
+                gradient="{{theme.gradient}}"
+                data-msg-id="{{item.id}}"
+                bind:confirm="onAgentConfirm"
+                bind:cancel="onAgentCancel"
+              />
+
+              <!-- 社团推荐卡片列表 - 横向滑动卡片样式 -->
+              <view class="recommendation-cards" wx:if="{{item.recommendations && item.recommendations.type === 'clubs' && item.recommendations.items && item.recommendations.items.length > 0}}">
+                <view class="club-swiper-container">
+                  <swiper
+                    class="club-swiper"
+                    previous-margin="120rpx"
+                    next-margin="120rpx"
+                    bindchange="onClubSwiperChange"
+                    data-msg-id="{{item.id}}"
+                  >
+                    <swiper-item
+                      class="club-swiper-item"
+                      wx:for="{{item.recommendations.items}}"
+                      wx:key="id"
+                      wx:for-item="club"
+                      data-id="{{club.id}}"
+                      bindtap="goToClub"
+                    >
+                      <view class="club-card-new">
+                        <!-- 社团封面图（占满整个卡片） -->
+                        <image class="club-card__cover" src="{{club.coverImage || club.logo}}" mode="aspectFill"></image>
+                        <!-- 底部渐变遮罩 + 信息区 -->
+                        <view class="club-card__overlay">
+                          <view class="club-card__name">{{club.name}}</view>
+                          <view class="club-card__footer">
+                            <image class="club-card__logo" src="{{club.logo}}" mode="aspectFill" wx:if="{{club.logo}}"></image>
+                            <text class="club-card__desc">{{club.shortIntro}}</text>
+                          </view>
+                        </view>
+                      </view>
+                    </swiper-item>
+                  </swiper>
+                  <!-- 页码指示器 -->
+                  <view class="club-swiper-indicator" wx:if="{{item.recommendations.items.length > 1}}">
+                    <text>{{item.currentClubIndex != undefined ? item.currentClubIndex + 1 : 1}} of {{item.recommendations.items.length}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 底部占位，用于滚动 -->
+      <view id="scroll-bottom" class="scroll-bottom-anchor"></view>
+    </scroll-view>
+
+    <!-- 输入区域 -->
+    <view class="chat-input-area">
+      <view class="input-wrapper">
+        <input
+          class="chat-input"
+          placeholder="问我关于审核、社团和活动的任何问题..."
+          value="{{inputText}}"
+          bindinput="onInputChange"
+          bindconfirm="sendMessage"
+          confirm-type="send"
+          disabled="{{isLoading}}"
+          adjust-position="{{true}}"
+          cursor-spacing="20"
+        />
+        <view
+          class="send-btn {{hasInput && !isLoading ? 'send-btn--active' : ''}}"
+          bindtap="sendMessage"
+          style="{{hasInput && !isLoading ? 'background: ' + theme.gradient + ';' : ''}}"
+        >
+          <image class="send-btn__icon" src="/images/post.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="input-safe-bottom"></view>
+    </view>
+  </view>
+</theme-provider>

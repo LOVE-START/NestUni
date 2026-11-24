@@ -1,0 +1,119 @@
+<view class="clubs-events-card-wrapper">
+  <view class="clubs-events-card">
+    <!-- 顶部封面 -->
+    <view class="ripple-container">
+      <image 
+        class="cover" 
+        src="{{coverImage}}" 
+        mode="aspectFill"
+        bindtap="onCoverImageTap"
+      ></image>
+      <!-- 波纹效果 -->
+      <view 
+        class="ripple" 
+        wx:for="{{ripples}}" 
+        wx:key="id"
+        style="left: {{item.x}}px; top: {{item.y}}px;"
+      ></view>
+    </view>
+
+    <!-- 内容主体 -->
+    <view class="content">
+      <view class="title-row">
+        <text class="card-title">我的社团与活动</text>
+      </view>
+
+      <view class="location">
+        <text>Joined Clubs & Participated Events</text>
+      </view>
+
+      <!-- 标签页切换 -->
+      <view class="tabs">
+        <view 
+          class="tab {{currentTab === 'clubs' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="clubs"
+        >
+          社团 ({{clubs.length}})
+        </view>
+        <view 
+          class="tab {{currentTab === 'events' ? 'active' : ''}}" 
+          bindtap="switchTab" 
+          data-tab="events"
+        >
+          活动 ({{formattedEvents.length}})
+        </view>
+      </view>
+
+      <!-- 社团列表 -->
+      <view class="list-container" wx:if="{{currentTab === 'clubs'}}">
+        <view 
+          class="item" 
+          wx:for="{{clubs}}" 
+          wx:key="id" 
+          bindtap="viewClubDetail" 
+          data-id="{{item.id}}"
+        >
+          <image class="item-icon" src="{{item.logo || '/images/default-club.png'}}" mode="aspectFill"></image>
+          <view class="item-content">
+            <text class="item-title">{{item.name}}</text>
+            <view class="item-desc-container">
+              <text class="item-desc">{{item.short_intro}}</text>
+            </view>
+          </view>
+          <view class="role-container">
+            <text class="item-role {{item.role === 'leader' ? 'leader' : (item.role === 'admin' ? 'admin' : 'member')}}">{{item.role === 'leader' ? '👑 会长' : (item.role === 'admin' ? '👑 管理员' : '🌟 成员')}}</text>
+          </view>
+        </view>
+        
+        <view class="empty" wx:if="{{clubs.length === 0}}">
+          <text>暂无加入的社团</text>
+        </view>
+      </view>
+
+      <!-- 活动列表 -->
+      <view class="list-container" wx:if="{{currentTab === 'events'}}">
+        <view 
+          class="item" 
+          wx:for="{{formattedEvents}}" 
+          wx:key="id" 
+          bindtap="viewEventDetail" 
+          data-id="{{item.id}}"
+        >
+          <image class="item-icon" src="{{item.cover_image || '/images/default-event.png'}}" mode="aspectFill"></image>
+          <view class="item-content">
+            <text class="item-title">{{item.title}}</text>
+            <view class="item-desc-container">
+              <text class="item-desc">{{item.formattedDate}}</text>
+              <text class="item-time">{{item.time}}</text>
+            </view>
+          </view>
+          <view class="role-container">
+            <text class="item-status {{item.participation_status === 'approved' ? 'joined' : 'pending'}}">{{item.participation_status === 'approved' ? '已加入' : '待确认'}}</text>
+          </view>
+        </view>
+        
+        <view class="empty" wx:if="{{formattedEvents.length === 0}}">
+          <text>暂无参与的活动</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 中间锯齿分割线 -->
+    <view class="zigzag"></view>
+
+    <!-- 底部信息，仅保留更新时间和总计 -->
+    <view class="bottom">
+      <view class="code-row">
+        <view class="code">
+          <text class="label">更新时间</text>
+          <text class="value">{{currentDate}}</text>
+        </view>
+        <view class="code">
+          <text class="label">总计</text>
+          <text class="value">{{clubs.length + formattedEvents.length}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

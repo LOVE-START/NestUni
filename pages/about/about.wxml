@@ -1,0 +1,90 @@
+<view class="container">
+  <!-- 最终背景图片 -->
+  <view class="final-bg-image {{showFinalImage && activeTab === 'story' ? 'visible' : ''}}"></view>
+
+  <!-- 装饰元素 - 柔和花瓣 -->
+  <view class="petals">
+    <view class="petal petal-1"></view>
+    <view class="petal petal-2"></view>
+    <view class="petal petal-3"></view>
+    <view class="petal petal-4"></view>
+    <view class="petal petal-5"></view>
+    <view class="golden-petal golden-petal-1"></view>
+    <view class="golden-petal golden-petal-2"></view>
+    <view class="golden-petal golden-petal-3"></view>
+  </view>
+
+  <!-- 说明书内容区域 - 可滚动 -->
+  <scroll-view class="manual-container" scroll-y="{{true}}" wx:if="{{activeTab === 'manual'}}">
+    <!-- 顶部区域 - 返回按钮和切换胶囊 -->
+    <view class="page-header">
+      <view class="back-button" bindtap="goBack">
+        <view class="back-icon"></view>
+      </view>
+      <view class="tab-capsule">
+        <view class="tab-item {{activeTab === 'manual' ? 'active' : ''}}" data-tab="manual" bindtap="switchTab">
+          Guide
+        </view>
+        <view class="tab-item {{activeTab === 'story' ? 'active' : ''}}" data-tab="story" bindtap="switchTab">
+          From Us
+        </view>
+      </view>
+    </view>
+    <!-- 说明书内容 -->
+    <view class="manual-content">
+      <view class="manual-section" wx:for="{{manualSections}}" wx:key="title">
+        <view class="manual-title">{{item.title}}</view>
+        <view class="manual-text">{{item.content}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 文字内容区域 - 逐字浮现效果 -->
+  <view class="story-container" wx:if="{{activeTab === 'story'}}">
+    <!-- 顶部区域 - 返回按钮和切换胶囊 -->
+    <view class="page-header">
+      <view class="back-button" bindtap="goBack">
+        <view class="back-icon"></view>
+      </view>
+      <view class="tab-capsule">
+        <view class="tab-item {{activeTab === 'manual' ? 'active' : ''}}" data-tab="manual" bindtap="switchTab">
+          Guide
+        </view>
+        <view class="tab-item {{activeTab === 'story' ? 'active' : ''}}" data-tab="story" bindtap="switchTab">
+          From Us
+        </view>
+      </view>
+    </view>
+    <!-- 文字内容 -->
+    <view class="lyrics-container">
+      <!-- 当前显示的文字 -->
+      <view class="lyric-item {{fadeOut ? 'fade-out' : ''}}" wx:if="{{displayText}}">
+        <view class="text-with-glow">{{displayText}}<text class="text-cursor"></text></view>
+      </view>
+      
+      <!-- 最终文字显示区 -->
+      <view class="final-text {{showFinal ? 'visible' : ''}}" wx:if="{{showFinal}}">
+        <view class="final-line" wx:if="{{finalDisplayTexts[0]}}">
+          <text class="text-with-glow">{{finalDisplayTexts[0]}}</text>
+          <text class="text-cursor" wx:if="{{currentFinalLine === 0}}"></text>
+        </view>
+        <view class="final-line" wx:if="{{finalDisplayTexts[1]}}">
+          <text class="text-with-glow">{{finalDisplayTexts[1]}}</text>
+          <text class="text-cursor" wx:if="{{currentFinalLine === 1}}"></text>
+        </view>
+        <view class="final-line" wx:if="{{finalDisplayTexts[2]}}">
+          <text class="text-with-glow">{{finalDisplayTexts[2]}}</text>
+          <text class="text-cursor" wx:if="{{currentFinalLine === 2}}"></text>
+        </view>
+        <view class="final-line" wx:if="{{finalDisplayTexts[3]}}">
+          <text class="text-with-glow">{{finalDisplayTexts[3]}}</text>
+          <text class="text-cursor" wx:if="{{currentFinalLine === 3}}"></text>
+        </view>
+        <view class="final-line last-line" wx:if="{{finalDisplayTexts[4]}}">
+          <text class="text-with-glow">{{finalDisplayTexts[4]}}</text>
+          <text class="text-cursor" wx:if="{{currentFinalLine === 4}}"></text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

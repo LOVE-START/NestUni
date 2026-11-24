@@ -1,0 +1,88 @@
+<!-- 登录弹窗组件 -->
+<view class="login-modal" wx:if="{{show}}">
+  <view class="modal-mask" bindtap="onCancel"></view>
+  <view class="modal-container">
+    <view class="modal-header">
+      <text class="modal-title" style="background: {{theme.gradient}}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">完善个人信息</text>
+      <view class="close-btn" bindtap="onCancel">
+        <text class="close-icon">✕</text>
+      </view>
+    </view>
+    
+    <view class="modal-body">
+      <!-- 头像和昵称区域 -->
+      <view class="avatar-nickname-section">
+        <view class="avatar-upload-container">
+          <button 
+            class="avatar-wrapper {{isChoosingAvatar ? 'disabled' : ''}}" 
+            open-type="chooseAvatar" 
+            bindtap="onAvatarTap"
+            bind:chooseavatar="onChooseAvatar"
+            disabled="{{isChoosingAvatar}}"
+          >
+            <open-data type="userAvatarUrl" wx:if="{{avatarUrl === 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"></open-data>
+            <image wx:else class="avatar-image" src="{{avatarUrl}}" mode="aspectFill"></image>
+            <!-- 加载状态遮罩 -->
+            <view class="avatar-overlay" wx:if="{{!isChoosingAvatar}}">
+              <text class="overlay-text">点击上传</text>
+            </view>
+            <!-- 选择中状态 -->
+            <view class="avatar-loading-overlay" wx:if="{{isChoosingAvatar}}">
+              <view class="loading-spinner"></view>
+            </view>
+          </button>
+          <view class="avatar-ring" style="background: {{theme.gradientButton}};"></view>
+        </view>
+        
+        <view class="input-group nickname-group">
+          <view class="input-wrapper">
+            <input 
+              type="nickname" 
+              class="input-field nickname-input" 
+              placeholder="请输入昵称"
+              value="{{nickname}}" 
+              bindinput="onNicknameInput"
+              bind:nicknameDone="onNicknameInput"
+            />
+          </view>
+        </view>
+      </view>
+      
+      <!-- 学号输入 -->
+      <view class="input-group">
+        <view class="input-label-container">
+          <text class="input-label">学号</text>
+        </view>
+        <view class="input-wrapper">
+          <input 
+            class="input-field" 
+            placeholder="请输入学号" 
+            value="{{localStudentId}}" 
+            bindinput="onStudentIdInput"
+          />
+        </view>
+      </view>
+      
+      <!-- 微信号输入 -->
+      <view class="input-group">
+        <view class="input-label-container">
+          <text class="input-label">微信号</text>
+          <text class="optional-tag">选填</text>
+        </view>
+        <view class="input-wrapper">
+          <input 
+            class="input-field" 
+            placeholder="请输入微信号" 
+            value="{{localWechat}}" 
+            bindinput="onWechatInput"
+          />
+        </view>
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <button class="btn cancel-btn" bindtap="onCancel">取消</button>
+      <button class="btn confirm-btn" style="background: {{theme.gradientButton}};" bindtap="onConfirm">确认</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,71 @@
+<!-- 公告弹窗：延续首页 kawaii 风格（贴纸便签卡 + 柔和投影 + 主题渐变） -->
+<view class="announcement-modal {{visible ? 'show' : ''}}" wx:if="{{visible}}" style="--announce-gradient: {{theme.gradient}};">
+	<!-- 遮罩层：浅色柔化，不使用深色神秘感 -->
+	<view class="modal-mask" bindtap="onMaskTap"></view>
+
+	<!-- 卡片外壳：卡片主体需要 overflow 裁剪圆角，胶带贴纸放在外壳层才能"贴"出卡片边缘 -->
+	<view class="card-shell">
+		<!-- 顶部胶带标签：轻微倾斜，像贴在便签纸上 -->
+		<view class="card-tape">
+			<view class="tape-dot"></view>
+			<text class="tape-text">ANNOUNCEMENTS</text>
+		</view>
+
+		<!-- 公告卡片主体 -->
+		<view class="announce-card">
+			<!-- 标题区域：两侧主题色小爱心（纯静态点缀） -->
+			<view class="card-header">
+				<view class="title-row">
+					<text class="title-heart">♡</text>
+					<text class="card-title">{{title || '公告通知'}}</text>
+					<text class="title-heart">♡</text>
+				</view>
+			</view>
+
+			<!-- 细虚线分隔 + 居中菱形装饰，呼应首页卡片底部的虚线样式 -->
+			<view class="header-divider"></view>
+
+			<!-- 内容滚动区域 -->
+			<scroll-view class="card-body" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+				<!-- 公告文字内容 -->
+				<view class="content-text-wrapper" wx:if="{{content}}">
+					<text class="content-text">{{content}}</text>
+				</view>
+
+				<!-- 公告图片：拍立得式白框 -->
+				<view class="content-image-wrapper" wx:if="{{image}}">
+					<image
+						class="content-image"
+						src="{{image}}"
+						mode="widthFix"
+						bindtap="onImagePreview"
+						show-menu-by-longpress="{{true}}"
+					/>
+				</view>
+
+				<!-- 空内容兜底 -->
+				<view class="content-empty" wx:if="{{!content && !image}}">
+					<text class="content-empty__text">暂无公告内容</text>
+				</view>
+			</scroll-view>
+
+			<!-- 底部操作区 -->
+			<view class="card-footer">
+				<button
+					class="confirm-btn {{countdown > 0 ? 'disabled' : ''}}"
+					bindtap="onConfirm"
+					disabled="{{countdown > 0}}"
+					hover-class="none"
+				>
+					<!-- 倒计时进度环：中间显示剩余秒数 -->
+					<view class="countdown-ring" wx:if="{{countdown > 0}}">
+						<view class="ring-bg"></view>
+						<view class="ring-progress" style="--progress: {{(5 - countdown) / 5 * 360}}deg;"></view>
+						<text class="countdown-number">{{countdown}}</text>
+					</view>
+					<text class="btn-text">{{countdown > 0 ? '请阅读公告' : '我知道啦'}}</text>
+				</button>
+			</view>
+		</view>
+	</view>
+</view>

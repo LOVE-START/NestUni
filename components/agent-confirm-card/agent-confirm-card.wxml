@@ -1,0 +1,42 @@
+<!-- Agent操作确认卡片 - 写操作需用户二次确认后才执行 -->
+<!-- gradient通过CSS变量--card-gradient下发；页面未传主题时在此统一回退到默认渐变 -->
+<view
+  class="agent-card {{action.resolved ? 'agent-card--resolved' : ''}}"
+  style="--card-gradient: {{gradient || 'linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160))'}};"
+  wx:if="{{action}}"
+>
+  <view class="agent-card__content">
+    <!-- 状态徽标：主题色淡化小胶囊，与 Agent 步骤条保持同一视觉语言 -->
+    <view class="agent-card__badge" wx:if="{{!action.resolved}}">
+      <view class="agent-card__badge-dot"></view>
+      <text class="agent-card__badge-text">待确认</text>
+    </view>
+
+    <!-- 操作标题 -->
+    <text class="agent-card__title">{{action.summary.title}}</text>
+
+    <!-- 操作摘要信息行 -->
+    <view class="agent-card__row" wx:for="{{action.summary.rows}}" wx:key="label">
+      <text class="agent-card__label">{{item.label}}</text>
+      <text class="agent-card__value">{{item.value}}</text>
+    </view>
+
+    <!-- 审核正文：活动描述/公告内容，管理员据此判断是否通过 -->
+    <view class="agent-card__long" wx:if="{{action.summary.contentLabel}}">
+      <text class="agent-card__long-label">{{action.summary.contentLabel}}</text>
+      <text class="agent-card__long-text" wx:if="{{action.summary.content}}">{{action.summary.content}}</text>
+      <text class="agent-card__long-text agent-card__long-text--empty" wx:else>未填写</text>
+    </view>
+
+    <!-- 未处理时展示操作按钮 -->
+    <view class="agent-card__actions" wx:if="{{!action.resolved}}">
+      <button class="agent-card__btn agent-card__btn--cancel" size="mini" bindtap="onCancel">再想想</button>
+      <button class="agent-card__btn agent-card__btn--confirm" size="mini" bindtap="onConfirm">确认执行</button>
+    </view>
+    <!-- 已处理标识 -->
+    <view class="agent-card__done" wx:else>
+      <view class="agent-card__done-check">✓</view>
+      <text>已完成</text>
+    </view>
+  </view>
+</view>

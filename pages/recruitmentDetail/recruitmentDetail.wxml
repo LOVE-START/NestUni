@@ -1,0 +1,172 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view class="recruitment-detail-page">
+    <!-- 封面区域 -->
+    <view class="cover-section" wx:if="{{recruitment.cover_image}}">
+      <image class="cover-image" src="{{recruitment.cover_image}}" mode="aspectFill" />
+      <view class="cover-overlay">
+        <view class="status-badge {{recruitment.statusClass}}" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{recruitment.statusText}}</view>
+      </view>
+      <!-- 返回按钮 -->
+      <back-button absolute="{{true}}" solid="{{true}}" custom-back="{{true}}" bind:back="goBack"></back-button>
+    </view>
+
+    <!-- 基本信息卡片 -->
+    <view class="info-card">
+      <view class="title-row">
+        <text class="recruitment-title" style="--decoration-bg: {{theme.gradient}}">{{recruitment.title}}</text>
+      </view>
+      
+      <view class="club-info" bindtap="goToClub">
+        <image class="club-logo" src="{{recruitment.club_logo || '/images/default-avatar.png'}}" />
+        <view class="club-detail">
+          <text class="club-name">{{recruitment.club_name}}</text>
+          <text class="club-category">{{recruitment.club_category}}</text>
+        </view>
+        <text class="arrow-icon">›</text>
+      </view>
+      
+      <!-- 信息徽章 -->
+      <view class="info-badges">
+        <view class="stat-item" wx:if="{{recruitment.end_time}}">
+          <view class="badge-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="badge-icon" src="/images/calendar.png" mode="aspectFit"></image>
+          </view>
+          <text class="badge-value">{{recruitment.end_time}}</text>
+          <text class="badge-label">截止时间</text>
+        </view>
+
+        <view class="stat-item" wx:if="{{recruitment.max_applicants}}">
+          <view class="badge-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="badge-icon" src="/images/people.png" mode="aspectFit"></image>
+          </view>
+          <text class="badge-value">{{recruitment.current_applicants || 0}}/{{recruitment.max_applicants}}</text>
+          <text class="badge-label">招募人数</text>
+        </view>
+
+        <view class="stat-item" wx:if="{{recruitment.contact_info}}" bindtap="copyText" data-text="{{recruitment.contact_info}}" data-label="联系方式">
+          <view class="badge-circle" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="badge-icon" src="/images/phone1.png" mode="aspectFit"></image>
+          </view>
+          <text class="badge-value">{{recruitment.contact_info}}</text>
+          <text class="badge-label">联系方式</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 招新描述 -->
+    <view class="section-container" wx:if="{{recruitment.description}}">
+      <view class="section-header">
+        <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">招新描述</view>
+      </view>
+      <view class="section-content">
+        <text class="description-text">{{recruitment.description}}</text>
+      </view>
+    </view>
+
+    <!-- 招新要求 -->
+    <view class="section-container" wx:if="{{recruitment.requirements.length > 0}}">
+      <view class="section-header">
+        <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">招新要求</view>
+      </view>
+      <view class="requirement-list">
+        <view class="requirement-item" wx:for="{{recruitment.requirements}}" wx:key="index">
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 面试信息 -->
+    <view class="section-container" wx:if="{{recruitment.interview_info}}">
+      <view class="section-header">
+        <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">面试信息</view>
+      </view>
+      <view class="interview-card">
+        <view class="interview-item" wx:if="{{recruitment.interview_info.time}}">
+          <view class="interview-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="interview-icon" src="/images/calendar.png" mode="aspectFit"></image>
+          </view>
+          <view class="interview-content">
+            <text class="interview-label">面试时间</text>
+            <text class="interview-value">{{recruitment.interview_info.time}}</text>
+          </view>
+        </view>
+        <view class="interview-item clickable" wx:if="{{recruitment.interview_info.location}}" bindtap="copyText" data-text="{{recruitment.interview_info.location}}" data-label="面试地点">
+          <view class="interview-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="interview-icon" src="/images/locatione.png" mode="aspectFit"></image>
+          </view>
+          <view class="interview-content">
+            <text class="interview-label">面试地点</text>
+            <text class="interview-value">{{recruitment.interview_info.location}}</text>
+          </view>
+        </view>
+        <view class="interview-item" wx:if="{{recruitment.interview_info.type}}">
+          <view class="interview-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="interview-icon" src="/images/video.png" mode="aspectFit"></image>
+          </view>
+          <view class="interview-content">
+            <text class="interview-label">面试形式</text>
+            <text class="interview-value">{{recruitment.interview_info.type === 'offline' ? '线下面试' : '线上面试'}}</text>
+          </view>
+        </view>
+        <view class="interview-item clickable" wx:if="{{recruitment.interview_info.contact}}" bindtap="copyText" data-text="{{recruitment.interview_info.contact}}" data-label="联系人">
+          <view class="interview-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+            <image class="interview-icon" src="/images/user.png" mode="aspectFit"></image>
+          </view>
+          <view class="interview-content">
+            <text class="interview-label">联系人</text>
+            <text class="interview-value">{{recruitment.interview_info.contact}}</text>
+          </view>
+        </view>
+        <view class="interview-notes" wx:if="{{recruitment.interview_info.notes}}">
+          <text class="notes-label">备注：</text>
+          <text class="notes-text">{{recruitment.interview_info.notes}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 招新海报 -->
+    <view class="section-container" wx:if="{{recruitment.poster}}">
+      <view class="section-header">
+        <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">招新海报</view>
+      </view>
+      <view class="poster-card">
+        <image class="poster-image" src="{{recruitment.poster}}" mode="widthFix" bindtap="previewPoster" data-url="{{recruitment.poster}}" />
+      </view>
+    </view>
+
+    <!-- 招新群二维码 -->
+    <view class="section-container" wx:if="{{recruitment.qr_code}}">
+      <view class="section-header">
+        <view class="section-title-text" style="--decoration-bg: {{theme.gradient}}">招新群二维码</view>
+      </view>
+      <view class="qr-code-card">
+        <view class="qr-code-container">
+          <image class="qr-code-image" src="{{recruitment.qr_code}}" mode="aspectFit" bindtap="previewQrCode" data-url="{{recruitment.qr_code}}" />
+        </view>
+        <text class="qr-code-hint">扫描二维码加入招新群</text>
+      </view>
+    </view>
+
+    <!-- 底部占位区域，防止内容被底部栏遮挡 -->
+    <view class="bottom-placeholder"></view>
+
+    <!-- 底部操作栏 -->
+    <view class="bottom-bar">
+      <!-- 会长显示两个按钮：查看和填写 -->
+      <view class="leader-btns" wx:if="{{isLeader}}">
+        <view class="leader-btn view-btn" bindtap="viewApplications" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+          <text>查看报名</text>
+        </view>
+        <view class="leader-btn fill-btn" bindtap="fillApplication" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+          <text>填写报名</text>
+        </view>
+      </view>
+      <!-- 普通用户显示一个大按钮 -->
+      <view class="apply-btn {{(canApply || recruitment.hasApplied) ? '' : 'disabled'}}" wx:else bindtap="{{recruitment.hasApplied ? 'viewMyApplication' : 'apply'}}" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+        <text wx:if="{{recruitment.hasApplied}}">查看报名</text>
+        <text wx:elif="{{!canApply}}">{{recruitment.statusText}}</text>
+        <text wx:else>立即报名</text>
+      </view>
+    </view>
+  </view>
+</theme-provider>

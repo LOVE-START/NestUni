@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "羽章殿堂",
+  "navigationBarBackgroundColor": "#1a0f0a",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#1a0f0a",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "back-button": "/components/back-button/back-button",
+    "badge-card": "/components/badge-card/badge-card",
+    "badge-modal": "/components/badge-modal/badge-modal"
+  }
+}

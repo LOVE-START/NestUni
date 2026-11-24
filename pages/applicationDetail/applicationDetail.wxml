@@ -1,0 +1,287 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view wx:if="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+  </view>
+
+  <view wx:elif="{{permissionChecked && hasPermission}}" class="detail-page">
+    <!-- 顶部装饰背景 -->
+    <view class="header-decoration" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+      <view class="header-pattern"></view>
+    </view>
+    
+    <!-- 自定义导航栏 -->
+    <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+      <view class="nav-content">
+        <view class="nav-left" bindtap="goBack">
+          <image class="nav-back-icon" src="/images/back.png" mode="aspectFit" />
+        </view>
+        <view class="nav-title">报名详情</view>
+        <view class="nav-right"></view>
+      </view>
+    </view>
+
+    <!-- 主内容区域 -->
+    <scroll-view scroll-y class="main-content">
+      <!-- 状态卡片 -->
+      <view class="status-card">
+        <view class="status-badge-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+          <image class="status-badge-icon" src="{{statusIconImage}}" mode="aspectFit"></image>
+        </view>
+        <view class="status-info">
+          <text class="status-text">{{application.statusText}}</text>
+          <text class="status-time">提交于 {{application.submitted_at}}</text>
+        </view>
+        <view class="status-decoration">
+          <view class="decoration-circle circle-1"></view>
+          <view class="decoration-circle circle-2"></view>
+          <view class="decoration-circle circle-3"></view>
+        </view>
+      </view>
+
+      <!-- 招新信息卡片 -->
+      <view class="info-card recruitment-card" bindtap="goToRecruitment">
+        <view class="card-header">
+          <view class="card-title-wrap">
+            <view class="card-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="card-icon" src="/images/celebrity.png" mode="aspectFit" />
+            </view>
+            <text class="card-title">招新信息</text>
+          </view>
+          <view class="card-arrow">
+            <text class="arrow-text">›</text>
+          </view>
+        </view>
+        <view class="recruitment-content">
+          <image class="recruitment-cover" src="{{application.recruitment_cover || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="recruitment-detail">
+            <text class="recruitment-title">{{application.recruitment_title}}</text>
+            <view class="recruitment-club">
+              <image class="club-logo" src="{{application.club_logo || '/images/default-avatar.png'}}" />
+              <text class="club-name">{{application.club_name}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 报名人信息卡片 -->
+      <view class="info-card applicant-card">
+        <view class="card-header">
+          <view class="card-title-wrap">
+            <view class="card-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="card-icon" src="/images/user.png" mode="aspectFit" />
+            </view>
+            <text class="card-title">报名信息</text>
+          </view>
+        </view>
+        
+        <!-- 基础信息区 -->
+        <view class="info-section" wx:if="{{formData.basic.length > 0}}">
+          <view class="section-title">
+            <view class="title-line" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <text class="title-text">基本信息</text>
+          </view>
+          <view class="info-grid">
+            <view class="info-card" wx:for="{{formData.basic}}" wx:key="key">
+              <view class="card-label">{{item.label}}</view>
+              <view class="card-value">{{item.value}}</view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 联系方式区 -->
+        <view class="info-section" wx:if="{{formData.contact.length > 0}}">
+          <view class="section-title">
+            <view class="title-line" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <text class="title-text">联系方式</text>
+          </view>
+          <view class="contact-grid">
+            <view class="contact-card" wx:for="{{formData.contact}}" wx:key="key" style="--theme-color: {{theme.colors.primary}}">
+              <view class="contact-content">
+                <view class="contact-label">{{item.label}}</view>
+                <view class="contact-value" style="color: {{theme.colors.primary}}">{{item.value}}</view>
+              </view>
+              <view class="copy-btn" catchtap="copyText" data-text="{{item.value}}" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+                <text class="copy-text">copy</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 自我介绍区 -->
+        <view class="info-section" wx:if="{{formData.intro.length > 0}}">
+          <view class="section-title">
+            <view class="title-line" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <text class="title-text">详细介绍</text>
+          </view>
+          <view class="intro-list">
+            <view class="intro-card" wx:for="{{formData.intro}}" wx:key="key">
+              <view class="intro-label" style="color: {{theme.colors.primary}}">{{item.label}}</view>
+              <view class="intro-value">{{item.value}}</view>
+            </view>
+          </view>
+        </view>
+        
+        <view class="empty-state" wx:if="{{formData.basic.length === 0 && formData.contact.length === 0 && formData.intro.length === 0}}">
+          <text class="empty-icon">📭</text>
+          <text class="empty-text">暂无报名信息</text>
+        </view>
+      </view>
+
+      <!-- 面试信息卡片 -->
+      <view class="info-card interview-card" wx:if="{{application.interview_time || application.interview_location}}">
+        <view class="card-header">
+          <view class="card-title-wrap">
+            <view class="card-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <image class="card-icon" src="/images/video.png" mode="aspectFit" />
+            </view>
+            <text class="card-title">面试安排</text>
+          </view>
+        </view>
+        
+        <view class="interview-timeline">
+          <view class="timeline-item" wx:if="{{application.interview_time_display}}">
+            <view class="timeline-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <view class="timeline-content">
+              <text class="timeline-label">面试时间</text>
+              <text class="timeline-value">{{application.interview_time_display}}</text>
+            </view>
+          </view>
+          
+          <view class="timeline-item" wx:if="{{application.interview_location}}">
+            <view class="timeline-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <view class="timeline-content">
+              <text class="timeline-label">面试地点</text>
+              <text class="timeline-value">{{application.interview_location}}</text>
+            </view>
+          </view>
+          
+          <view class="timeline-item" wx:if="{{application.interview_type}}">
+            <view class="timeline-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <view class="timeline-content">
+              <text class="timeline-label">面试形式</text>
+              <text class="timeline-value">{{application.interview_type === 'offline' ? '线下面试' : '线上面试'}}</text>
+            </view>
+          </view>
+          
+          <view class="timeline-item timeline-item--copyable" wx:if="{{application.interview_contact}}" catchtap="copyText" data-text="{{application.interview_contact}}">
+            <view class="timeline-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <view class="timeline-content">
+              <text class="timeline-label">联系方式</text>
+              <text class="timeline-value">{{application.interview_contact}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="interview-notes" wx:if="{{application.interview_notes}}">
+          <view class="notes-header">
+            <text class="notes-icon">💡</text>
+            <text class="notes-title">备注</text>
+          </view>
+          <text class="notes-content">{{application.interview_notes}}</text>
+        </view>
+      </view>
+
+      <!-- 结果备注卡片 -->
+      <view class="info-card notes-card" wx:if="{{application.result_notes}}">
+        <view class="card-header">
+          <view class="card-title-wrap">
+            <view class="card-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <text class="card-icon">📝</text>
+            </view>
+            <text class="card-title">备注信息</text>
+          </view>
+        </view>
+        <view class="result-notes-content">
+          <text>{{application.result_notes}}</text>
+        </view>
+      </view>
+
+      <!-- 操作历史记录卡片 -->
+      <view class="info-card logs-card" wx:if="{{operationLogs.length > 0}}">
+        <view class="card-header">
+          <view class="card-title-wrap">
+            <view class="card-icon-wrap" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <text class="card-icon">📋</text>
+            </view>
+            <text class="card-title">操作记录</text>
+          </view>
+        </view>
+        
+        <view class="logs-timeline">
+          <view class="log-item" wx:for="{{operationLogs}}" wx:key="id">
+            <view class="log-dot" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)"></view>
+            <view class="log-content">
+              <view class="log-header">
+                <text class="log-action">{{item.actionText}}</text>
+                <text class="log-time">{{item.createdAt}}</text>
+              </view>
+              <view class="log-detail">
+                <text class="log-operator">操作人：{{item.operatorName}}</text>
+                <text class="log-status" wx:if="{{item.oldStatus && item.newStatus}}">
+                  状态变更：{{item.oldStatus}} → {{item.newStatus}}
+                </text>
+              </view>
+              <view class="log-remark" wx:if="{{item.remark}}">
+                <text>{{item.remark}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部占位 -->
+      <view class="bottom-placeholder" wx:if="{{isLeader && application.status !== 'accepted' && application.status !== 'rejected'}}"></view>
+      <view class="bottom-placeholder" wx:if="{{!isLeader && application.status === 'accepted'}}"></view>
+    </scroll-view>
+
+    <!-- 社长操作按钮 -->
+    <view class="bottom-actions" wx:if="{{isLeader && application.status !== 'accepted' && application.status !== 'rejected'}}">
+      <button class="action-btn secondary" bindtap="markAsViewed" wx:if="{{application.status === 'submitted'}}">
+        <text>标记已查看</text>
+      </button>
+      <button class="action-btn primary" bindtap="showStatusPicker" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+        <text>更新状态</text>
+      </button>
+    </view>
+
+    <!-- 普通用户底部操作 -->
+    <view class="bottom-actions" wx:if="{{!isLeader && application.status === 'accepted'}}">
+      <button class="action-btn primary full" bindtap="joinClub" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+        <text class="btn-icon">🎉</text>
+        <text>加入社团</text>
+      </button>
+    </view>
+
+    <!-- 状态选择弹窗 -->
+    <view class="modal-mask" wx:if="{{showStatusPicker}}" bindtap="hideStatusPicker">
+      <view class="modal-content" catchtap="">
+        <view class="modal-header">
+          <text class="modal-title">选择状态</text>
+          <view class="modal-close" bindtap="hideStatusPicker">
+            <text>✕</text>
+          </view>
+        </view>
+        <view class="status-options">
+          <view 
+            class="status-option {{application.status === item.value ? 'active' : ''}}" 
+            wx:for="{{statusOptions}}" 
+            wx:key="value"
+            bindtap="onStatusSelect"
+            data-status="{{item.value}}"
+            style="--decoration-bg: {{theme.gradient}}"
+          >
+            <view class="option-icon" style="--decoration-bg: {{theme.gradient}}">
+              <image class="option-icon-img" src="{{item.icon}}" mode="aspectFit"></image>
+            </view>
+            <view class="option-content">
+              <text class="option-label">{{item.label}}</text>
+              <text class="option-desc">{{item.desc}}</text>
+            </view>
+            <view class="option-check" wx:if="{{application.status === item.value}}">
+              <text>✓</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</theme-provider>

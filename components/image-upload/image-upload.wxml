@@ -1,0 +1,50 @@
+<!--components/image-upload/image-upload.wxml-->
+<view class="image-upload-container {{customClass}}">
+  <!-- 单图模式 -->
+  <block wx:if="{{!multiple}}">
+    <view class="upload-area {{size}}" bindtap="chooseImage">
+      <image wx:if="{{imageUrl}}" 
+             class="preview-image {{previewMode === 'contain' ? 'contain' : ''}}" 
+             src="{{imageUrl}}" 
+             mode="{{previewMode === 'contain' ? 'aspectFit' : 'aspectFill'}}"
+             bindtap="previewImage"
+             data-url="{{imageUrl}}" />
+      <view wx:else class="upload-placeholder">
+        <text class="iconfont icon-add upload-icon"></text>
+        <text class="upload-text">{{placeholder}}</text>
+      </view>
+    </view>
+    <text wx:if="{{hint}}" class="upload-hint">{{hint}}</text>
+    <button wx:if="{{imageUrl && showDelete}}" class="btn-delete" bindtap="deleteImage">删除图片</button>
+  </block>
+  
+  <!-- 多图模式 -->
+  <block wx:if="{{multiple}}">
+    <view class="gallery-container">
+      <!-- 已上传的图片 -->
+      <view wx:for="{{internalImages}}" wx:key="index" class="gallery-item">
+        <image class="gallery-image" 
+               src="{{item}}" 
+               mode="aspectFill"
+               bindtap="previewImage"
+               data-url="{{item}}"
+               data-images="{{internalImages}}"
+               data-index="{{index}}" />
+        <view wx:if="{{showDelete}}" class="remove-btn" catchtap="deleteImage" data-index="{{index}}">
+          <text class="iconfont icon-close"></text>
+        </view>
+      </view>
+      
+      <!-- 添加按钮 -->
+      <view wx:if="{{showAdd && internalImages.length < maxCount}}" 
+            class="upload-area {{size}}" 
+            bindtap="chooseImage">
+        <view class="upload-placeholder">
+          <text class="iconfont icon-add upload-icon"></text>
+          <text class="upload-text">{{placeholder}}</text>
+        </view>
+      </view>
+    </view>
+    <text wx:if="{{hint}}" class="upload-hint">{{hint}}</text>
+  </block>
+</view>

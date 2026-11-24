@@ -1,0 +1,265 @@
+/**
+ * 公共模态框组件样式
+ * @description 提供统一的模态框样式，支持全屏模式和主题渐变
+ */
+
+/* 模态框遮罩层 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-mask.show {
+  opacity: 1;
+}
+
+/* 模态框内容 - 普通模式 */
+.modal-content {
+  background-color: white;
+  border-radius: 24rpx;
+  width: 90%;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+}
+
+.modal-mask.show .modal-content {
+  transform: scale(1);
+}
+
+/* 模态框头部 */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 36rpx 40rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+  background: #fafafa;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 50%;
+  font-size: 32rpx;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.modal-close:active {
+  transform: scale(0.9);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.modal-close::after {
+  border: none;
+}
+
+/* 模态框主体 - 支持内容滚动 */
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 模态框底部 */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 24rpx 40rpx;
+  border-top: 2rpx solid #f5f5f5;
+  gap: 24rpx;
+  background: #fafafa;
+}
+
+/* 取消按钮 */
+.btn-cancel {
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  border-radius: 40rpx;
+  border: 2rpx solid #e0e0e0;
+  background-color: white;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:active {
+  transform: scale(0.95);
+  background: #f5f5f5;
+}
+
+.btn-cancel::after {
+  border: none;
+}
+
+/* 确认按钮 - 使用主题渐变 */
+.btn-confirm {
+  padding: 20rpx 50rpx;
+  font-size: 28rpx;
+  border-radius: 40rpx;
+  border: none;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 6rpx 20rpx var(--theme-shadow, rgba(255, 175, 189, 0.4));
+}
+
+.btn-confirm:active {
+  transform: scale(0.95);
+}
+
+.btn-confirm::after {
+  border: none;
+}
+
+.btn-confirm.disabled {
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+/* ==================== 全屏模式样式 ==================== */
+
+.modal-content.fullscreen {
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 全屏模式头部 - 使用主题渐变背景 */
+/* 增加20rpx避免被灵动岛遮挡 */
+.modal-content.fullscreen .modal-header {
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  padding: 40rpx;
+  padding-top: calc(80rpx + env(safe-area-inset-top));
+  flex-shrink: 0;
+  border-radius: 0 0 40rpx 40rpx;
+}
+
+/* 全屏模式返回按钮 */
+.modal-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  margin-right: 20rpx;
+  transition: all 0.2s ease;
+}
+
+.modal-back:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.modal-back .back-arrow {
+  font-size: 56rpx;
+  color: white;
+  font-weight: 300;
+  line-height: 1;
+  text-align: center;
+}
+
+.modal-content.fullscreen .modal-title {
+  color: white;
+  font-size: 38rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  flex: 1;
+}
+
+.modal-content.fullscreen .modal-close {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.modal-content.fullscreen .modal-close:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* 全屏模式主体 - scroll-view需要明确高度 */
+.modal-content.fullscreen .modal-body {
+  flex: 1;
+  height: 0;
+  max-height: none;
+  overflow: hidden;
+  padding: 0;
+  background: #fafafa;
+}
+
+/* 全屏模式内容容器 - 提供padding */
+.modal-body-content {
+  padding: 30rpx 40rpx;
+}
+
+/* 全屏模式底部 */
+.modal-content.fullscreen .modal-footer {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 24rpx 40rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+/* 全屏模式确认按钮 */
+.modal-content.fullscreen .btn-confirm {
+  padding: 22rpx 60rpx;
+  font-size: 30rpx;
+}
+
+/* ==================== 动画效果 ==================== */
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 从底部滑入动画 */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 全屏模式使用滑入动画 */
+.modal-mask.show .modal-content.fullscreen {
+  animation: slideUp 0.3s ease forwards;
+}

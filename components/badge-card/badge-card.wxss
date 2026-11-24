@@ -1,0 +1,338 @@
+/* 羽章卡片组件样式 */
+
+/* 卡片容器 - 玻璃态效果 */
+.badge-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 点击反馈 */
+.badge-card:active {
+  transform: scale(0.95);
+}
+
+/* 点击时的光效和粒子 */
+.badge-card.tapped {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* 点击光效爆发 */
+.click-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.click-burst.active {
+  animation: burst 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes burst {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 300rpx;
+    height: 300rpx;
+    opacity: 0;
+  }
+}
+
+/* 粒子容器 */
+.particle-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.particle-container.active {
+  opacity: 1;
+}
+
+/* 粒子基础样式 */
+.particle {
+  position: absolute;
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: #ffd700;
+  box-shadow: 0 0 12rpx rgba(255, 215, 0, 0.8);
+  opacity: 0;
+}
+
+.particle-container.active .particle {
+  animation: particle-burst 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 8个粒子向不同方向飞出 */
+.particle-container.active .p1 { animation-delay: 0s; --tx: 80rpx; --ty: -40rpx; }
+.particle-container.active .p2 { animation-delay: 0.03s; --tx: 70rpx; --ty: 50rpx; }
+.particle-container.active .p3 { animation-delay: 0.06s; --tx: -60rpx; --ty: -70rpx; }
+.particle-container.active .p4 { animation-delay: 0.09s; --tx: -80rpx; --ty: 30rpx; }
+.particle-container.active .p5 { animation-delay: 0.12s; --tx: 50rpx; --ty: 80rpx; }
+.particle-container.active .p6 { animation-delay: 0.15s; --tx: -40rpx; --ty: -80rpx; }
+.particle-container.active .p7 { animation-delay: 0.18s; --tx: 90rpx; --ty: 20rpx; }
+.particle-container.active .p8 { animation-delay: 0.21s; --tx: -90rpx; --ty: -20rpx; }
+
+@keyframes particle-burst {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1);
+    opacity: 0;
+  }
+}
+
+/* 光芒扩散效果 */
+.glow-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100rpx;
+  height: 100rpx;
+  border: 3rpx solid rgba(255, 215, 0, 0.8);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.glow-ring.active {
+  animation: ring-expand 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes ring-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 未解锁状态 */
+.badge-card.locked {
+  opacity: 0.4;
+  filter: grayscale(80%);
+}
+
+.badge-card.locked .badge-icon image {
+  filter: grayscale(100%) brightness(0.6);
+}
+
+/* 已佩戴状态 */
+.badge-card.worn {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 4rpx 20rpx rgba(251, 191, 36, 0.2);
+}
+
+/* 已佩戴标识 - 金色闪烁圆点 */
+.worn-badge {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+  box-shadow: 0 0 12rpx rgba(255, 215, 0, 0.8);
+  z-index: 2;
+  animation: worn-pulse 2s ease-in-out infinite;
+}
+
+@keyframes worn-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 12rpx rgba(255, 215, 0, 0.8);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(0.8);
+    box-shadow: 0 0 20rpx rgba(255, 215, 0, 1);
+  }
+}
+
+/* 羽章图标容器 */
+.badge-icon {
+  position: relative;
+  width: 100rpx;
+  height: 100rpx;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-icon image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.badge-card:active .badge-icon image {
+  transform: scale(0.9);
+}
+
+/* 锁定遮罩层 */
+.lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  backdrop-filter: blur(2px);
+}
+
+.lock-icon {
+  font-size: 36rpx;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0, 0, 0, 0.3));
+}
+
+/* 羽章名称 */
+.badge-name {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 4rpx;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 稀有度标签 */
+.badge-rarity {
+  font-size: 18rpx;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+/* 稀有度样式 - 普通 */
+.badge-common {
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+.badge-common .badge-icon {
+  filter: drop-shadow(0 0 8rpx rgba(156, 163, 175, 0.3));
+}
+
+/* 稀有度样式 - 稀有 */
+.badge-rare {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4rpx 20rpx rgba(59, 130, 246, 0.2);
+}
+
+.badge-rare .badge-icon {
+  filter: drop-shadow(0 0 12rpx rgba(59, 130, 246, 0.5));
+}
+
+/* 稀有度样式 - 史诗 */
+.badge-epic {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 4rpx 24rpx rgba(168, 85, 247, 0.25);
+}
+
+.badge-epic .badge-icon {
+  filter: drop-shadow(0 0 16rpx rgba(168, 85, 247, 0.6));
+}
+
+/* 稀有度样式 - 传说 */
+.badge-legendary {
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 4rpx 28rpx rgba(251, 191, 36, 0.3);
+  animation: legendary-pulse 2s ease-in-out infinite;
+}
+
+.badge-legendary .badge-icon {
+  filter: drop-shadow(0 0 20rpx rgba(251, 191, 36, 0.7));
+  animation: legendary-icon-glow 2s ease-in-out infinite;
+}
+
+@keyframes legendary-pulse {
+  0%, 100% {
+    box-shadow: 0 4rpx 28rpx rgba(251, 191, 36, 0.3);
+  }
+  50% {
+    box-shadow: 0 4rpx 36rpx rgba(251, 191, 36, 0.5);
+  }
+}
+
+@keyframes legendary-icon-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 20rpx rgba(251, 191, 36, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 28rpx rgba(251, 191, 36, 0.9));
+  }
+}
+
+/* 小尺寸卡片 */
+.badge-small {
+  padding: 8rpx;
+}
+
+.badge-small .badge-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 0;
+}
+
+.badge-small .badge-name,
+.badge-small .badge-rarity {
+  display: none;
+}
+
+/* 大尺寸卡片 */
+.badge-large {
+  padding: 40rpx 32rpx;
+}
+
+.badge-large .badge-icon {
+  width: 180rpx;
+  height: 180rpx;
+  margin-bottom: 24rpx;
+}
+
+.badge-large .badge-name {
+  font-size: 32rpx;
+  margin-bottom: 8rpx;
+}
+
+.badge-large .badge-rarity {
+  font-size: 24rpx;
+}

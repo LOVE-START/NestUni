@@ -1,0 +1,240 @@
+/* 🌈 背景渐变 */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* 页面主体布局 */
+.page {
+  margin-top: 45rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 24rpx 200rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* 🎐 左侧竖排标签 */
+.side-label {
+  position: absolute;
+  left: 30rpx;
+  top: 190rpx;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: rgba(100, 110, 120, 0.6);
+  letter-spacing: 3rpx;
+  text-transform: uppercase;
+  backdrop-filter: blur(4rpx);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8rpx;
+  padding: 8rpx 4rpx;
+  z-index: 10;
+}
+
+/* 📜 票卡滑动区 */
+.ticket-swiper {
+  width: 100%;
+  max-width: 800rpx;
+  height: 1300rpx; /* 固定高度，确保swiper正常显示 */
+  margin-top: 20rpx; /* 减小顶部边距，因为分页指示器现在在上方 */
+  overflow: visible;
+}
+
+/* swiper内容容器 - 使用flex纵向布局，使按钮跟随卡片 */
+.swiper-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+swiper-item {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 顶部对齐，避免被压 */
+  height: auto !important; /* 解除swiper默认高度锁定 */
+  overflow: visible;
+  padding-bottom: 60rpx; /* 给阴影留空间 */
+}
+
+/* 确保票卡组件正确显示 */
+ticket-card {
+  margin-top: 30rpx;
+  width: 100%;
+  min-width: 1000rpx;
+}
+
+/* 确保社团活动组件正确显示 */
+clubs-events {
+  width: 100%;
+  max-width: 600rpx;
+  margin-top: 30rpx;
+}
+
+/* 确保我的报名组件正确显示 */
+my-applications-card {
+  width: 100%;
+  max-width: 600rpx;
+  margin-top: 30rpx;
+}
+
+/* 分页指示器 - 顶部的圆点导航 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 50rpx; /* 移动到顶部，不需要负边距 */
+  margin-bottom: -10rpx; /* 在分页指示器和票卡之间添加间距 */
+  gap: 16rpx;
+  z-index: 100;
+}
+
+/* 分页圆点默认样式 */
+.dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: rgba(156, 163, 175, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* 分页圆点激活状态 */
+.dot.active {
+  background: #374151;
+  transform: scale(1.4);
+}
+
+/* 图片点击效果优化 */
+.cover {
+  transition: all 0.3s ease;
+}
+
+.cover:active {
+  transform: scale(1.05);
+  opacity: 0.9;
+  z-index: 10;
+}
+
+/* 添加波纹效果容器 */
+.ripple-container {
+  position: relative;
+  overflow: visible;
+  border-radius: 28rpx 28rpx 0 0;
+}
+
+/* 波纹效果 */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 操作按钮区域 */
+.actions-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10rpx; /* 按钮之间的间距 */
+  margin-top: 100rpx; /* 加大按钮与卡片的间距 */
+  margin-bottom: 20rpx;
+  transition: opacity 0.3s ease, transform 1.0s ease; /* 添加过渡动画 */
+}
+
+/* 按钮可见状态 - 淡入效果 */
+.actions-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 按钮隐藏状态 - 淡出效果 */
+.actions-hidden {
+  opacity: 0;
+  transform: translateY(20rpx);
+}
+
+/* 操作按钮 */
+.action-btn {
+  background: rgba(255, 255, 255, 0.3); /* 半透明白色背景 */
+  border: 1rpx solid rgba(255, 255, 255, 0.2); /* 半透明边框 */
+  border-radius: 50rpx;
+  padding: 15rpx 40rpx;
+  font-size: 28rpx;
+  color: #666666;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10rpx); /* 毛玻璃模糊效果 */
+}
+
+/* 移除按钮默认边框 */
+.action-btn::after {
+  border: none;
+}
+
+/* 按钮悬停和点击效果 */
+.action-btn:hover,
+.action-btn:active {
+  background: rgba(255, 255, 255, 0.4); /* 悬停时稍微提高透明度 */
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 操作按钮图标 */
+.action-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+
+/* 管理员登录按钮区域 */
+.admin-login-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+/* 管理员登录按钮 */
+.admin-login-btn {
+  background: #ffffff;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 50rpx;
+  padding: 15rpx 40rpx;
+  font-size: 28rpx;
+  color: #666666;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.admin-login-btn::after {
+  border: none;
+}
+
+.admin-login-btn:hover,
+.admin-login-btn:active {
+  background: #f5f5f5;
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
+}

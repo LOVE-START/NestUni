@@ -1,0 +1,125 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view wx:if="{{permissionChecked && !hasPermission}}" class="no-permission-page">
+  </view>
+
+  <view wx:elif="{{permissionChecked && hasPermission}}" class="interview-page">
+    <!-- 顶部装饰背景 -->
+    <view class="header-decoration" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+      <view class="header-pattern"></view>
+    </view>
+    
+    <!-- 自定义导航栏 -->
+    <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+      <view class="nav-content">
+        <view class="nav-left" bindtap="goBack">
+          <image class="nav-back-icon" src="/images/back.png" mode="aspectFit" />
+        </view>
+        <view class="nav-title">填写面试信息</view>
+        <view class="nav-right"></view>
+      </view>
+    </view>
+
+    <!-- 表单内容 -->
+    <scroll-view scroll-y class="form-container">
+      <!-- 提示卡片 -->
+      <view class="tip-card">
+        <view class="tip-icon">📋</view>
+        <view class="tip-content">
+          <text class="tip-title">面试信息通知</text>
+          <text class="tip-desc">填写面试时间地点后，系统将通知申请人参加面试</text>
+        </view>
+      </view>
+
+      <!-- 表单区域 -->
+      <view class="form-section">
+        <view class="form-group">
+          <view class="form-label">
+            <text class="label-text">面试时间</text>
+            <text class="label-required">*</text>
+          </view>
+          <picker mode="multiSelector" range="{{dateTimePicker.range}}" value="{{dateTimePicker.value}}" bindchange="onDateTimeChange" bindcolumnchange="onDateTimeColumnChange">
+            <view class="form-picker">
+              <text class="{{interviewForm.interview_time_display ? '' : 'placeholder-text'}}">
+                {{interviewForm.interview_time_display || '请选择面试时间'}}
+              </text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label">
+            <text class="label-text">面试地点</text>
+            <text class="label-required">*</text>
+          </view>
+          <input 
+            class="form-input" 
+            placeholder="请输入面试地点"
+            placeholder-class="input-placeholder"
+            value="{{interviewForm.interview_location}}"
+            bindinput="onInterviewInput"
+            data-field="interview_location"
+            confirm-type="done"
+            adjust-position="{{true}}"
+          />
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label">
+            <text class="label-text">面试形式</text>
+          </view>
+          <picker mode="selector" range="['线下面试', '线上面试']" bindchange="onInterviewTypeChange">
+            <view class="form-picker">
+              <text>{{interviewForm.interview_type === 'offline' ? '线下面试' : '线上面试'}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label">
+            <text class="label-text">联系方式</text>
+          </view>
+          <input 
+            class="form-input" 
+            type="number"
+            placeholder="请输入手机号码"
+            placeholder-class="input-placeholder"
+            value="{{interviewForm.interview_contact}}"
+            bindinput="onInterviewInput"
+            data-field="interview_contact"
+            confirm-type="done"
+            maxlength="11"
+            adjust-position="{{true}}"
+          />
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label">
+            <text class="label-text">备注</text>
+          </view>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入备注信息（如面试要求、注意事项等）"
+            placeholder-class="input-placeholder"
+            value="{{interviewForm.interview_notes}}"
+            bindinput="onInterviewInput"
+            data-field="interview_notes"
+            maxlength="200"
+            adjust-position="{{true}}"
+          />
+        </view>
+      </view>
+
+      <!-- 底部占位 -->
+      <view class="bottom-placeholder"></view>
+    </scroll-view>
+
+    <!-- 底部提交按钮 -->
+    <view class="bottom-actions">
+      <button class="submit-btn" bindtap="submitInterview" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+        确认并发送面试通知
+      </button>
+    </view>
+  </view>
+</theme-provider>

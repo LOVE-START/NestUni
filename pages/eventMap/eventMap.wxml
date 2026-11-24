@@ -1,0 +1,157 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view class="event-map-page" style="--decoration-bg: {{theme.gradient}}; --decoration-bg-button: {{theme.gradientButton}};">
+    <!-- 返回按钮 -->
+    <back-button solid="{{true}}" custom-back="{{true}}" bind:back="goBack"></back-button>
+
+    <!-- 地图区域 -->
+    <view class="map-container">
+      <map 
+        id="eventMap"
+        longitude="{{center.longitude}}" 
+        latitude="{{center.latitude}}" 
+        scale="{{scale}}"
+        rotate="{{rotate}}"
+        style="width:100%;height:100%;" 
+        markers="{{markers}}" 
+        bindmarkertap="onMarkerTap"
+        bindregionchange="onRegionChange"
+        show-location="{{showLocation}}"
+        polyline="{{polyline}}"
+      >
+        <!-- 定位按钮 -->
+        <view class="location-btn" bindtap="moveToLocation">
+          <text class="location-icon">📍</text>
+        </view>
+        
+        <!-- 图例 -->
+        <view class="legend">
+          <view class="legend-item">
+            <view class="legend-dot ongoing"></view>
+            <text>进行中</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-dot upcoming"></view>
+            <text>即将开始</text>
+          </view>
+        </view>
+
+        <!-- 导航状态显示 -->
+        <view class="navigation-status" wx:if="{{isNavigating && routeInfo}}" bindtap="showNavigationCard">
+          <view class="nav-status-content">
+            <view class="nav-status-icon">🧭</view>
+            <view class="nav-status-info">
+              <view class="nav-status-title">导航中</view>
+              <view class="nav-status-detail">
+                剩余 {{routeInfo.distance}}{{routeInfo.distanceUnit}} · 约{{routeInfo.duration}}分钟
+              </view>
+            </view>
+          </view>
+        </view>
+      </map>
+    </view>
+
+    <!-- 活动卡片弹窗 -->
+    <view class="event-card {{showEventCard ? 'show' : ''}}" wx:if="{{showEventCard && selectedEvent}}">
+      <view class="event-card-mask" bindtap="closeEventCard"></view>
+      <view class="event-card-content">
+        <view class="event-ticket" bindtap="navigateToEvent">
+          <view class="ticket-cover">
+            <image 
+              class="cover-image" 
+              src="{{selectedEvent.cover_image || selectedEvent.coverImage || '/images/default-avatar.png'}}" 
+              mode="aspectFill"
+            />
+            <view class="ticket-status {{selectedEvent.statusClass}}">{{selectedEvent.statusText}}</view>
+          </view>
+          <view class="ticket-divider">
+            <view class="divider-circle left"></view>
+            <view class="divider-line"></view>
+            <view class="divider-circle right"></view>
+          </view>
+          <view class="ticket-info">
+            <view class="ticket-title">{{selectedEvent.title}}</view>
+            <view class="ticket-details">
+              <view class="detail-row">
+                <view class="detail-icon">📅</view>
+                <view class="detail-text">{{selectedEvent.formattedDate}} {{selectedEvent.formattedTime}}</view>
+              </view>
+              <view class="detail-row">
+                <view class="detail-icon">📍</view>
+                <view class="detail-text">{{selectedEvent.displayLocation}}</view>
+              </view>
+              <view class="detail-row" wx:if="{{selectedEvent.max_participants}}">
+                <view class="detail-icon">👥</view>
+                <view class="detail-text">{{selectedEvent.current_participants || 0}}/{{selectedEvent.max_participants}}人</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="close-btn" bindtap="closeEventCard">
+          <text class="close-icon">×</text>
+        </view>
+        
+        <!-- 操作按钮区域 -->
+        <view class="action-buttons">
+          <!-- 导航状态下显示停止导航按钮 -->
+          <view class="action-btn nav-btn full-width" wx:if="{{isNavigating}}" bindtap="stopNavigation">
+            <text class="action-icon">🛑</text>
+            <text class="action-text">停止导航</text>
+          </view>
+          
+          <!-- 有路线但未导航时显示开始导航按钮 -->
+          <view class="action-btn nav-btn full-width" wx:elif="{{polyline.length > 0}}" bindtap="startNavigation">
+            <text class="action-icon">🧭</text>
+            <text class="action-text">开始导航</text>
+          </view>
+          
+          <!-- 无路线时显示路线规划按钮 -->
+          <view class="action-btn nav-btn full-width" wx:else bindtap="showRoutePlanning">
+            <text class="action-icon">🗺️</text>
+            <text class="action-text">路线规划</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 附近活动推荐 -->
+    <view class="nearby-section" wx:if="{{nearbyEvents.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">附近活动</text>
+        <view class="section-more" bindtap="toggleNearbyList">
+          <view class="arrow-icon {{showNearbyList ? 'arrow-up' : 'arrow-down'}}"></view>
+        </view>
+      </view>
+      <scroll-view scroll-x class="nearby-scroll" wx:if="{{showNearbyList}}">
+        <view class="nearby-list">
+          <view 
+            class="nearby-item" 
+            wx:for="{{nearbyEvents}}" 
+            wx:key="id"
+            bindtap="onNearbyEventTap"
+            data-event="{{item}}"
+          >
+            <image class="nearby-cover" src="{{item.cover_image || item.coverImage || '/images/default-avatar.png'}}" mode="aspectFill" />
+            <view class="nearby-info">
+              <view class="nearby-title">{{item.title}}</view>
+              <view class="nearby-distance">{{item.distance}}km</view>
+              <view class="nearby-status {{item.statusClass}}">{{item.statusText}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!markers.length && !loading}}">
+      <text class="empty-icon">🗺️</text>
+      <text class="empty-text">暂无活动</text>
+      <text class="empty-hint">当前筛选条件下没有活动</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+  </view>
+</theme-provider>

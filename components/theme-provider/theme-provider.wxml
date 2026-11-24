@@ -1,0 +1,3 @@
+<view class="theme-provider" style="--theme-gradient: {{theme.gradient}}; --theme-gradient-button: {{theme.gradientButton}}; --theme-color-primary: {{theme.colors.primary}}; --theme-color-secondary: {{theme.colors.secondary}}">
+  <slot></slot>
+</view>

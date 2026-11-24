@@ -1,0 +1,99 @@
+<view class="ticket-card {{alternative ? 'alternative-card' : ''}}" style="--button-gradient: {{theme.gradientButton}}">
+  <!-- 顶部封面 -->
+  <view class="ripple-container">
+    <image 
+      class="cover" 
+      src="{{image}}" 
+      mode="aspectFill"
+      bindtap="onImageTap"
+    ></image>
+    <!-- 波纹效果 -->
+    <view 
+      class="ripple" 
+      wx:for="{{ripples}}" 
+      wx:key="id"
+      style="left: {{item.x}}px; top: {{item.y}}px;"
+    ></view>
+  </view>
+
+  <!-- 内容主体 -->
+  <view class="content">
+    <view class="title-row">
+      <!-- 使用用户昵称 -->
+      <text class="movie-title" bindtap="onNicknameTap">{{nickname}}</text>
+      <!-- 羽章展示 -->
+      <view class="user-badges" wx:if="{{isLoggedIn}}">
+        <!-- 有徽章时显示徽章图标 -->
+        <view 
+          wx:for="{{badges}}" 
+          wx:key="id" 
+          wx:if="{{item.icon}}"
+          class="badge-icon-wrapper"
+          style="background: {{theme.gradient}}"
+          bindtap="onBadgeIconTap"
+          data-badge="{{item}}"
+        >
+          <image 
+            class="badge-icon-mini" 
+            src="{{item.icon}}" 
+            mode="aspectFit"
+          ></image>
+        </view>
+        <!-- 无徽章时显示透明占位圆圈，提供入口 -->
+        <view 
+          wx:if="{{badges.length === 0}}"
+          class="badge-placeholder"
+          bindtap="onBadgeIconTap"
+        >
+        </view>
+      </view>
+      <!-- 根据登录状态显示不同内容 -->
+      <view class="badge" bindtap="onBadgeTap">
+        {{isLoggedIn ? 'XXI' : '登录'}}
+      </view>
+    </view>
+
+    <view class="location">
+      <text>Elysian Fields, Arcadia GR 0000I​​</text>
+    </view>
+
+    <view class="info-row">
+      <view class="info-block" bindtap="onDateTap">
+        <text class="label">Date</text>
+        <!-- 使用动态日期 -->
+        <text class="value">{{date}}</text>
+      </view>
+      <view class="info-block" bindtap="onTimeTap">
+        <text class="label">Hour</text>
+        <!-- 使用动态时间 -->
+        <text class="value">{{time}}</text>
+      </view>
+      <view class="info-block" bindtap="onSeatsTap">
+        <text class="label">Seats</text>
+        <text class="value">{{seats}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 中间锯齿分割线 -->
+  <view class="zigzag"></view>
+
+  <!-- 底部信息 -->
+  <view class="bottom">
+    <view class="code-row">
+      <!-- Student ID 区域：点击订阅面试通知、活动提醒、新活动通知 -->
+      <view class="code" bindtap="onStudentIdTap">
+        <text class="label">Student ID</text>
+        <text class="value">{{studentId}}</text>
+      </view>
+      <!-- Pass Key 区域：点击订阅审核结果、待审核提醒 -->
+      <view class="code" bindtap="onPassKeyTap">
+        <text class="label">Pass Key</text>
+        <text class="value">{{passKey}}</text>
+      </view>
+    </view>
+
+    <!-- 图片条形码-->
+    <image class="barcode-image" src="/images/barcode.png" bindtap="onBarcodeTap"></image>
+  </view>
+</view>

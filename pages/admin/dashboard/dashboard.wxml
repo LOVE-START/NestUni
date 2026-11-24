@@ -1,0 +1,92 @@
+<!-- 管理员控制台 - 编辑式极简风格 -->
+<view class="container" wx:if="{{showContent}}">
+
+  <!-- 页头：全局自定义导航栏，padding-top 按状态栏高度动态撑开 -->
+  <view class="masthead" style="padding-top: {{statusBarHeight}}px;">
+    <view class="masthead__bar">
+      <view class="brand">
+        <!-- 渐变底托比图片小：图片四周有透明留白，放大图片并裁掉留白，让底托更紧凑 -->
+        <view class="brand__logo">
+          <image class="brand__logo-img" src="https://s3.bmp.ovh/imgs/2025/10/24/d5c040730dc7af67.png" mode="aspectFill" />
+        </view>
+        <view class="brand__words">
+          <text class="brand__name">NFUNEST</text>
+          <text class="brand__tag">ADMIN CONSOLE</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="masthead__headline">
+      <text class="masthead__date">{{todayLabel}}</text>
+      <!-- 标题与退出按钮同一水平线：左侧大标题，右侧轻量退出入口 -->
+      <view class="masthead__title-row">
+        <text class="masthead__title">控制台</text>
+        <view class="logout" hover-class="logout--pressed" hover-stay-time="80" bindtap="logout">
+          <text class="logout__text">退出</text>
+        </view>
+      </view>
+      <text class="masthead__meta" wx:if="{{adminInfo.username}}">{{adminInfo.username}} · {{roleLabel}}</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <!-- 待审核提醒：仅在存在待审内容时出现，点击直达审核中心 -->
+    <view class="alert" wx:if="{{pendingApprovals > 0}}" hover-class="alert--pressed" hover-stay-time="80" bindtap="goToApprovals">
+      <view class="alert__dot"></view>
+      <text class="alert__text">{{pendingApprovals}} 项内容等待审核</text>
+      <text class="alert__cta">去处理</text>
+    </view>
+
+    <!-- 数据概览：三项核心指标共用一张卡片，以发丝线分隔 -->
+    <view class="panel metrics">
+      <view class="metric">
+        <text class="metric__value">{{statsReady ? stats.totalClubs : '—'}}</text>
+        <text class="metric__label">社团</text>
+      </view>
+      <view class="metric__split"></view>
+      <view class="metric">
+        <text class="metric__value">{{statsReady ? stats.totalEvents : '—'}}</text>
+        <text class="metric__label">活动</text>
+      </view>
+      <view class="metric__split"></view>
+      <view class="metric">
+        <text class="metric__value">{{statsReady ? stats.totalUsers : '—'}}</text>
+        <text class="metric__label">用户</text>
+      </view>
+    </view>
+
+    <!-- 微信绑定状态：仅教师账号显示 -->
+    <view class="bind" wx:if="{{adminInfo.level === 'teacher'}}">
+      <view class="bind__indicator {{hasWechatBind ? 'bind__indicator--on' : ''}}"></view>
+      <text class="bind__text">{{hasWechatBind ? '微信已绑定，审核通知可正常送达' : '绑定微信后可接收审核通知'}}</text>
+      <text class="bind__action" catchtap="handleWechatBind">{{hasWechatBind ? '解绑' : '绑定'}}</text>
+    </view>
+
+    <!-- 管理功能：列表式入口，比宫格更易点按与扫读 -->
+    <view class="section">
+      <view class="section__head">
+        <text class="section__title">管理</text>
+        <text class="section__note">{{modules.length}} 个模块</text>
+      </view>
+      <view class="panel list">
+        <view
+          class="row"
+          wx:for="{{modules}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          hover-class="row--pressed"
+          hover-stay-time="60"
+          bindtap="onModuleTap"
+        >
+          <view class="row__glyph {{item.accent ? 'row__glyph--accent' : ''}} {{item.latin ? 'row__glyph--latin' : ''}}">{{item.glyph}}</view>
+          <view class="row__main">
+            <text class="row__name">{{item.name}}</text>
+            <text class="row__desc">{{item.desc}}</text>
+          </view>
+          <text class="row__count" wx:if="{{item.key === 'approvals' && pendingApprovals > 0}}">{{pendingApprovals}}</text>
+          <view class="row__chevron"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

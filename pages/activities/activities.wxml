@@ -1,0 +1,159 @@
+<!--活动页面-->
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view class="activities-page">
+    <!-- 横幅区域 -->
+    <view class="hero">
+      <image class="hero__img" src="https://gd-hbimg.huaban.com/b85465da3981a15ce96033084c6d5fb46534a5778e665-AMrwsR" mode="aspectFill" />
+      <view class="hero__mask"></view>
+      <view class="hero__title">精彩校园活动</view>
+      <view class="hero__subtitle">发现和参与有趣的校园活动</view>
+    </view>
+
+    <!-- 搜索栏 -->
+    <view class="search-container">
+      <view class="search-wrapper">
+        <text class="icon-search">🔍</text>
+        <input 
+          class="search-input" 
+          placeholder="搜索活动名称、地点..." 
+          value="{{keyword}}"
+          bindinput="onSearchInput"
+          confirm-type="search"
+          bindconfirm="onSearchConfirm"
+        />
+        <!-- 时间筛选按钮放到搜索栏里，与搜索图标相对 -->
+        <view class="search-action" bindtap="toggleDateFilter">
+          <text class="icon-calendar">📅</text>
+        </view>
+      </view>
+    </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view scroll-x="true" class="categories-scroll" enable-flex="true">
+    <view class="categories">
+      <block wx:for="{{categories}}" wx:key="name">
+        <view 
+          class="chip {{currentCategory===item.name?'chip--active':''}}" 
+          data-name="{{item.name}}" 
+          bindtap="onTapCategory"
+          style="{{currentCategory===item.name?'background-image: var(--decoration-bg, ' + theme.gradient + ');':''}}"
+        >
+          <text class="chip-text">{{item.name}}</text>
+          <image class="chip-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        </view>
+      </block>
+      <!-- ✅ 尾部留白，防止最后一个被遮挡 -->
+      <view class="scroll-end-spacer"></view>
+    </view>
+  </scroll-view>
+
+
+    <!-- 活动列表 -->
+    <view class="events-container">
+      <!-- 卡片视图 -->
+      <view wx:if="{{viewMode === 'card'}}" class="events-grid">
+        <view 
+          wx:for="{{events}}" 
+          wx:key="id"
+          class="event-card"
+          data-id="{{item.id}}"
+          bindtap="goToEvent"
+        >
+          <view class="event-image-container">
+            <image class="event-image" src="{{item.cachedCoverImage || item.coverImage}}" mode="aspectFill"></image>
+            <view class="event-status {{item.statusClass}}" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+              <text>{{item.statusText}}</text>
+            </view>
+            <view class="event-category-tag" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">{{item.category}}</view>
+          </view>
+          
+          <view class="event-info">
+            <view class="event-title" style="--decoration-bg: {{theme.gradient}}">{{item.title}}</view>
+            
+            <!-- ✅ 新增横向布局容器 -->
+            <view class="event-footer">
+              <view class="event-meta">
+                <view class="meta-item">
+                  <text class="meta-icon">📅</text>
+                  <text class="meta-text">{{item.formattedDate || item.date}}</text>
+                </view>
+                <view class="meta-item">
+                  <text class="meta-icon">📍</text>
+                  <text class="meta-text">{{item.location}}</text>
+                </view>
+              </view>
+
+              <view class="event-actions">
+                <view 
+                  wx:if="{{item.status === 'active' && !item.isJoined}}"
+                  class="join-btn"
+                  data-id="{{item.id}}"
+                  bindtap="joinEvent"
+                  style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)"
+                >
+                  <text>立即报名</text>
+                </view>
+                <view wx:elif="{{item.isJoined}}" class="joined-btn" style="--decoration-bg: {{theme.gradientButton}}; background-image: var(--decoration-bg)">
+                  <text>已报名</text>
+                </view>
+              </view>
+            </view>
+            
+            <!-- 显示关联社团和最近参与者 -->
+            <view class="event-participants">
+              <block wx:if="{{item.related_clubs && item.related_clubs.length > 0}}">
+                <block wx:for="{{item.related_clubs}}" wx:key="id" wx:for-index="index">
+                  <!-- 只显示前7个 -->
+                  <block wx:if="{{index < 7}}">
+                    <view class="participant-avatar-wrapper" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+                      <image class="participant-avatar club-avatar" src="{{item.logo}}" mode="aspectFill"></image>
+                    </view>
+                  </block>
+                  <!-- 第8个及以后显示... -->
+                  <block wx:elif="{{index === 7}}">
+                    <view class="participant-avatar-wrapper ellipsis-wrapper" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+                      <text class="ellipsis">...</text>
+                    </view>
+                  </block>
+                </block>
+              </block>
+              <block wx:if="{{item.recent_participants && item.recent_participants.length > 0}}">
+                <block wx:for="{{item.recent_participants}}" wx:key="nickname" wx:for-index="index">
+                  <!-- 只显示前7个 -->
+                  <block wx:if="{{index < 7}}">
+                    <view class="participant-avatar-wrapper" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+                      <image class="participant-avatar user-avatar" src="{{item.avatar_url}}" mode="aspectFill"></image>
+                    </view>
+                  </block>
+                  <!-- 第8个及以后显示... -->
+                  <block wx:elif="{{index === 7}}">
+                    <view class="participant-avatar-wrapper ellipsis-wrapper" style="--decoration-bg: {{theme.gradient}}; background-image: var(--decoration-bg)">
+                      <text class="ellipsis">...</text>
+                    </view>
+                  </block>
+                </block>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{loading}}" class="loading-more">
+        <text>加载中...</text>
+      </view>
+      
+      <view wx:elif="{{!hasMore && events.length > 0}}" class="no-more">
+        <text>END</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:if="{{events.length === 0 && !loading}}" class="empty-state">
+        <text class="empty-icon">🎪</text>
+        <text class="empty-text">暂无相关活动</text>
+      </view>
+    </view>
+
+    <bottom-bar active="events" />
+  </view>
+</theme-provider>

@@ -1,0 +1,401 @@
+/* ======================== */
+/* 报名表单页面样式 */
+/* ======================== */
+
+.no-permission-page {
+  width: 100vw;
+  height: 100vh;
+  background: #f8fafc;
+}
+
+/* 页面整体风格 */
+.form-page {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', sans-serif;
+}
+
+/* ======================== */
+/* 自定义导航栏 */
+/* ======================== */
+.custom-nav {
+  position: relative;
+  background: #ffffff;
+  z-index: 100;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 24rpx;
+}
+
+.nav-left, .nav-right {
+  width: 76rpx;
+}
+
+.nav-back-btn {
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 50%;
+  background-color: #f6f7fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.nav-back-btn:active {
+  transform: scale(0.95);
+  background-color: #ebedf0;
+}
+
+.back-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1f2430;
+}
+
+/* ======================== */
+/* 头部卡片 */
+/* ======================== */
+.header-card {
+  position: relative;
+  background: #ffffff;
+  padding: 36rpx 30rpx;
+  margin: 0 24rpx 24rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.header-icon-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+}
+
+.header-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.header-info {
+  flex: 1;
+}
+
+.header-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f2430;
+  margin-bottom: 8rpx;
+}
+
+.header-club {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.header-club .club-logo {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+}
+
+.header-club .club-name {
+  font-size: 24rpx;
+  color: #7a808a;
+}
+
+.header-decoration {
+  position: absolute;
+  right: -30rpx;
+  bottom: -30rpx;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+/* ======================== */
+/* 表单提示卡片 */
+/* ======================== */
+.form-tips-card {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin: 0 24rpx 24rpx;
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.tips-icon-wrap {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tips-icon-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.tips-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.tips-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1f2430;
+}
+
+.tips-text {
+  font-size: 22rpx;
+  color: #7a808a;
+}
+
+/* ======================== */
+/* 表单区块 */
+/* ======================== */
+.form-section {
+  margin-bottom: 24rpx;
+}
+
+.section-header {
+  padding: 0 24rpx;
+  margin-top: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  border-radius: 3rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+/* 表单卡片 */
+.form-card {
+  margin: 0 24rpx;
+  padding: 0 24rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 表单项 */
+.form-item {
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+/* 标签行 */
+.form-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.label-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #2c2f36;
+}
+
+.required-badge {
+  font-size: 20rpx;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+}
+
+/* 输入框 */
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #2c2f36;
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  background: #f0f1f5;
+}
+
+.input-placeholder {
+  color: #b0b5bd;
+}
+
+/* 多行文本框 */
+.form-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #2c2f36;
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-textarea:focus {
+  background: #f0f1f5;
+}
+
+.textarea-counter {
+  text-align: right;
+  font-size: 22rpx;
+  color: #b0b5bd;
+  margin-top: 8rpx;
+}
+
+/* 选择器 */
+.form-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-picker:active {
+  background: #f0f1f5;
+}
+
+.form-picker text {
+  font-size: 28rpx;
+  color: #b0b5bd;
+}
+
+.form-picker.has-value text {
+  color: #2c2f36;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #b0b5bd;
+}
+
+/* ======================== */
+/* 底部占位区域 */
+/* ======================== */
+.bottom-placeholder {
+  height: 240rpx;
+}
+
+/* ======================== */
+/* 底部提交栏 */
+/* ======================== */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.submit-info {
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.submit-hint {
+  font-size: 22rpx;
+  color: #b0b5bd;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn[disabled] {
+  background: #d9d9d9 !important;
+  color: #7a808a;
+  box-shadow: none;
+}

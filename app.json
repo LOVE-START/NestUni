@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/activities/activities",
+    "pages/activitiesDetail/activitiesDetail",
+    "pages/clubDetail/clubDetail",
+    "pages/edit/edit",
+    "pages/eventMap/eventMap",
+    "pages/recruitmentDetail/recruitmentDetail",
+    "pages/recruitmentForm/recruitmentForm",
+    "pages/myApplications/myApplications",
+    "pages/myApprovals/myApprovals",
+    "pages/applicationDetail/applicationDetail",
+    "pages/interviewForm/interviewForm",
+    "pages/clubApplications/clubApplications",
+    "pages/my/my",
+    "pages/badges/badges",
+    "pages/chat/chat",
+    "pages/chatHistory/chatHistory",
+    "pages/about/about",
+    "pages/feedback/feedback",
+    "pages/admin/login/login",
+    "pages/admin/dashboard/dashboard",
+    "pages/admin/clubs/clubs",
+    "pages/admin/events/events",
+    "pages/admin/announcements/announcements",
+    "pages/admin/approvals/approvals",
+    "pages/admin/badges/badges",
+    "pages/admin/adminChat/adminChat"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "window": {
+    "navigationStyle": "custom"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在地图中显示社团和活动位置"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation",
+    "getLocation",
+    "startLocationUpdate",
+    "onLocationChange"
+  ],
+  "sitemapLocation": "sitemap.json"
+}

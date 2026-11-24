@@ -1,0 +1,115 @@
+<theme-provider id="themeProvider" bind:themeChange="onThemeChange">
+  <view class="page">
+    <!-- 背景渐变 -->
+    <view class="background" style="background: url('{{currentBackgroundImage}}') no-repeat center center; background-size: cover;"></view>
+    
+    <!-- 票卡分页指示 -->
+    <view class="pagination">
+      <view class="dot {{currentTicketIndex === 0 ? 'active' : ''}}" bindtap="switchToTicket" data-index="0"></view>
+      <view class="dot {{currentTicketIndex === 1 ? 'active' : ''}}" bindtap="switchToTicket" data-index="1"></view>
+      <view class="dot {{currentTicketIndex === 2 ? 'active' : ''}}" bindtap="switchToTicket" data-index="2"></view>
+    </view>
+
+    <!-- 左侧竖排标签 -->
+    <view class="side-label">{{currentTicketIndex === 0 ? 'Personal Identity' : (currentTicketIndex === 1 ? 'What is My Passion' : 'My Applications')}}</view>
+
+    <!-- 滑动票卡容器 -->
+    <swiper class="ticket-swiper" indicator-dots="{{false}}" autoplay="{{false}}" interval="5000" duration="500" circular="{{true}}" bindchange="onTicketSwiperChange" bindtouchstart="onSwiperTouchStart" bindanimationfinish="onSwiperAnimationFinish" current="{{currentTicketIndex}}" vertical="{{false}}">
+      <!-- 主票卡 -->
+      <swiper-item>
+        <view class="swiper-content">
+          <ticket-card 
+            image="{{profileImage}}"
+            nickname="{{userInfo.nickname}}"
+            isLoggedIn="{{isLoggedIn}}"
+            date="{{currentDate}}"
+            time="{{currentTime}}"
+            seats="{{randomSeats}}"
+            studentId="{{userInfo.student_id}}"
+            passKey="{{randomPassKey}}"
+            badges="{{userBadges}}"
+            bind:badgeTap="onBadgeTap"
+            bind:imageTap="selectAndCacheProfileImage"
+            bind:nicknameTap="onNicknameTap"
+            bind:dateTap="onDateTap"
+            bind:timeTap="onTimeTap"
+            bind:seatsTap="onSeatsTap"
+            bind:barcodeTap="onBarcodeTap"
+            theme="{{theme}}"
+          ></ticket-card>
+          
+          <!-- 操作按钮区域 -->
+          <view class="actions-section {{showActions ? 'actions-visible' : 'actions-hidden'}}">
+            <button class="action-btn" bindtap="goToAbout">
+              <image class="action-icon" src="/images/flower1.png"></image>
+              <text>About | 关于</text>
+            </button>
+            <button class="action-btn" bindtap="goToFeedback">
+              <image class="action-icon" src="/images/flower2.png"></image>
+              <text>Opinion | 感受</text>
+            </button>
+          </view>
+        </view>
+      </swiper-item>
+
+      <!-- 社团和活动卡片 -->
+      <swiper-item>
+        <view class="swiper-content">
+          <clubs-events 
+            clubs="{{userClubs}}"
+            events="{{userEvents}}"
+          ></clubs-events>
+          
+          <!-- 操作按钮区域 -->
+          <view class="actions-section {{showActions ? 'actions-visible' : 'actions-hidden'}}">
+            <button class="action-btn" bindtap="goToAbout">
+              <image class="action-icon" src="/images/flower1.png"></image>
+              <text>About | 关于</text>
+            </button>
+            <button class="action-btn" bindtap="goToFeedback">
+              <image class="action-icon" src="/images/flower2.png"></image>
+              <text>Opinion | 感受</text>
+            </button>
+          </view>
+        </view>
+      </swiper-item>
+
+      <!-- 我的报名卡片 -->
+      <swiper-item>
+        <view class="swiper-content">
+          <my-applications-card 
+            applications="{{userApplications}}"
+            theme="{{theme}}"
+          ></my-applications-card>
+          
+          <!-- 操作按钮区域 -->
+          <view class="actions-section {{showActions ? 'actions-visible' : 'actions-hidden'}}">
+            <button class="action-btn" bindtap="goToAbout">
+              <image class="action-icon" src="/images/flower1.png"></image>
+              <text>About | 关于</text>
+            </button>
+            <button class="action-btn" bindtap="goToFeedback">
+              <image class="action-icon" src="/images/flower2.png"></image>
+              <text>Opinion | 感受</text>
+            </button>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <!-- 管理员登录按钮（解密后显示） -->
+    <view wx:if="{{showAdminButton}}" class="admin-login-section">
+      <button class="admin-login-btn" bindtap="goToAdminLogin">管理员登录</button>
+    </view>
+    
+    <!-- 底部导航栏 -->
+    <bottom-bar active="my" />
+    
+    <!-- 登录弹窗 -->
+    <login-modal 
+      show="{{showLoginModal}}" 
+      bindcancel="onLoginCancel"
+      bindconfirm="onLoginConfirm"
+    />
+  </view>
+</theme-provider>

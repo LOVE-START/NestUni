@@ -1,0 +1,30 @@
+<!--components/edit-modal/edit-modal.wxml-->
+<view class="modal-mask {{show ? 'show' : ''}}" wx:if="{{show}}" bindtap="onClose" style="--decoration-bg: {{theme.gradient}}; --theme-primary: {{theme.colors.primary}}; --theme-shadow: rgba(255, 175, 189, 0.15);">
+  <view class="modal-content {{customClass}} {{fullscreen ? 'fullscreen' : ''}}" style="{{fullscreen ? '' : 'max-height: ' + maxHeight}}" catchtap="stopPropagation">
+    <!-- 模态框头部 -->
+    <view class="modal-header" style="{{fullscreen ? 'background-image: ' + theme.gradient : ''}}">
+      <!-- 全屏模式返回按钮 -->
+      <view wx:if="{{fullscreen}}" class="modal-back" bindtap="onClose">
+        <text class="back-arrow">‹</text>
+      </view>
+      <text class="modal-title">{{title}}</text>
+      <button wx:if="{{showClose && !fullscreen}}" class="modal-close" bindtap="onClose">✕</button>
+    </view>
+    
+    <!-- 模态框内容 - 全屏模式使用scroll-view实现滚动 -->
+    <scroll-view wx:if="{{fullscreen}}" class="modal-body" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view class="modal-body-content">
+        <slot name="content"></slot>
+      </view>
+    </scroll-view>
+    <view wx:else class="modal-body">
+      <slot name="content"></slot>
+    </view>
+    
+    <!-- 模态框底部 -->
+    <view class="modal-footer" wx:if="{{showFooter}}">
+      <button class="btn-cancel" bindtap="onCancel">{{cancelText}}</button>
+      <button class="btn-confirm {{confirmDisabled ? 'disabled' : ''}}" style="background: {{theme.gradient}}" bindtap="onConfirm" disabled="{{confirmDisabled}}">{{confirmText}}</button>
+    </view>
+  </view>
+</view>

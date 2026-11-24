@@ -1,0 +1,493 @@
+/* 羽章殿堂 - 哈利波特复古魔法风格 */
+
+/* 页面容器 - 羊皮纸质感背景 */
+.badges-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2c1810 0%, #1a0f0a 100%);
+  padding: 0;
+  /* 顶部安全区域 - 避免被灵动岛遮挡 */
+  padding-top: calc(env(safe-area-inset-top) + 100rpx);
+  padding-bottom: env(safe-area-inset-bottom, 40rpx);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 魔法星空背景 */
+.magic-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  width: 4rpx;
+  height: 4rpx;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.star-1 { top: 10%; left: 15%; animation-delay: 0s; }
+.star-2 { top: 25%; left: 80%; animation-delay: 0.5s; }
+.star-3 { top: 45%; left: 10%; animation-delay: 1s; }
+.star-4 { top: 60%; left: 90%; animation-delay: 1.5s; }
+.star-5 { top: 80%; left: 50%; animation-delay: 2s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* 顶部装饰标题 */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 24rpx 30rpx;
+  position: relative;
+}
+
+.header-ornament {
+  flex: 1;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #8b6914, #c9a227, #8b6914, transparent);
+  position: relative;
+}
+
+.header-ornament::before,
+.header-ornament::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c9a227;
+  font-size: 20rpx;
+}
+
+.header-ornament.left::before { right: 0; }
+.header-ornament.left::after { right: 40rpx; font-size: 14rpx; opacity: 0.6; }
+.header-ornament.right::before { left: 0; }
+.header-ornament.right::after { left: 40rpx; font-size: 14rpx; opacity: 0.6; }
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 30rpx;
+}
+
+.title-main {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #c9a227;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5), 0 0 20rpx rgba(201, 162, 39, 0.3);
+  letter-spacing: 8rpx;
+}
+
+.title-sub {
+  font-size: 20rpx;
+  color: #8b6914;
+  letter-spacing: 4rpx;
+  margin-top: 8rpx;
+  font-style: italic;
+}
+
+/* 卷轴统计区域 */
+.scroll-section {
+  margin: 0 24rpx 24rpx;
+  background: linear-gradient(180deg, #d4a574 0%, #c49a6c 20%, #b8895f 80%, #a67c52 100%);
+  border-radius: 20rpx;
+  border: 3rpx solid #8b6914;
+  box-shadow: 
+    inset 0 2rpx 10rpx rgba(255, 255, 255, 0.2),
+    inset 0 -2rpx 10rpx rgba(0, 0, 0, 0.2),
+    0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卷轴纹理 */
+.scroll-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2rpx,
+      rgba(139, 105, 20, 0.05) 2rpx,
+      rgba(139, 105, 20, 0.05) 4rpx
+    );
+  pointer-events: none;
+}
+
+.scroll-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  border-bottom: 2rpx dashed #8b6914;
+  position: relative;
+}
+
+.scroll-seal {
+  width: 40rpx;
+  height: 40rpx;
+  background: radial-gradient(circle, #c9a227 0%, #8b6914 100%);
+  border-radius: 50%;
+  border: 2rpx solid #5c4a1f;
+  margin-right: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.scroll-title {
+  font-size: 28rpx;
+  color: #3d2914;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+}
+
+.scroll-content {
+  padding: 24rpx;
+}
+
+/* 收藏统计 */
+.collection-stats {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.stat-item.main-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 30rpx;
+}
+
+.stat-frame {
+  display: flex;
+  align-items: baseline;
+}
+
+.stat-number {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #3d2914;
+  text-shadow: 0 1rpx 2rpx rgba(255, 255, 255, 0.3);
+}
+
+.stat-divider {
+  font-size: 36rpx;
+  color: #6b4423;
+  margin: 0 8rpx;
+}
+
+.stat-total {
+  font-size: 32rpx;
+  color: #6b4423;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #5c3d1e;
+  margin-top: 4rpx;
+}
+
+.stat-divider-line {
+  width: 2rpx;
+  height: 80rpx;
+  background: linear-gradient(180deg, transparent, #8b6914, transparent);
+  margin: 0 20rpx;
+}
+
+/* 稀有度统计 */
+.rarity-stats {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+.rarity-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rarity-count {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #3d2914;
+}
+
+.rarity-name {
+  font-size: 18rpx;
+  color: #6b4423;
+  margin-top: 4rpx;
+}
+
+/* 稀有度颜色 */
+.rarity-item.legendary .rarity-count { color: #8b6914; text-shadow: 0 0 10rpx rgba(201, 162, 39, 0.5); }
+.rarity-item.epic .rarity-count { color: #6b3a7a; }
+.rarity-item.rare .rarity-count { color: #2a4a7a; }
+.rarity-item.common .rarity-count { color: #4a4a4a; }
+
+/* 进度条 */
+.progress-scroll {
+  margin-top: 16rpx;
+}
+
+.progress-track {
+  height: 12rpx;
+  background: rgba(61, 41, 20, 0.3);
+  border-radius: 6rpx;
+  overflow: hidden;
+  border: 1rpx solid #8b6914;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b6914, #c9a227, #8b6914);
+  border-radius: 6rpx;
+  transition: width 0.6s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.progress-text {
+  display: block;
+  text-align: center;
+  font-size: 20rpx;
+  color: #5c3d1e;
+  margin-top: 12rpx;
+}
+
+.scroll-footer {
+  height: 16rpx;
+  background: linear-gradient(180deg, #a67c52, #8b6914);
+  border-top: 2rpx dashed #6b4a23;
+}
+
+/* 筛选区域 */
+.filter-section {
+  margin: 0 24rpx 24rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(184, 137, 95, 0.1) 100%);
+  border: 2rpx solid #5c4a1f;
+  border-radius: 20rpx;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.label-text {
+  font-size: 26rpx;
+  color: #c9a227;
+  font-weight: bold;
+  letter-spacing: 2rpx;
+  padding-right: 16rpx;
+}
+
+.label-line {
+  flex: 1;
+  height: 1rpx;
+  background: linear-gradient(90deg, #5c4a1f, transparent);
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-title {
+  width: 80rpx;
+  font-size: 22rpx;
+  color: #8b6914;
+  flex-shrink: 0;
+}
+
+.filter-scroll {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.filter-options {
+  display: inline-flex;
+  gap: 12rpx;
+}
+
+/* 筛选按钮 - 古典徽章风格 */
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 24rpx;
+  background: linear-gradient(180deg, #3d2914 0%, #2a1a0a 100%);
+  border: 2rpx solid #5c4a1f;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.filter-btn text {
+  font-size: 22rpx;
+  color: #a08050;
+  letter-spacing: 2rpx;
+}
+
+.filter-btn.active {
+  background: linear-gradient(180deg, #5c4a1f 0%, #3d2914 100%);
+  border-color: #c9a227;
+  box-shadow: 0 0 12rpx rgba(201, 162, 39, 0.3);
+}
+
+.filter-btn.active text {
+  color: #c9a227;
+}
+
+.filter-btn:active {
+  transform: scale(0.95);
+}
+
+/* 稀有度筛选按钮颜色 */
+.filter-btn.rarity-common.active { border-color: #6b6b6b; }
+.filter-btn.rarity-common.active text { color: #a0a0a0; }
+
+.filter-btn.rarity-rare.active { border-color: #4a7ac9; }
+.filter-btn.rarity-rare.active text { color: #6a9ad9; }
+
+.filter-btn.rarity-epic.active { border-color: #8a4ab0; }
+.filter-btn.rarity-epic.active text { color: #aa6ad0; }
+
+.filter-btn.rarity-legendary.active { border-color: #c9a227; }
+.filter-btn.rarity-legendary.active text { color: #ffd700; text-shadow: 0 0 8rpx rgba(255, 215, 0, 0.5); }
+
+/* 羽章展示区 */
+.badges-section {
+  margin: 0 24rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  padding: 0 8rpx;
+}
+
+.header-decoration {
+  width: 40rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #5c4a1f);
+}
+
+.header-decoration:last-child {
+  background: linear-gradient(90deg, #5c4a1f, transparent);
+}
+
+.section-title {
+  font-size: 30rpx;
+  color: #c9a227;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+  margin: 0 16rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
+}
+
+.section-count {
+  font-size: 20rpx;
+  color: #8b6914;
+  margin-left: 8rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 60rpx 40rpx;
+}
+
+.empty-scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+  background: linear-gradient(180deg, rgba(212, 165, 116, 0.1) 0%, rgba(184, 137, 95, 0.05) 100%);
+  border: 2rpx dashed #5c4a1f;
+  border-radius: 8rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #8b6914;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 22rpx;
+  color: #6b4a23;
+}
+
+/* 羽章网格 */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+  padding-bottom: 20rpx;
+}
+
+/* 底部装饰 */
+.page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 24rpx;
+  margin-top: 20rpx;
+}
+
+.footer-ornament {
+  width: 60rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #5c4a1f);
+}
+
+.footer-ornament:last-child {
+  background: linear-gradient(90deg, #5c4a1f, transparent);
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #5c4a1f;
+  font-style: italic;
+  margin: 0 20rpx;
+  letter-spacing: 2rpx;
+}

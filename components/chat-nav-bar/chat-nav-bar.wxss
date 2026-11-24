@@ -1,0 +1,70 @@
+/* 组件宿主节点 - 在页面的 flex 布局中作为块级元素并禁止被压缩 */
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* 导航栏容器 - 圆角与层级，背景色由页面通过 gradient 属性传入 */
+.nav-bar {
+  position: relative;
+  z-index: 100;
+  border-radius: 0 0 32rpx 32rpx;
+  overflow: hidden;
+}
+
+/* 导航栏内容区 - 左右两端对齐，保持标题居中 */
+.nav-bar__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 20rpx;
+}
+
+/* 导航栏左侧区域 - 包含返回键和操作按钮 */
+.nav-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+}
+
+/* 导航栏中间标题 */
+.nav-bar__title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 导航栏右侧占位 - 用于保持布局平衡 */
+.nav-bar__placeholder {
+  width: 56rpx;
+  flex: 1;
+}
+
+/* 操作按钮组 */
+.nav-bar__actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+/* 圆形操作按钮 - 半透明白色底，与返回键风格统一 */
+.nav-btn {
+  width: 62rpx;
+  height: 62rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.nav-btn__icon {
+  width: 40rpx;
+  height: 40rpx;
+}

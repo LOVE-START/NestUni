@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "back-button": "/components/back-button/back-button",
+    "edit-modal": "/components/edit-modal/edit-modal",
+    "image-upload": "/components/image-upload/image-upload",
+    "data-analysis": "./components/DataAnalysis/data-analysis"
+  },
+  "navigationBarTitleText": "社团编辑"
+}

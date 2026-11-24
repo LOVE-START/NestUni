@@ -1,0 +1,506 @@
+/* ======================== */
+/* 招新详情页面样式 */
+/* ======================== */
+
+/* 页面整体风格 */
+.recruitment-detail-page {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Open Sans', sans-serif;
+}
+
+/* ======================== */
+/* 封面区域 */
+/* ======================== */
+.cover-section {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  overflow: hidden;
+  border-bottom-left-radius: 36rpx;
+  border-bottom-right-radius: 36rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  transition: transform 0.8s ease;
+}
+
+.cover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3));
+}
+
+/* 状态标签 */
+.status-badge {
+  position: absolute;
+  bottom: 32rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10rpx 24rpx;
+  font-size: 24rpx;
+  color: #ffffff;
+  border-radius: 30rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 175, 189, 0.3);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  min-width: 120rpx;
+  z-index: 10;
+}
+
+.status-badge.ongoing {
+  background-image: var(--decoration-bg, linear-gradient(to right, #20bf6b, #0fb9b1));
+}
+
+.status-badge.upcoming {
+  background-image: var(--decoration-bg, linear-gradient(to right, #ffb84c, #ff9d2e));
+}
+
+.status-badge.ended {
+  background-image: var(--decoration-bg, linear-gradient(to right, #94a3b8, #64748b));
+}
+
+.status-badge.full {
+  background-image: var(--decoration-bg, linear-gradient(to right, #ff6b6b, #ee5a5a));
+}
+
+/* ======================== */
+/* 基本信息卡片 */
+/* ======================== */
+.info-card {
+  margin: -60rpx 24rpx 24rpx;
+  padding: 36rpx;
+  background-color: #fff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.title-row {
+  margin-bottom: 24rpx;
+}
+
+.recruitment-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.4;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.5rpx;
+}
+
+.recruitment-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6rpx;
+  left: 0;
+  width: 40%;
+  height: 4rpx;
+  background-image: var(--decoration-bg);
+  border-radius: 4rpx;
+}
+
+.club-info {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.club-info:active {
+  transform: scale(0.98);
+  background: #f0f1f5;
+}
+
+.club-logo {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.club-detail {
+  flex: 1;
+}
+
+.club-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1f2430;
+  margin-bottom: 8rpx;
+}
+
+.club-category {
+  font-size: 24rpx;
+  color: #7a808a;
+}
+
+.arrow-icon {
+  font-size: 36rpx;
+  color: #c0c0c0;
+  font-weight: 300;
+}
+
+/* 信息徽章 */
+.info-badges {
+  display: flex;
+  justify-content: space-around;
+  margin: 30rpx 0 0;
+  padding: 24rpx 0 0;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge-circle {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.badge-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.badge-value {
+  font-size: 26rpx;
+  font-weight: 700;
+  margin-bottom: 4rpx;
+  color: #333;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.05);
+  text-align: center;
+  max-width: 160rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge-label {
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* ======================== */
+/* 模块通用样式 */
+/* ======================== */
+.section-container {
+  margin: 0 24rpx 24rpx;
+  border-radius: 24rpx;
+  background-color: white;
+  padding: 24rpx 20rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-header {
+  margin-bottom: 24rpx;
+  color: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  position: relative;
+  padding-left: 20rpx;
+  color: #333;
+}
+
+.section-title-text::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+  border-radius: 3rpx;
+}
+
+.section-content {
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.8;
+}
+
+/* 描述文本 */
+.description-text {
+  font-size: 26rpx;
+  color: #444;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* ======================== */
+/* 要求列表 */
+/* ======================== */
+.requirement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.requirement-item {
+  background: #f8fafc;
+  color: #475569;
+  padding: 16rpx 20rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1rpx solid #e2e8f0;
+}
+
+.requirement-item::before {
+  content: "✓";
+  font-weight: bold;
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+/* ======================== */
+/* 面试信息卡片 */
+/* ======================== */
+.interview-card {
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.interview-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 可点击的面试信息项 - 点击后直接复制，使用优雅的透明度过渡 */
+.interview-item.clickable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease;
+}
+
+.interview-item.clickable:active {
+  opacity: 0.6;
+}
+
+.interview-item:last-child {
+  margin-bottom: 0;
+}
+
+.interview-icon-wrap {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.interview-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.interview-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.interview-label {
+  font-size: 22rpx;
+  color: #64748b;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  padding: 6rpx 14rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.interview-value {
+  flex: 1;
+  font-size: 27rpx;
+  color: #4e5a6c;
+  font-weight: 500;
+}
+
+.interview-notes {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #edf0f5;
+}
+
+.notes-label {
+  font-size: 24rpx;
+  color: #7a808a;
+}
+
+.notes-text {
+  font-size: 26rpx;
+  color: #2c2f36;
+}
+
+/* ======================== */
+/* 海报卡片 */
+/* ======================== */
+.poster-card {
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.poster-image {
+  width: 100%;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+/* ======================== */
+/* 二维码卡片 */
+/* ======================== */
+.qr-code-card {
+  background: #f6f7fb;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-code-container {
+  width: 400rpx;
+  height: 400rpx;
+  background: #ffffff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.qr-code-image {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-code-hint {
+  margin-top: 20rpx;
+  font-size: 24rpx;
+  color: #7a808a;
+}
+
+/* ======================== */
+/* 底部占位区域 */
+/* ======================== */
+.bottom-placeholder {
+  height: 180rpx;
+}
+
+/* ======================== */
+/* 底部操作栏 */
+/* ======================== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 会长两个按钮并排布局 */
+.leader-btns {
+  display: flex;
+  gap: 20rpx;
+}
+
+.leader-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.leader-btn:active {
+  transform: scale(0.98);
+}
+
+/* 普通用户报名按钮 */
+.apply-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  background-image: var(--decoration-bg, linear-gradient(to right, rgb(255, 175, 189), rgb(255, 195, 160)));
+}
+
+.apply-btn:active {
+  transform: scale(0.98);
+}
+
+.apply-btn.disabled {
+  background: #d9d9d9 !important;
+  color: #7a808a;
+  box-shadow: none;
+}

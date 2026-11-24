@@ -1,0 +1,11 @@
+{
+	"navigationBarTitleText": "活动详情",
+	"navigationStyle": "custom",
+	"enablePullDownRefresh": true,
+	"backgroundTextStyle": "dark",
+	"usingComponents": {
+		"back-button": "/components/back-button/back-button",
+		"comments": "/components/comments/comments",
+		"theme-provider": "/components/theme-provider/theme-provider"
+	}
+}

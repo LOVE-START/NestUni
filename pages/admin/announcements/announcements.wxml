@@ -1,0 +1,169 @@
+<view class="container" wx:if="{{showContent}}">
+  <view class="masthead" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav__back" hover-class="nav__back--pressed" hover-stay-time="60" bindtap="goBack">
+        <view class="nav__arrow"></view>
+      </view>
+    </view>
+    <view class="lead">
+      <text class="lead__eyebrow">NOTICE BOARD</text>
+      <text class="lead__title">公告管理</text>
+      <text class="lead__meta">{{announcementPagination.total}} 条公告 · 第 {{announcementPagination.page}} / {{announcementPagination.totalPages || 1}} 页</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="toolbar">
+      <view class="search">
+        <view class="search__glyph"></view>
+        <input class="search__input" placeholder="搜索公告" placeholder-class="search__placeholder" bindinput="onAnnouncementSearch" value="{{announcementSearch}}" />
+      </view>
+      <view class="btn btn--solid btn--compact" hover-class="btn--pressed" bindtap="showAddAnnouncementModal">公告</view>
+    </view>
+
+    <view class="cards">
+      <view class="card" wx:for="{{announcements}}" wx:key="id">
+        <view class="card__head">
+          <view class="glyph">公</view>
+          <view class="card__main">
+            <text class="card__title">{{item.title}}</text>
+            <text class="card__excerpt">{{item.content.substring(0, 50)}}{{item.content.length > 50 ? '...' : ''}}</text>
+            <view class="card__meta-row">
+              <text class="tag" wx:if="{{item.club_name}}">{{item.club_name}}</text>
+              <text class="card__meta">{{item.formatted_created_at}}</text>
+            </view>
+            <view class="thumbs" wx:if="{{item.images && item.images.length > 0}}">
+              <image
+                wx:for="{{item.images}}"
+                wx:for-item="img"
+                wx:key="index"
+                class="thumb"
+                src="{{img}}"
+                bindtap="previewAnnouncementListImage"
+                data-url="{{img}}"
+                data-images="{{item.images}}"
+                mode="aspectFill"
+                binderror="onImageLoadError"
+              />
+            </view>
+          </view>
+        </view>
+        <view class="card__actions">
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="viewAnnouncementDetail" data-id="{{item.id}}">详情</view>
+          <view class="link-btn" hover-class="link-btn--pressed" bindtap="editAnnouncement" data-id="{{item.id}}">编辑</view>
+          <view class="link-btn link-btn--danger" hover-class="link-btn--pressed" bindtap="deleteAnnouncement" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{announcements.length === 0}}">
+      <view class="empty__seal"><view class="empty__dash"></view></view>
+      <text class="empty__title">暂无公告</text>
+      <text class="empty__desc">调整搜索关键词，或发布第一条公告</text>
+    </view>
+
+    <view class="pager" wx:if="{{announcementPagination.totalPages > 1}}">
+      <view class="pager__btn {{announcementPagination.page <= 1 ? 'pager__btn--disabled' : ''}}" bindtap="prevAnnouncementPage">上一页</view>
+      <text class="pager__info">{{announcementPagination.page}} / {{announcementPagination.totalPages}}</text>
+      <view class="pager__btn {{announcementPagination.page >= announcementPagination.totalPages ? 'pager__btn--disabled' : ''}}" bindtap="nextAnnouncementPage">下一页</view>
+    </view>
+  </view>
+</view>
+
+<!-- 发布 / 编辑公告 -->
+<view class="mask" wx:if="{{showAddAnnouncementModal}}">
+  <view class="sheet">
+    <view class="sheet__grip"></view>
+    <view class="sheet__head">
+      <view>
+        <text class="sheet__eyebrow">NOTICE EDITOR</text>
+        <text class="sheet__title">{{editAnnouncementId ? '编辑公告' : '发布公告'}}</text>
+      </view>
+      <view class="sheet__close" bindtap="closeAddAnnouncementModal"><view class="sheet__close-x"></view></view>
+    </view>
+
+    <scroll-view class="sheet__body" scroll-y>
+      <view class="form__group">
+        <text class="form__label">公告标题</text>
+        <input class="form__input" placeholder="请输入公告标题" placeholder-class="form__placeholder" data-field="title" bindinput="onAnnouncementFormChange" value="{{announcementForm.title}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">公告内容</text>
+        <textarea class="form__textarea" placeholder="请输入公告内容" placeholder-class="form__placeholder" data-field="content" bindinput="onAnnouncementFormChange" value="{{announcementForm.content}}" />
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">关联社团</text>
+        <picker range="{{clubs}}" range-key="name" bindchange="onClubPickerChange" value="{{selectedClubIndex}}">
+          <view class="form__value">
+            <text>{{selectedClubName || '无'}}</text>
+            <view class="form__chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form__group">
+        <text class="form__label">公告图片</text>
+        <view class="uploader">
+          <block wx:for="{{announcementForm.images}}" wx:key="index">
+            <view class="uploader__item" wx:if="{{item}}">
+              <image class="uploader__img" src="{{item}}" mode="aspectFill" bindtap="previewFormImage" data-url="{{item}}" data-field="images"></image>
+              <view class="uploader__remove" catchtap="deleteAnnouncementImage" data-index="{{index}}">×</view>
+            </view>
+            <view class="uploader__add" wx:else bindtap="selectAnnouncementImage" data-index="{{index}}">选择图片</view>
+          </block>
+          <view class="uploader__add" bindtap="addImageSlot">添加图片</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="sheet__footer">
+      <view class="btn btn--ghost" bindtap="closeAddAnnouncementModal">取消</view>
+      <view class="btn btn--solid" bindtap="saveAnnouncement">保存</view>
+    </view>
+  </view>
+</view>
+
+<!-- 公告详情 -->
+<view class="mask" wx:if="{{showAnnouncementDetailModal}}">
+  <view class="sheet">
+    <view class="sheet__grip"></view>
+    <view class="sheet__head">
+      <view>
+        <text class="sheet__eyebrow">NOTICE</text>
+        <text class="sheet__title">公告详情</text>
+      </view>
+      <view class="sheet__close" bindtap="closeAnnouncementDetailModal"><view class="sheet__close-x"></view></view>
+    </view>
+
+    <scroll-view class="sheet__body detail-body" scroll-y>
+      <block wx:if="{{currentAnnouncement}}">
+        <text class="detail__title">{{currentAnnouncement.title}}</text>
+        <view class="card__meta-row">
+          <text class="tag" wx:if="{{currentAnnouncement.club_name}}">{{currentAnnouncement.club_name}}</text>
+          <text class="card__meta">{{currentAnnouncement.formatted_created_at}}</text>
+        </view>
+
+        <text class="detail__label">CONTENT</text>
+        <text class="detail__text">{{currentAnnouncement.content}}</text>
+
+        <view wx:if="{{currentAnnouncement.images && currentAnnouncement.images.length > 0}}">
+          <text class="detail__label">IMAGES</text>
+          <view class="uploader">
+            <view
+              class="uploader__item"
+              wx:for="{{currentAnnouncement.images}}"
+              wx:key="index"
+              bindtap="previewAnnouncementImage"
+              data-url="{{item}}"
+              data-images="{{currentAnnouncement.images}}"
+            >
+              <image class="uploader__img" src="{{item}}" mode="aspectFill" binderror="onImageLoadError"></image>
+            </view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>

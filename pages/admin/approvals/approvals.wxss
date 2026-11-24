@@ -1,0 +1,682 @@
+/* 审核中心
+   设计方向：与管理员控制台统一的编辑式极简（暖纸底 + 墨色文字 + 单一陶土色强调）
+   刻意避免：彩虹渐变、emoji 图标、多层阴影、装饰色条 */
+
+page {
+  background: #f4f1ea;
+}
+
+.container {
+  /* 页面级设计变量，保证配色与线条只有一个维护来源 */
+  --ink: #1b1a17;
+  --muted: #8b857a;
+  --faint: #a9a294;
+  --hairline: #e9e3d7;
+  --surface: #fffdf9;
+  --accent: #a8502f;
+  --accent-tint: #f7e9e0;
+  --accent-line: #edd8ca;
+
+  min-height: 100vh;
+  background: #f4f1ea;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 48rpx);
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ---------- 页头 ---------- */
+
+/* 顶部极淡暖色晕染，形成纸面质感，不抢标题 */
+.masthead {
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  padding-bottom: 32rpx;
+  background: linear-gradient(180deg, #eee7d9 0%, #f4f1ea 82%);
+  animation: rise 0.4s ease both;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+}
+
+/* 返回入口：发丝线圆环，与暖纸底融合 */
+.nav__back {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 1rpx solid #ddd5c6;
+  background: rgba(255, 253, 249, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav__back--pressed {
+  background: #ffffff;
+}
+
+/* 纯 CSS 箭头，避免图片符号在不同机型下大小不一 */
+.nav__arrow {
+  width: 16rpx;
+  height: 16rpx;
+  border-left: 3rpx solid var(--ink);
+  border-bottom: 3rpx solid var(--ink);
+  transform: rotate(45deg);
+  margin-left: 6rpx;
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+}
+
+.lead__eyebrow {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  color: var(--faint);
+}
+
+/* 大标题用衬线体，形成编辑式版面感 */
+.lead__title {
+  margin-top: 12rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 64rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.lead__meta {
+  margin-top: 14rpx;
+  font-size: 23rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+
+/* ---------- 内容区 ---------- */
+
+.content {
+  padding: 0 40rpx;
+  animation: rise 0.5s ease both;
+  animation-delay: 0.06s;
+}
+
+/* 统一卡面：暖白底 + 发丝描边 + 极轻阴影 */
+.panel {
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 26rpx;
+  box-shadow: 0 2rpx 12rpx rgba(27, 26, 23, 0.03);
+  overflow: hidden;
+}
+
+/* ---------- 指标概览 ---------- */
+
+.metrics {
+  display: flex;
+  align-items: stretch;
+  padding: 34rpx 10rpx;
+}
+
+.metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 数字用衬线/窄体组合，等宽感更强，便于扫读 */
+.metric__value {
+  font-family: 'DIN Alternate', 'Times New Roman', 'Songti SC', serif;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.metric__label {
+  margin-top: 14rpx;
+  font-size: 21rpx;
+  color: var(--muted);
+  letter-spacing: 4rpx;
+}
+
+.metric__split {
+  width: 1rpx;
+  background: #efe9dd;
+  margin: 6rpx 0;
+}
+
+/* ---------- 类型筛选 ---------- */
+
+.tabs {
+  display: flex;
+  margin-top: 36rpx;
+  border-bottom: 1rpx solid var(--hairline);
+}
+
+.tab {
+  position: relative;
+  padding-bottom: 18rpx;
+  margin-right: 48rpx;
+  font-size: 26rpx;
+  color: var(--muted);
+  letter-spacing: 2rpx;
+  transition: color 0.2s ease;
+}
+
+.tab--active {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* 选中态仅用一小截强调色下划线，克制但有指向性 */
+.tab--active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1rpx;
+  width: 32rpx;
+  height: 3rpx;
+  margin-left: -16rpx;
+  background: var(--accent);
+  border-radius: 2rpx;
+}
+
+/* ---------- 审核列表 ---------- */
+
+.list {
+  margin-top: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket {
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(27, 26, 23, 0.03);
+  overflow: hidden;
+  margin-bottom: 20rpx;
+}
+
+.ticket__main {
+  display: flex;
+  align-items: flex-start;
+  padding: 26rpx 26rpx 22rpx;
+  transition: background-color 0.15s ease;
+}
+
+.ticket__main--pressed {
+  background: #faf7f0;
+}
+
+/* 汉字字形图标块：风格统一、无需图片资源 */
+.ticket__glyph {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 16rpx;
+  background: #f2eee5;
+  color: #4a4438;
+  font-size: 24rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 活动用唯一的强调色区分，公告保持中性 */
+.ticket__glyph--event {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.ticket__content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 20rpx;
+}
+
+.ticket__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.ticket__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10rpx;
+}
+
+.ticket__meta-item {
+  font-size: 22rpx;
+  color: #9d968a;
+  margin-right: 10rpx;
+}
+
+.ticket__meta-item--time {
+  color: var(--faint);
+}
+
+/* 元信息之间的间隔点 */
+.ticket__dot {
+  width: 4rpx;
+  height: 4rpx;
+  border-radius: 50%;
+  background: #c8c2b5;
+  margin-right: 10rpx;
+  margin-top: 4rpx;
+  flex-shrink: 0;
+}
+
+.ticket__actions {
+  display: flex;
+  padding: 16rpx 20rpx 20rpx;
+  border-top: 1rpx solid #f2ede4;
+}
+
+/* ---------- 按钮 ---------- */
+
+.btn {
+  flex: 1;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+/* 第二个按钮统一留出间距，避免依赖 gap 的兼容性 */
+.btn + .btn {
+  margin-left: 16rpx;
+}
+
+.btn--ghost {
+  border: 1rpx solid #ded7c9;
+  color: #6f6a5f;
+  background: transparent;
+}
+
+.btn--ghost-pressed {
+  background: #faf7f0;
+}
+
+.btn--solid {
+  background: var(--ink);
+  color: #fffdf9;
+}
+
+.btn--solid-pressed {
+  opacity: 0.86;
+}
+
+/* 拒绝确认使用页面唯一的强调色，语义清晰且不额外引入颜色 */
+.btn--accent {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.btn--accent-pressed {
+  opacity: 0.86;
+}
+
+/* ---------- 载入 / 空状态 ---------- */
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96rpx 40rpx;
+}
+
+/* 一条缓慢呼吸的细线，替代跳动的圆点 */
+.state__pulse {
+  width: 96rpx;
+  height: 3rpx;
+  border-radius: 2rpx;
+  background: #ded7c9;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.state__text {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  color: var(--faint);
+  letter-spacing: 3rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96rpx 40rpx 104rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--hairline);
+  border-radius: 26rpx;
+  margin-top: 24rpx;
+}
+
+/* 细线圆环内的对勾：处理完毕的安静回执 */
+.empty__seal {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+  border: 1rpx solid #ded7c9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty__tick {
+  width: 32rpx;
+  height: 16rpx;
+  border-left: 2rpx solid #b7ae9e;
+  border-bottom: 2rpx solid #b7ae9e;
+  transform: rotate(-45deg);
+  margin-top: -8rpx;
+}
+
+.empty__title {
+  margin-top: 32rpx;
+  font-size: 29rpx;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 1rpx;
+}
+
+.empty__desc {
+  margin-top: 10rpx;
+  font-size: 23rpx;
+  color: var(--faint);
+}
+
+.more {
+  display: block;
+  padding: 32rpx 0 8rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--faint);
+  letter-spacing: 2rpx;
+}
+
+/* ---------- 抽屉 ---------- */
+
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(27, 26, 23, 0.42);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade 0.22s ease both;
+}
+
+.sheet {
+  width: 100%;
+  max-height: 86vh;
+  background: var(--surface);
+  border-radius: 32rpx 32rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: sheetUp 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.sheet--compact {
+  max-height: 74vh;
+}
+
+/* 顶部拖拽提示条，暗示可下滑关闭 */
+.sheet__grip {
+  width: 64rpx;
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: #e3dccd;
+  margin: 16rpx auto 0;
+}
+
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 40rpx 20rpx;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.sheet__head-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet__eyebrow {
+  font-size: 17rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+}
+
+.sheet__title {
+  margin-top: 6rpx;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sheet__close {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #f4efe4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sheet__close-x {
+  position: relative;
+  width: 22rpx;
+  height: 22rpx;
+}
+
+.sheet__close-x::before,
+.sheet__close-x::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2rpx;
+  background: #6f6a5f;
+}
+
+.sheet__close-x::before {
+  transform: rotate(45deg);
+}
+
+.sheet__close-x::after {
+  transform: rotate(-45deg);
+}
+
+.sheet__body {
+  flex: 1;
+  max-height: 62vh;
+  padding: 28rpx 40rpx 8rpx;
+  box-sizing: border-box;
+}
+
+.sheet__footer {
+  display: flex;
+  padding: 20rpx 40rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #f2ede4;
+}
+
+/* ---------- 详情内容 ---------- */
+
+.detail__title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.detail__rows {
+  margin-top: 22rpx;
+  border-top: 1rpx solid #f2ede4;
+}
+
+.drow {
+  display: flex;
+  align-items: baseline;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f2ede4;
+}
+
+.drow__key {
+  flex-shrink: 0;
+  margin-right: 24rpx;
+  font-size: 23rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+
+.drow__val {
+  flex: 1;
+  text-align: right;
+  font-size: 26rpx;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* 申请人为空的字段统一用弱化色显示「未填写」，让审核人一眼识别空缺 */
+.drow__val--empty {
+  color: #b3ab9c;
+}
+
+.detail__block {
+  margin-top: 36rpx;
+}
+
+/* 小标签用字距与灰色弱化，作为分区标题 */
+.detail__label {
+  display: block;
+  font-size: 19rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+  margin-bottom: 12rpx;
+}
+
+.detail__long {
+  margin-top: 26rpx;
+}
+
+.detail__text {
+  display: block;
+  font-size: 26rpx;
+  color: #4a4438;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.detail__text--empty {
+  color: #b3ab9c;
+}
+
+/* ---------- 拒绝输入 ---------- */
+
+.reject {
+  padding: 24rpx 40rpx 4rpx;
+}
+
+.reject__input {
+  width: 100%;
+  height: 220rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  background: #f8f5ee;
+  border: 1rpx solid #ece6d9;
+  border-radius: 18rpx;
+  font-size: 27rpx;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.reject__counter {
+  display: block;
+  margin-top: 12rpx;
+  text-align: right;
+  font-size: 20rpx;
+  color: #b3ab9c;
+}
+
+/* 小程序原生 textarea 的占位符需通过 placeholder-class 指定 */
+.reject__placeholder {
+  color: #b3ab9c;
+}
+
+/* ---------- 动效 ---------- */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    opacity: 0.6;
+    transform: translateY(60rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleX(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}

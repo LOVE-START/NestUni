@@ -1,0 +1,201 @@
+<!--审核中心 - 编辑式极简风格：暖纸底 / 墨色文字 / 单一陶土色强调-->
+<view class="container" wx:if="{{showContent}}">
+
+  <!-- 页头：自定义导航，padding-top 让出系统状态栏 -->
+  <view class="masthead" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav__back" hover-class="nav__back--pressed" hover-stay-time="60" bindtap="goBack">
+        <view class="nav__arrow"></view>
+      </view>
+    </view>
+
+    <view class="lead">
+      <text class="lead__eyebrow">REVIEW CENTER</text>
+      <text class="lead__title">审核中心</text>
+      <text class="lead__meta">{{stats.total > 0 ? stats.total + ' 项等待处理' : '所有事项均已处理'}}</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <!-- 指标概览：三项共用一张卡面，以发丝线分隔 -->
+    <view class="panel metrics">
+      <view class="metric">
+        <text class="metric__value">{{stats.total}}</text>
+        <text class="metric__label">待处理</text>
+      </view>
+      <view class="metric__split"></view>
+      <view class="metric">
+        <text class="metric__value">{{stats.event}}</text>
+        <text class="metric__label">活动</text>
+      </view>
+      <view class="metric__split"></view>
+      <view class="metric">
+        <text class="metric__value">{{stats.announcement}}</text>
+        <text class="metric__label">公告</text>
+      </view>
+    </view>
+
+    <!-- 类型筛选：纯文字标签 + 活动下划线，去掉胶囊滑块等装饰 -->
+    <view class="tabs">
+      <view class="tab {{currentTab === 'all' ? 'tab--active' : ''}}" data-tab="all" bindtap="switchTab">全部</view>
+      <view class="tab {{currentTab === 'event' ? 'tab--active' : ''}}" data-tab="event" bindtap="switchTab">活动</view>
+      <view class="tab {{currentTab === 'announcement' ? 'tab--active' : ''}}" data-tab="announcement" bindtap="switchTab">公告</view>
+    </view>
+
+    <!-- 审核列表 -->
+    <view class="list" wx:if="{{approvals.length > 0}}">
+      <view class="ticket" wx:for="{{approvals}}" wx:key="id">
+        <view
+          class="ticket__main"
+          hover-class="ticket__main--pressed"
+          hover-stay-time="60"
+          bindtap="viewDetail"
+          data-id="{{item.id}}"
+        >
+          <!-- 汉字字形图标替代 emoji，与后台其他页面保持一致 -->
+          <view class="ticket__glyph ticket__glyph--{{item.target_type}}">{{item.target_type === 'event' ? '活' : item.target_type === 'club' ? '社' : '公'}}</view>
+          <view class="ticket__content">
+            <text class="ticket__title">{{item.target_title}}</text>
+            <view class="ticket__meta">
+              <text class="ticket__meta-item" wx:if="{{item.club}}">{{item.club.name}}</text>
+              <view class="ticket__dot" wx:if="{{item.club && item.applicant}}"></view>
+              <text class="ticket__meta-item" wx:if="{{item.applicant}}">{{item.applicant.nickname || '未知申请人'}}</text>
+              <view class="ticket__dot"></view>
+              <text class="ticket__meta-item ticket__meta-item--time">{{item.created_at_formatted}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="ticket__actions">
+          <view class="btn btn--ghost" hover-class="btn--ghost-pressed" hover-stay-time="60" catchtap="showRejectDialog" data-id="{{item.id}}">拒绝</view>
+          <view class="btn btn--solid" hover-class="btn--solid-pressed" hover-stay-time="60" catchtap="handleApprove" data-id="{{item.id}}">通过</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 载入状态 -->
+    <view class="state" wx:if="{{loading && approvals.length === 0}}">
+      <view class="state__pulse"></view>
+      <text class="state__text">正在载入</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && approvals.length === 0}}">
+      <view class="empty__seal">
+        <view class="empty__tick"></view>
+      </view>
+      <text class="empty__title">暂无待审核内容</text>
+      <text class="empty__desc">新的申请会显示在这里</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <text class="more" wx:if="{{!loading && approvals.length > 0 && pagination.page < pagination.totalPages}}">上拉加载更多</text>
+  </view>
+
+  <!-- 详情抽屉 -->
+  <view class="mask" wx:if="{{detailModal.show}}" catchtap="closeDetailModal">
+    <view class="sheet" catchtap="preventBubble">
+      <view class="sheet__grip"></view>
+      <view class="sheet__head">
+        <view class="sheet__head-text">
+          <text class="sheet__eyebrow">{{detailModal.data.target_type === 'event' ? 'EVENT' : detailModal.data.target_type === 'club' ? 'CLUB' : 'NOTICE'}}</text>
+          <text class="sheet__title">审核详情</text>
+        </view>
+        <view class="sheet__close" bindtap="closeDetailModal">
+          <view class="sheet__close-x"></view>
+        </view>
+      </view>
+
+      <scroll-view class="sheet__body" scroll-y>
+        <block wx:if="{{detailModal.data}}">
+          <text class="detail__title">{{detailModal.data.target_title}}</text>
+
+          <view class="detail__rows">
+            <view class="drow" wx:if="{{detailModal.data.club}}">
+              <text class="drow__key">所属社团</text>
+              <text class="drow__val">{{detailModal.data.club.name}}</text>
+            </view>
+            <view class="drow" wx:if="{{detailModal.data.applicant}}">
+              <text class="drow__key">申请人</text>
+              <text class="drow__val">{{detailModal.data.applicant.nickname || '未知'}}</text>
+            </view>
+            <view class="drow">
+              <text class="drow__key">申请时间</text>
+              <text class="drow__val">{{detailModal.data.created_at_formatted}}</text>
+            </view>
+          </view>
+
+          <!-- 活动信息 -->
+          <view class="detail__block" wx:if="{{detailModal.data.target_type === 'event' && detailModal.data.target}}">
+            <text class="detail__label">活动信息</text>
+            <view class="detail__rows">
+              <view class="drow">
+                <text class="drow__key">时间</text>
+                <text class="drow__val" wx:if="{{detailModal.data.target_date_formatted || detailModal.data.target.time}}">{{detailModal.data.target_date_formatted}} {{detailModal.data.target.time}}</text>
+                <text class="drow__val drow__val--empty" wx:else>未填写</text>
+              </view>
+              <view class="drow">
+                <text class="drow__key">地点</text>
+                <text class="drow__val" wx:if="{{detailModal.data.target.location}}">{{detailModal.data.target.location}}</text>
+                <text class="drow__val drow__val--empty" wx:else>未填写</text>
+              </view>
+            </view>
+            <!-- 描述即使为空也保留区块与标签，方便审核人确认申请人未填写 -->
+            <view class="detail__long">
+              <text class="detail__label">活动描述</text>
+              <text class="detail__text" wx:if="{{detailModal.data.target.description}}">{{detailModal.data.target.description}}</text>
+              <text class="detail__text detail__text--empty" wx:else>未填写</text>
+            </view>
+          </view>
+
+          <!-- 公告内容 -->
+          <view class="detail__block" wx:if="{{detailModal.data.target_type === 'announcement' && detailModal.data.target}}">
+            <text class="detail__label">公告内容</text>
+            <text class="detail__text" wx:if="{{detailModal.data.target.content}}">{{detailModal.data.target.content}}</text>
+            <text class="detail__text detail__text--empty" wx:else>未填写</text>
+          </view>
+        </block>
+      </scroll-view>
+
+      <view class="sheet__footer">
+        <view class="btn btn--ghost" hover-class="btn--ghost-pressed" hover-stay-time="60" catchtap="showRejectDialog" data-id="{{detailModal.data.id}}">拒绝</view>
+        <view class="btn btn--solid" hover-class="btn--solid-pressed" hover-stay-time="60" catchtap="handleApprove" data-id="{{detailModal.data.id}}">通过</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 拒绝原因抽屉 -->
+  <view class="mask" wx:if="{{showRejectModal}}" catchtap="cancelReject">
+    <view class="sheet sheet--compact" catchtap="preventBubble">
+      <view class="sheet__grip"></view>
+      <view class="sheet__head">
+        <view class="sheet__head-text">
+          <text class="sheet__eyebrow">REJECT</text>
+          <text class="sheet__title">填写拒绝原因</text>
+        </view>
+        <view class="sheet__close" catchtap="cancelReject">
+          <view class="sheet__close-x"></view>
+        </view>
+      </view>
+
+      <view class="reject">
+        <textarea
+          class="reject__input"
+          placeholder="说明拒绝原因，便于申请人了解问题"
+          placeholder-class="reject__placeholder"
+          value="{{rejectForm.rejectReason}}"
+          bindinput="onRejectReasonInput"
+          maxlength="200"
+          auto-focus="{{true}}"
+          fixed="{{true}}"
+        ></textarea>
+        <text class="reject__counter">{{rejectReasonLength}}/200</text>
+      </view>
+
+      <view class="sheet__footer">
+        <view class="btn btn--ghost" hover-class="btn--ghost-pressed" hover-stay-time="60" catchtap="cancelReject">取消</view>
+        <view class="btn btn--accent" hover-class="btn--accent-pressed" hover-stay-time="60" catchtap="confirmReject">确认拒绝</view>
+      </view>
+    </view>
+  </view>
+</view>

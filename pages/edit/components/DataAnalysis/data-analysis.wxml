@@ -1,0 +1,152 @@
+<import src="./icon-svg.wxml"/>
+
+<view class="data-analysis">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <view class="header-title">
+      <template is="icon-svg" data="{{name: 'chart-bar', size: 'lg', color: 'white'}}"/>
+      <text class="title-text">数据分析</text>
+    </view>
+    <view class="header-subtitle">社团运营数据可视化</view>
+  </view>
+
+  <!-- 时间筛选 -->
+  <view class="filter-section">
+    <picker mode="selector" range="{{periodOptions}}" range-key="label" bindchange="onPeriodChange">
+      <view class="picker-button">
+        <template is="icon-svg" data="{{name: 'calendar', size: 'sm'}}"/>
+        <text>{{currentPeriod.label}}</text>
+        <view class="picker-arrow">▼</view>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 数据概览卡片 -->
+  <view class="overview-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text>数据概览</text>
+      </view>
+    </view>
+    
+    <view class="stats-grid">
+      <!-- 成员数卡片 -->
+      <view class="stat-card stat-card--primary">
+        <view class="stat-content">
+          <view class="stat-value">{{overview.memberCount}}</view>
+          <view class="stat-label">成员数</view>
+        </view>
+        <view class="stat-trend {{overview.trends.memberTrend >= 0 ? 'trend-up' : 'trend-down'}}">
+          <template is="icon-svg" data="{{name: overview.trends.memberTrend >= 0 ? 'trend-up' : 'trend-down', size: 'xs'}}"/>
+          <text>{{Math.abs(overview.trends.memberTrend)}}%</text>
+        </view>
+      </view>
+
+      <!-- 活动数卡片 -->
+      <view class="stat-card stat-card--success">
+        <view class="stat-content">
+          <view class="stat-value">{{overview.eventCount}}</view>
+          <view class="stat-label">活动数</view>
+        </view>
+        <view class="stat-trend {{overview.trends.eventTrend >= 0 ? 'trend-up' : 'trend-down'}}">
+          <template is="icon-svg" data="{{name: overview.trends.eventTrend >= 0 ? 'trend-up' : 'trend-down', size: 'xs'}}"/>
+          <text>{{Math.abs(overview.trends.eventTrend)}}%</text>
+        </view>
+      </view>
+
+      <!-- 招新数卡片 -->
+      <view class="stat-card stat-card--warning">
+        <view class="stat-content">
+          <view class="stat-value">{{overview.recruitmentCount}}</view>
+          <view class="stat-label">招新数</view>
+        </view>
+        <view class="stat-trend {{overview.trends.recruitmentTrend >= 0 ? 'trend-up' : 'trend-down'}}">
+          <template is="icon-svg" data="{{name: overview.trends.recruitmentTrend >= 0 ? 'trend-up' : 'trend-down', size: 'xs'}}"/>
+          <text>{{Math.abs(overview.trends.recruitmentTrend)}}%</text>
+        </view>
+      </view>
+
+      <!-- 活跃度卡片 -->
+      <view class="stat-card stat-card--secondary">
+        <view class="stat-content">
+          <view class="stat-value">{{overview.avgActivityScore}}<text class="stat-unit">分</text></view>
+          <view class="stat-label">活跃度</view>
+        </view>
+        <view class="stat-trend {{overview.trends.activityTrend >= 0 ? 'trend-up' : 'trend-down'}}">
+          <template is="icon-svg" data="{{name: overview.trends.activityTrend >= 0 ? 'trend-up' : 'trend-down', size: 'xs'}}"/>
+          <text>{{Math.abs(overview.trends.activityTrend)}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 活动数据 -->
+  <view class="data-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text>活动数据</text>
+      </view>
+    </view>
+    <view class="chart-container chart-container--line">
+      <view class="chart-title">活动参与趋势</view>
+      <ec-canvas id="eventTrendChart" canvas-id="eventTrendChart" ec="{{ eventTrendEc }}"></ec-canvas>
+    </view>
+  </view>
+
+  <!-- 成员数据 -->
+  <view class="data-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text>成员数据</text>
+      </view>
+    </view>
+    <view class="chart-container chart-container--pie">
+      <view class="chart-title">成员等级分布</view>
+      <ec-canvas id="memberLevelChart" canvas-id="memberLevelChart" ec="{{ memberLevelEc }}"></ec-canvas>
+    </view>
+  </view>
+
+  <!-- 招新数据 -->
+  <view class="data-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text>招新数据</text>
+      </view>
+    </view>
+    <view class="funnel-section">
+      <view class="chart-title">招新转化漏斗</view>
+      <view class="funnel-chart">
+        <view class="funnel-item" wx:for="{{recruitmentStats.funnelData}}" wx:key="stage">
+          <view class="funnel-bar-wrapper">
+            <view class="funnel-bar" style="width: {{item.percentage}}%; background-color: {{item.color}};">
+              <text class="funnel-label">{{item.stage}}</text>
+              <text class="funnel-value">{{item.count}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="conversion-rates">
+        <view class="conversion-item">
+          <view class="conversion-dot" style="background-color: #91cc75;"></view>
+          <text>报名 {{recruitmentStats.funnel.conversionRates.application}}%</text>
+        </view>
+        <view class="conversion-arrow">→</view>
+        <view class="conversion-item">
+          <view class="conversion-dot" style="background-color: #fac858;"></view>
+          <text>面试 {{recruitmentStats.funnel.conversionRates.interview}}%</text>
+        </view>
+        <view class="conversion-arrow">→</view>
+        <view class="conversion-item">
+          <view class="conversion-dot" style="background-color: #ee6666;"></view>
+          <text>录用 {{recruitmentStats.funnel.conversionRates.accepted}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

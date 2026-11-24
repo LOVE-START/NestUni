@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "社团详情",
+  "enablePullDownRefresh": true,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "back-button": "/components/back-button/back-button",
+    "theme-provider": "/components/theme-provider/theme-provider"
+  },
+  "backgroundTextStyle": "dark",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
+}

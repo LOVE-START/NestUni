@@ -1,0 +1,13 @@
+<!-- Agent工具调用步骤条 - 展示本次对话Agent执行了哪些动作 -->
+<!-- gradient通过CSS变量--step-gradient下发，作为胶囊淡化底色 -->
+<view class="agent-steps" style="--step-gradient: {{gradient}};" wx:if="{{steps.length > 0}}">
+  <view
+    class="agent-step agent-step--{{step.status}}"
+    wx:for="{{steps}}"
+    wx:for-item="step"
+    wx:key="index"
+  >
+    <view class="agent-step__mark"></view>
+    <text class="agent-step__text">{{step.label}}</text>
+  </view>
+</view>

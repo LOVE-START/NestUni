@@ -1,0 +1,306 @@
+/* 🌈 卡片容器（最外层） */
+.my-applications-card-wrapper {
+  width: 100%;
+  min-height: 900rpx;
+  max-width: 600rpx;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+/* 🎟️ 卡片主容器 */
+.my-applications-card {
+  width: 100%;
+  max-width: 580rpx;
+  background: #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0,0,0,0.08), 0 4rpx 12rpx rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  position: relative;
+  transition: all 0.35s ease;
+  margin: 0 auto;
+  padding: 10rpx;
+  box-sizing: border-box;
+}
+
+/* 半透明覆盖层，仅覆盖封面 */
+.my-applications-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 380rpx;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10rpx);
+  z-index: 1;
+  border-radius: 28rpx 28rpx 0 0;
+}
+
+/* 卡片悬浮效果 */
+.my-applications-card:hover {
+  transform: translateY(-10rpx);
+  box-shadow: 0 20rpx 60rpx rgba(0,0,0,0.12);
+}
+
+/* 封面图片 */
+.cover {
+  width: 100%;
+  height: 380rpx;
+  object-fit: cover;
+  filter: brightness(0.97);
+  z-index: 1;
+  position: relative;
+  border-radius: 28rpx 28rpx 0 0;
+  transition: all 0.3s ease;
+  transform-origin: center center;
+}
+
+/* 波纹效果容器 */
+.ripple-container {
+  position: relative;
+  overflow: visible;
+  border-radius: 28rpx 28rpx 0 0;
+  margin: -10rpx -10rpx 0 -10rpx;
+}
+
+/* 波纹效果 */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 标题样式 */
+.card-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #1a1d29;
+  line-height: 1.3;
+}
+
+/* 位置信息 */
+.location {
+  color: #6b7280;
+  font-size: 26rpx;
+  margin-top: -10rpx;
+  margin-bottom: 10rpx;
+  text-align: left;
+  z-index: 2;
+  position: relative;
+}
+
+/* 主体内容 */
+.content {
+  padding: 28rpx 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  z-index: 2;
+  position: relative;
+}
+
+/* 标题行 */
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 查看全部文字链接 */
+.view-all {
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.view-all:active {
+  opacity: 0.7;
+}
+
+/* 列表容器 */
+.list-container {
+  max-height: 500rpx;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding-right: 8rpx;
+}
+
+/* 隐藏滚动条 */
+.list-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 列表项 */
+.item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 12rpx;
+  border-radius: 20rpx;
+  background: rgba(243, 244, 246, 0.5);
+  gap: 16rpx;
+}
+
+/* 默认卡片样式 - Love Yourself 主题 */
+.default-item {
+  background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(255, 218, 185, 0.15) 100%);
+  border: 1rpx solid rgba(255, 182, 193, 0.3);
+}
+
+.default-item .item-title {
+  color: #d4736a;
+}
+
+.default-item .item-desc {
+  color: #e8a598;
+}
+
+/* 图标尺寸 */
+.item-icon {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 16rpx;
+  object-fit: cover;
+}
+
+/* 文字内容容器 */
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  min-width: 0;
+}
+
+/* 标题 */
+.item-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1d29;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 描述信息容器 */
+.item-desc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+/* 描述文字 */
+.item-desc {
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+/* 时间信息 */
+.item-time {
+  font-size: 22rpx;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+/* 状态标签容器 */
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 状态标签 - 使用主题色 */
+.item-status {
+  font-size: 22rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  flex-shrink: 0;
+  align-self: flex-start;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  height: auto;
+  line-height: 1.4;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  color: #ffffff;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #9ca3af;
+  font-size: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+/* ⚡锯齿分隔线 */
+.zigzag {
+  height: 12rpx;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8rpx,
+    #e5e7eb 8rpx,
+    #e5e7eb 16rpx
+  );
+  margin: 5rpx 0 -2rpx 0;
+}
+
+/* 底部信息区域 */
+.bottom {
+  width: 100%;
+  border-radius: 0 0 28rpx 28rpx;
+  padding: 40rpx 32rpx 28rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 2;
+  position: relative;
+}
+
+/* 名言容器 */
+.quote-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  text-align: center;
+}
+
+/* 名言文字 */
+.quote-text {
+  font-size: 26rpx;
+  color: #6b7280;
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 100%;
+}
+
+/* 名言作者 */
+.quote-author {
+  font-size: 22rpx;
+  color: #9ca3af;
+  font-weight: 500;
+}
